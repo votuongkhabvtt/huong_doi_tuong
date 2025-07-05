@@ -1,207 +1,337 @@
-<?php
-// Tạo shortcode [contact_form_button] để chèn vào trang
-add_shortcode('contact_form_button', 'render_contact_form_button');
-
-function render_contact_form_button() {
-    ob_start(); // Bắt đầu lưu output
-    ?>
-    <div class="contact-button-container">
-        <button id="contactButton" class="contact-btn">Liên hệ</button>
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trình Liên Hệ</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
         
-        <div id="contactFormModal" class="modal" style="display:none;">
-            <div class="modal-content">
-                <span class="close">&times;</span>
-                <h2>Liên hệ với chúng tôi</h2>
-                <form id="contactForm" method="post">
-                    <?php wp_nonce_field('contact_form_nonce', 'contact_nonce'); ?>
-                    <input type="hidden" name="action" value="send_contact_email">
-                    
+        body {
+            background: linear-gradient(135deg, #1a2a6c, #b21f1f, #fdbb2d);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 800px;
+            width: 100%;
+        }
+        
+        .contact-header {
+            text-align: center;
+            margin-bottom: 30px;
+            color: white;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+        }
+        
+        .contact-header h1 {
+            font-size: 2.8rem;
+            margin-bottom: 10px;
+        }
+        
+        .contact-header p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+        
+        .contact-card {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.25);
+            overflow: hidden;
+        }
+        
+        .contact-tabs {
+            display: flex;
+            background: #4e54c8;
+        }
+        
+        .tab {
+            flex: 1;
+            padding: 18px 0;
+            text-align: center;
+            color: white;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .tab.active {
+            background: #8f94fb;
+            box-shadow: inset 0 -4px 0 #ff7e5f;
+        }
+        
+        .tab:hover:not(.active) {
+            background: rgba(143, 148, 251, 0.6);
+        }
+        
+        .contact-form {
+            padding: 30px;
+        }
+        
+        .form-group {
+            margin-bottom: 22px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #333;
+        }
+        
+        .form-group input,
+        .form-group textarea {
+            width: 100%;
+            padding: 14px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: border-color 0.3s;
+        }
+        
+        .form-group input:focus,
+        .form-group textarea:focus {
+            border-color: #8f94fb;
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(143, 148, 251, 0.2);
+        }
+        
+        .form-group textarea {
+            min-height: 140px;
+            resize: vertical;
+        }
+        
+        .submit-btn {
+            background: linear-gradient(to right, #4e54c8, #8f94fb);
+            color: white;
+            border: none;
+            padding: 16px 30px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            border-radius: 8px;
+            cursor: pointer;
+            width: 100%;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 10px rgba(78, 84, 200, 0.4);
+        }
+        
+        .submit-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 15px rgba(78, 84, 200, 0.5);
+        }
+        
+        .submit-btn:active {
+            transform: translateY(0);
+        }
+        
+        .contact-info {
+            padding: 20px 30px;
+            background: #f5f7ff;
+            border-top: 1px solid #eee;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        
+        .info-item {
+            display: flex;
+            align-items: center;
+            margin: 10px 0;
+        }
+        
+        .info-icon {
+            width: 40px;
+            height: 40px;
+            background: #8f94fb;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-right: 12px;
+            color: white;
+            font-size: 1.2rem;
+        }
+        
+        .info-text {
+            color: #555;
+        }
+        
+        .info-text strong {
+            color: #4e54c8;
+        }
+        
+        .success-message {
+            display: none;
+            text-align: center;
+            padding: 30px;
+            background: #e8f5e9;
+            border-radius: 8px;
+            margin-top: 20px;
+            color: #2e7d32;
+        }
+        
+        .success-icon {
+            font-size: 3rem;
+            margin-bottom: 15px;
+            color: #4caf50;
+        }
+        
+        @media (max-width: 768px) {
+            .contact-tabs {
+                flex-direction: column;
+            }
+            
+            .contact-info {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            
+            .contact-header h1 {
+                font-size: 2.2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="contact-header">
+            <h1>Liên Hệ Với Chúng Tôi</h1>
+            <p>Chúng tôi luôn sẵn sàng hỗ trợ bạn 24/7</p>
+        </div>
+        
+        <div class="contact-card">
+            <div class="contact-tabs">
+                <div class="tab active" data-tab="form">Gửi tin nhắn</div>
+                <div class="tab" data-tab="info">Thông tin liên hệ</div>
+            </div>
+            
+            <div class="contact-form">
+                <form id="contactForm">
                     <div class="form-group">
-                        <label for="fullname">Họ và tên:</label>
-                        <input type="text" id="fullname" name="fullname" required>
+                        <label for="fullname">Họ và tên</label>
+                        <input type="text" id="fullname" name="fullname" required placeholder="Nhập họ và tên đầy đủ">
                     </div>
                     
                     <div class="form-group">
-                        <label for="phone">Điện thoại:</label>
-                        <input type="tel" id="phone" name="phone" required>
+                        <label for="phone">Số điện thoại</label>
+                        <input type="tel" id="phone" name="phone" required placeholder="Nhập số điện thoại">
                     </div>
                     
                     <div class="form-group">
-                        <label for="email">Email:</label>
-                        <input type="email" id="email" name="email" required>
+                        <label for="email">Email</label>
+                        <input type="email" id="email" name="email" required placeholder="Nhập địa chỉ email">
                     </div>
                     
                     <div class="form-group">
-                        <label for="message">Nội dung liên hệ:</label>
-                        <textarea id="message" name="message" rows="4" required></textarea>
+                        <label for="message">Nội dung liên hệ</label>
+                        <textarea id="message" name="message" required placeholder="Nhập nội dung bạn muốn liên hệ..."></textarea>
                     </div>
                     
-                    <button type="submit" class="submit-btn">Gửi</button>
-                    <div id="formResponse" style="margin-top: 15px;"></div>
+                    <button type="submit" class="submit-btn">Gửi thông tin liên hệ</button>
                 </form>
+                
+                <div class="success-message" id="successMessage">
+                    <div class="success-icon">✓</div>
+                    <h2>Cảm ơn bạn đã liên hệ!</h2>
+                    <p>Chúng tôi đã nhận được thông tin của bạn và sẽ phản hồi trong thời gian sớm nhất.</p>
+                    <p>Một email xác nhận đã được gửi đến hộp thư của bạn.</p>
+                </div>
+            </div>
+            
+            <div class="contact-info">
+                <div class="info-item">
+                    <div class="info-icon">✉️</div>
+                    <div class="info-text">
+                        <strong>Email:</strong><br>
+                        votuongkhabvtt@gmail.com
+                    </div>
+                </div>
+                
+                <div class="info-item">
+                    <div class="info-icon">📱</div>
+                    <div class="info-text">
+                        <strong>Hỗ trợ:</strong><br>
+                        0987.654.321
+                    </div>
+                </div>
+                
+                <div class="info-item">
+                    <div class="info-icon">🕒</div>
+                    <div class="info-text">
+                        <strong>Thời gian làm việc:</strong><br>
+                        8:00 - 22:00 hàng ngày
+                    </div>
+                </div>
             </div>
         </div>
     </div>
-
-    <style>
-    .contact-btn {
-        background-color: #4CAF50;
-        color: white;
-        padding: 12px 24px;
-        border: none;
-        border-radius: 4px;
-        cursor: pointer;
-        font-size: 16px;
-    }
-    .contact-btn:hover { background-color: #45a049; }
     
-    .modal {
-        display: none;
-        position: fixed;
-        z-index: 1000;
-        left: 0;
-        top: 0;
-        width: 100%;
-        height: 100%;
-        background-color: rgba(0,0,0,0.4);
-    }
-    .modal-content {
-        background-color: #fefefe;
-        margin: 10% auto;
-        padding: 20px;
-        border: 1px solid #888;
-        width: 80%;
-        max-width: 600px;
-        border-radius: 5px;
-    }
-    .close { color: #aaa; float: right; font-size: 28px; cursor: pointer; }
-    .close:hover { color: black; }
-    .form-group { margin-bottom: 15px; }
-    .form-group label { display: block; margin-bottom: 5px; font-weight: bold; }
-    .form-group input, .form-group textarea {
-        width: 100%;
-        padding: 10px;
-        border: 1px solid #ddd;
-        border-radius: 4px;
-    }
-    .submit-btn {
-        background-color: #2196F3;
-        color: white;
-        padding: 12px 20px;
-        border: none;
-        border-radius: 4px;
-        cursor: pointer;
-    }
-    .submit-btn:hover { background-color: #0b7dda; }
-    </style>
-
     <script>
-    document.addEventListener('DOMContentLoaded', function() {
-        // Mở modal khi nhấn nút "Liên hệ"
-        document.getElementById("contactButton").onclick = function() {
-            document.getElementById("contactFormModal").style.display = "block";
-        };
-        
-        // Đóng modal khi nhấn nút X
-        document.getElementsByClassName("close")[0].onclick = function() {
-            document.getElementById("contactFormModal").style.display = "none";
-        };
-        
-        // Đóng modal khi nhấn bên ngoài
-        window.onclick = function(event) {
-            if (event.target == document.getElementById("contactFormModal")) {
-                document.getElementById("contactFormModal").style.display = "none";
-            }
-        };
-        
-        // Xử lý gửi form bằng AJAX
-        document.getElementById("contactForm").addEventListener("submit", function(e) {
-            e.preventDefault();
-            
-            var formData = new FormData(this);
-            var responseElement = document.getElementById("formResponse");
-            
-            fetch("<?php echo admin_url('admin-ajax.php'); ?>", {
-                method: 'POST',
-                body: formData
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    responseElement.innerHTML = '<div style="color: green;">' + data.message + '</div>';
-                    document.getElementById("contactForm").reset();
-                    setTimeout(() => {
-                        document.getElementById("contactFormModal").style.display = "none";
-                        responseElement.innerHTML = "";
-                    }, 2000);
+        // Xử lý chuyển tab
+        const tabs = document.querySelectorAll('.tab');
+        tabs.forEach(tab => {
+            tab.addEventListener('click', () => {
+                tabs.forEach(t => t.classList.remove('active'));
+                tab.classList.add('active');
+                
+                if (tab.dataset.tab === 'info') {
+                    document.querySelector('.contact-form').style.display = 'none';
+                    document.querySelector('.contact-info').style.display = 'flex';
                 } else {
-                    responseElement.innerHTML = '<div style="color: red;">' + data.message + '</div>';
+                    document.querySelector('.contact-form').style.display = 'block';
+                    document.querySelector('.contact-info').style.display = 'flex';
                 }
-            })
-            .catch(error => {
-                responseElement.innerHTML = '<div style="color: red;">Lỗi kết nối. Vui lòng thử lại.</div>';
             });
         });
-    });
+        
+        // Xử lý gửi form
+        const contactForm = document.getElementById('contactForm');
+        const successMessage = document.getElementById('successMessage');
+        
+        contactForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // Lấy dữ liệu từ form
+            const fullname = document.getElementById('fullname').value;
+            const phone = document.getElementById('phone').value;
+            const email = document.getElementById('email').value;
+            const message = document.getElementById('message').value;
+            
+            // Tạo nội dung email
+            const emailBody = `Họ và tên: ${fullname}%0D%0A%0D%0A
+                              Điện thoại: ${phone}%0D%0A%0D%0A
+                              Email: ${email}%0D%0A%0D%0A
+                              Nội dung: ${message}`;
+            
+            // Tạo liên kết mailto để gửi email
+            const mailtoLink = `mailto:votuongkhabvtt@gmail.com?subject=Liên hệ từ ${fullname}&body=${emailBody}`;
+            
+            // Mở ứng dụng email mặc định
+            window.location.href = mailtoLink;
+            
+            // Hiển thị thông báo thành công
+            contactForm.reset();
+            contactForm.style.display = 'none';
+            successMessage.style.display = 'block';
+            
+            // Reset form sau 5 giây
+            setTimeout(() => {
+                successMessage.style.display = 'none';
+                contactForm.style.display = 'block';
+            }, 5000);
+        });
     </script>
-    <?php
-    return ob_get_clean(); // Trả về HTML
-}
-
-// Xử lý gửi email
-add_action('wp_ajax_send_contact_email', 'handle_contact_form_submission');
-add_action('wp_ajax_nopriv_send_contact_email', 'handle_contact_form_submission');
-
-function handle_contact_form_submission() {
-    // Kiểm tra nonce để bảo mật
-    if (!isset($_POST['contact_nonce']) || !wp_verify_nonce($_POST['contact_nonce'], 'contact_form_nonce')) {
-        wp_send_json_error(array('message' => 'Lỗi bảo mật. Vui lòng tải lại trang.'));
-        return;
-    }
-
-    // Kiểm tra các trường bắt buộc
-    if (empty($_POST['fullname']) || empty($_POST['email']) || empty($_POST['message'])) {
-        wp_send_json_error(array('message' => 'Vui lòng điền đầy đủ thông tin.'));
-        return;
-    }
-
-    // Làm sạch dữ liệu
-    $fullname = sanitize_text_field($_POST['fullname']);
-    $phone = sanitize_text_field($_POST['phone']);
-    $email = sanitize_email($_POST['email']);
-    $message = sanitize_textarea_field($_POST['message']);
-
-    // Kiểm tra email hợp lệ
-    if (!is_email($email)) {
-        wp_send_json_error(array('message' => 'Email không hợp lệ.'));
-        return;
-    }
-
-    // Thiết lập email
-    $to = 'votuongkhabvtt@gmail.com';
-    $subject = 'Liên hệ mới từ ' . $fullname;
-    $headers = array(
-        'Content-Type: text/html; charset=UTF-8',
-        'From: ' . $fullname . ' <' . $email . '>',
-        'Reply-To: ' . $fullname . ' <' . $email . '>'
-    );
-
-    // Nội dung email (HTML)
-    $email_content = "
-        <h2>Thông tin liên hệ mới</h2>
-        <p><strong>Họ tên:</strong> $fullname</p>
-        <p><strong>Điện thoại:</strong> $phone</p>
-        <p><strong>Email:</strong> $email</p>
-        <p><strong>Nội dung:</strong></p>
-        <p>$message</p>
-    ";
-
-    // Gửi email
-    $mail_sent = wp_mail($to, $subject, $email_content, $headers);
-
-    if ($mail_sent) {
-        wp_send_json_success(array('message' => 'Cảm ơn bạn! Chúng tôi sẽ liên hệ sớm.'));
-    } else {
-        wp_send_json_error(array('message' => 'Lỗi khi gửi email. Vui lòng thử lại.'));
-    }
-}
+</body>
+</html>
