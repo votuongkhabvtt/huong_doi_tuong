@@ -3,7 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Trình Liên Hệ</title>
+    <title>Đăng Ký Liên Hệ Qua Zalo</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         * {
             margin: 0;
@@ -13,7 +14,7 @@
         }
         
         body {
-            background: linear-gradient(135deg, #1a2a6c, #b21f1f, #fdbb2d);
+            background: linear-gradient(135deg, #0068ff, #00c2ff);
             min-height: 100vh;
             display: flex;
             justify-content: center;
@@ -26,33 +27,33 @@
             width: 100%;
         }
         
-        .contact-header {
+        .zalo-header {
             text-align: center;
             margin-bottom: 30px;
             color: white;
             text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
         }
         
-        .contact-header h1 {
+        .zalo-header h1 {
             font-size: 2.8rem;
             margin-bottom: 10px;
         }
         
-        .contact-header p {
+        .zalo-header p {
             font-size: 1.2rem;
             opacity: 0.9;
         }
         
-        .contact-card {
+        .zalo-card {
             background: rgba(255, 255, 255, 0.95);
             border-radius: 15px;
             box-shadow: 0 15px 30px rgba(0, 0, 0, 0.25);
             overflow: hidden;
         }
         
-        .contact-tabs {
+        .zalo-tabs {
             display: flex;
-            background: #4e54c8;
+            background: #0068ff;
         }
         
         .tab {
@@ -67,12 +68,12 @@
         }
         
         .tab.active {
-            background: #8f94fb;
-            box-shadow: inset 0 -4px 0 #ff7e5f;
+            background: #0084ff;
+            box-shadow: inset 0 -4px 0 #00c2ff;
         }
         
         .tab:hover:not(.active) {
-            background: rgba(143, 148, 251, 0.6);
+            background: rgba(0, 132, 255, 0.6);
         }
         
         .contact-form {
@@ -102,9 +103,9 @@
         
         .form-group input:focus,
         .form-group textarea:focus {
-            border-color: #8f94fb;
+            border-color: #0068ff;
             outline: none;
-            box-shadow: 0 0 0 3px rgba(143, 148, 251, 0.2);
+            box-shadow: 0 0 0 3px rgba(0, 104, 255, 0.2);
         }
         
         .form-group textarea {
@@ -113,7 +114,7 @@
         }
         
         .submit-btn {
-            background: linear-gradient(to right, #4e54c8, #8f94fb);
+            background: linear-gradient(to right, #0068ff, #00c2ff);
             color: white;
             border: none;
             padding: 16px 30px;
@@ -123,22 +124,26 @@
             cursor: pointer;
             width: 100%;
             transition: all 0.3s ease;
-            box-shadow: 0 4px 10px rgba(78, 84, 200, 0.4);
+            box-shadow: 0 4px 10px rgba(0, 104, 255, 0.4);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
         }
         
         .submit-btn:hover {
             transform: translateY(-3px);
-            box-shadow: 0 6px 15px rgba(78, 84, 200, 0.5);
+            box-shadow: 0 6px 15px rgba(0, 104, 255, 0.5);
         }
         
         .submit-btn:active {
             transform: translateY(0);
         }
         
-        .contact-info {
+        .zalo-info {
             padding: 20px 30px;
-            background: #f5f7ff;
-            border-top: 1px solid #eee;
+            background: #f0f9ff;
+            border-top: 1px solid #e0f0ff;
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -154,7 +159,7 @@
         .info-icon {
             width: 40px;
             height: 40px;
-            background: #8f94fb;
+            background: #0068ff;
             border-radius: 50%;
             display: flex;
             justify-content: center;
@@ -169,7 +174,7 @@
         }
         
         .info-text strong {
-            color: #4e54c8;
+            color: #0068ff;
         }
         
         .success-message {
@@ -188,17 +193,41 @@
             color: #4caf50;
         }
         
+        .zalo-qr {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-top: 20px;
+            padding: 20px;
+            background: #f0f9ff;
+            border-radius: 10px;
+        }
+        
+        .qr-code {
+            width: 150px;
+            height: 150px;
+            background: #fff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 15px 0;
+            border: 2px solid #0068ff;
+            border-radius: 10px;
+            font-size: 5rem;
+            color: #0068ff;
+        }
+        
         @media (max-width: 768px) {
-            .contact-tabs {
+            .zalo-tabs {
                 flex-direction: column;
             }
             
-            .contact-info {
+            .zalo-info {
                 flex-direction: column;
                 align-items: flex-start;
             }
             
-            .contact-header h1 {
+            .zalo-header h1 {
                 font-size: 2.2rem;
             }
         }
@@ -206,19 +235,19 @@
 </head>
 <body>
     <div class="container">
-        <div class="contact-header">
-            <h1>Liên Hệ Với Chúng Tôi</h1>
-            <p>Chúng tôi luôn sẵn sàng hỗ trợ bạn 24/7</p>
+        <div class="zalo-header">
+            <h1><i class="fab fa-zalo"></i> Liên Hệ Qua Zalo</h1>
+            <p>Kết nối trực tiếp với chúng tôi qua Zalo</p>
         </div>
         
-        <div class="contact-card">
-            <div class="contact-tabs">
+        <div class="zalo-card">
+            <div class="zalo-tabs">
                 <div class="tab active" data-tab="form">Gửi tin nhắn</div>
                 <div class="tab" data-tab="info">Thông tin liên hệ</div>
             </div>
             
             <div class="contact-form">
-                <form id="contactForm">
+                <form id="zaloContactForm">
                     <div class="form-group">
                         <label for="fullname">Họ và tên</label>
                         <input type="text" id="fullname" name="fullname" required placeholder="Nhập họ và tên đầy đủ">
@@ -230,8 +259,8 @@
                     </div>
                     
                     <div class="form-group">
-                        <label for="email">Email</label>
-                        <input type="email" id="email" name="email" required placeholder="Nhập địa chỉ email">
+                        <label for="email">Email (tuỳ chọn)</label>
+                        <input type="email" id="email" name="email" placeholder="Nhập địa chỉ email">
                     </div>
                     
                     <div class="form-group">
@@ -239,39 +268,51 @@
                         <textarea id="message" name="message" required placeholder="Nhập nội dung bạn muốn liên hệ..."></textarea>
                     </div>
                     
-                    <button type="submit" class="submit-btn">Gửi thông tin liên hệ</button>
+                    <button type="submit" class="submit-btn">
+                        <i class="fab fa-zalo"></i> Gửi thông tin qua Zalo
+                    </button>
                 </form>
                 
                 <div class="success-message" id="successMessage">
                     <div class="success-icon">✓</div>
-                    <h2>Cảm ơn bạn đã liên hệ!</h2>
-                    <p>Chúng tôi đã nhận được thông tin của bạn và sẽ phản hồi trong thời gian sớm nhất.</p>
-                    <p>Một email xác nhận đã được gửi đến hộp thư của bạn.</p>
+                    <h2>Thông tin đã sẵn sàng để gửi!</h2>
+                    <p>Vui lòng nhấn vào nút "Mở Zalo" bên dưới để gửi thông tin đến số 0913504755.</p>
+                    <button id="openZaloBtn" class="submit-btn" style="max-width: 250px; margin: 20px auto;">
+                        <i class="fab fa-zalo"></i> Mở Zalo Ngay
+                    </button>
+                </div>
+                
+                <div class="zalo-qr">
+                    <h3>Quét mã QR để kết nối Zalo</h3>
+                    <div class="qr-code">
+                        <i class="fab fa-zalo"></i>
+                    </div>
+                    <p>Hoặc lưu số điện thoại: <strong>0913504755</strong></p>
                 </div>
             </div>
             
-            <div class="contact-info">
+            <div class="zalo-info">
                 <div class="info-item">
-                    <div class="info-icon">✉️</div>
+                    <div class="info-icon"><i class="fas fa-phone-alt"></i></div>
                     <div class="info-text">
-                        <strong>Email:</strong><br>
-                        votuongkhabvtt@gmail.com
+                        <strong>Zalo:</strong><br>
+                        0913.504.755
                     </div>
                 </div>
                 
                 <div class="info-item">
-                    <div class="info-icon">📱</div>
-                    <div class="info-text">
-                        <strong>Hỗ trợ:</strong><br>
-                        0913504755
-                    </div>
-                </div>
-                
-                <div class="info-item">
-                    <div class="info-icon">🕒</div>
+                    <div class="info-icon"><i class="fas fa-clock"></i></div>
                     <div class="info-text">
                         <strong>Thời gian làm việc:</strong><br>
-                        7:00 - 22:00 hàng ngày
+                        8:00 - 22:00 hàng ngày
+                    </div>
+                </div>
+                
+                <div class="info-item">
+                    <div class="info-icon"><i class="fas fa-comments"></i></div>
+                    <div class="info-text">
+                        <strong>Hỗ trợ:</strong><br>
+                        Trả lời trong 5 phút
                     </div>
                 </div>
             </div>
@@ -288,19 +329,20 @@
                 
                 if (tab.dataset.tab === 'info') {
                     document.querySelector('.contact-form').style.display = 'none';
-                    document.querySelector('.contact-info').style.display = 'flex';
+                    document.querySelector('.zalo-info').style.display = 'flex';
                 } else {
                     document.querySelector('.contact-form').style.display = 'block';
-                    document.querySelector('.contact-info').style.display = 'flex';
+                    document.querySelector('.zalo-info').style.display = 'flex';
                 }
             });
         });
         
         // Xử lý gửi form
-        const contactForm = document.getElementById('contactForm');
+        const zaloForm = document.getElementById('zaloContactForm');
         const successMessage = document.getElementById('successMessage');
+        const openZaloBtn = document.getElementById('openZaloBtn');
         
-        contactForm.addEventListener('submit', function(e) {
+        zaloForm.addEventListener('submit', function(e) {
             e.preventDefault();
             
             // Lấy dữ liệu từ form
@@ -309,29 +351,60 @@
             const email = document.getElementById('email').value;
             const message = document.getElementById('message').value;
             
-            // Tạo nội dung email
-            const emailBody = `Họ và tên: ${fullname}%0D%0A%0D%0A
-                              Điện thoại: ${phone}%0D%0A%0D%0A
-                              Email: ${email}%0D%0A%0D%0A
-                              Nội dung: ${message}`;
+            // Tạo nội dung tin nhắn Zalo
+            let zaloMessage = `Xin chào, tôi là ${fullname}%0A`;
+            zaloMessage += `SĐT: ${phone}%0A`;
+            if(email) zaloMessage += `Email: ${email}%0A`;
+            zaloMessage += `Nội dung: ${message}`;
             
-            // Tạo liên kết mailto để gửi email
-            const mailtoLink = `mailto:votuongkhabvtt@gmail.com?subject=Liên hệ từ ${fullname}&body=${emailBody}`;
-            
-            // Mở ứng dụng email mặc định
-            window.location.href = mailtoLink;
+            // Lưu nội dung tin nhắn để sử dụng sau
+            openZaloBtn.dataset.message = zaloMessage;
             
             // Hiển thị thông báo thành công
-            contactForm.reset();
-            contactForm.style.display = 'none';
+            zaloForm.reset();
+            zaloForm.style.display = 'none';
             successMessage.style.display = 'block';
-            
-            // Reset form sau 5 giây
-            setTimeout(() => {
-                successMessage.style.display = 'none';
-                contactForm.style.display = 'block';
-            }, 5000);
         });
+        
+        // Xử lý mở Zalo
+        openZaloBtn.addEventListener('click', function() {
+            const zaloMessage = this.dataset.message;
+            const zaloUrl = `https://zalo.me/0913504755?text=${zaloMessage}`;
+            
+            // Mở Zalo trong tab mới
+            window.open(zaloUrl, '_blank');
+            
+            // Hiển thị thông báo cảm ơn
+            successMessage.innerHTML = `
+                <div class="success-icon">✓</div>
+                <h2>Cảm ơn bạn đã liên hệ!</h2>
+                <p>Chúng tôi đã nhận được thông tin của bạn và sẽ phản hồi trong thời gian sớm nhất.</p>
+                <p>Bạn có thể tiếp tục trò chuyện trên Zalo.</p>
+            `;
+        });
+        
+        // Kiểm tra thiết bị di động
+        function isMobileDevice() {
+            return (typeof window.orientation !== "undefined") || (navigator.userAgent.indexOf('IEMobile') !== -1);
+        }
+        
+        // Tự động chuyển sang Zalo app nếu là mobile
+        if(isMobileDevice()) {
+            openZaloBtn.textContent = "Mở Ứng dụng Zalo";
+            openZaloBtn.addEventListener('click', function(e) {
+                e.preventDefault();
+                const zaloMessage = this.dataset.message;
+                const zaloAppUrl = `https://zalo.me/0913504755?text=${zaloMessage}`;
+                
+                // Thử mở ứng dụng Zalo
+                window.location.href = `intent://send/0913504755?text=${zaloMessage}#Intent;scheme=zalo;package=com.zing.zalo;end`;
+                
+                // Dự phòng nếu không mở được app
+                setTimeout(function() {
+                    window.location.href = zaloAppUrl;
+                }, 500);
+            });
+        }
     </script>
 </body>
 </html>
