@@ -1,1 +1,83 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Temperature Converter</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 500px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .result {
+            background-color: white;
+            padding: 15px;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Temperature Converter</h1>
+    <div class="result" id="result"></div>
 
+    <script>
+        // Lớp Temperature
+        class Temperature {
+            // Thuộc tính
+            #celsius;  // Private field
+            
+            // Constructor
+            constructor(celsius = 0) {
+                this.celsius = celsius; // Sử dụng setter để kiểm tra
+            }
+            
+            // Getter và Setter cho celsius
+            get celsius() {
+                return this.#celsius;
+            }
+            
+            set celsius(value) {
+                // Kiểm tra giá trị tối thiểu -273°C
+                if (value < -273) {
+                    throw new Error("Nhiệt độ không thể dưới -273°C");
+                }
+                this.#celsius = value;
+            }
+            
+            // Chuyển đổi sang Fahrenheit
+            toFahrenheit() {
+                return (this.#celsius * 9/5) + 32;
+            }
+            
+            // Chuyển đổi sang Kelvin
+            toKelvin() {
+                return this.#celsius + 273.15;
+            }
+        }
+        
+        // Kịch bản chương trình
+        try {
+            // 1. Khởi tạo đối tượng
+            const temp = new Temperature();
+            
+            // 2. Gán giá trị 25°C
+            temp.celsius = 25;
+            
+            // 3. Hiển thị kết quả
+            const resultDiv = document.getElementById('result');
+            resultDiv.innerHTML = `
+                <p>Nhiệt độ nhập vào: ${temp.celsius}°C</p>
+                <p>Fahrenheit: ${temp.toFahrenheit().toFixed(2)}°F</p>
+                <p>Kelvin: ${temp.toKelvin().toFixed(2)}K</p>
+            `;
+            
+        } catch (error) {
+            alert(`Lỗi: ${error.message}`);
+        }
+    </script>
+</body>
+</html>
