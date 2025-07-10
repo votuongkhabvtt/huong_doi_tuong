@@ -1,1 +1,506 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Adam và Eva trong vườn địa đàng</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1a2a6c, #b21f1f, #1a2a6c);
+            color: #fff;
+            min-height: 100vh;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        
+        .container {
+            max-width: 1000px;
+            width: 100%;
+            margin: 0 auto;
+            text-align: center;
+        }
+        
+        header {
+            margin: 20px 0 30px;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+        }
+        
+        h1 {
+            font-size: 2.8rem;
+            margin-bottom: 10px;
+            background: linear-gradient(to right, #ffd700, #ffa500);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .subtitle {
+            font-size: 1.2rem;
+            opacity: 0.9;
+            max-width: 600px;
+            margin: 0 auto;
+            line-height: 1.6;
+        }
+        
+        .canvas-container {
+            background: rgba(0, 30, 0, 0.7);
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            margin-bottom: 30px;
+            border: 2px solid #5d4037;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        canvas {
+            background: #2e7d32;
+            border-radius: 10px;
+            display: block;
+            margin: 0 auto;
+            border: 3px solid #5d4037;
+        }
+        
+        .stats-container {
+            display: flex;
+            justify-content: space-around;
+            margin: 25px 0;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+        
+        .stat-box {
+            background: rgba(139, 69, 19, 0.8);
+            border-radius: 10px;
+            padding: 15px 25px;
+            min-width: 200px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            border: 2px solid #8b4513;
+        }
+        
+        .stat-title {
+            font-size: 1.1rem;
+            margin-bottom: 10px;
+            color: #ffd700;
+        }
+        
+        .stat-value {
+            font-size: 1.8rem;
+            font-weight: bold;
+        }
+        
+        .controls {
+            margin: 25px 0;
+        }
+        
+        .btn {
+            background: linear-gradient(to bottom, #e67e22, #d35400);
+            color: white;
+            border: none;
+            padding: 14px 28px;
+            font-size: 1.1rem;
+            border-radius: 50px;
+            cursor: pointer;
+            margin: 0 10px;
+            font-weight: bold;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            transition: all 0.3s ease;
+        }
+        
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+            background: linear-gradient(to bottom, #f39c12, #e67e22);
+        }
+        
+        .btn:active {
+            transform: translateY(1px);
+        }
+        
+        .btn:disabled {
+            background: linear-gradient(to bottom, #7f8c8d, #95a5a6);
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+        
+        .event-log {
+            background: rgba(0, 0, 0, 0.7);
+            border-radius: 10px;
+            padding: 20px;
+            margin-top: 20px;
+            max-height: 200px;
+            overflow-y: auto;
+            text-align: left;
+            border: 1px solid #444;
+        }
+        
+        .log-title {
+            color: #ffd700;
+            margin-bottom: 10px;
+            text-align: center;
+            font-size: 1.2rem;
+        }
+        
+        .log-entry {
+            padding: 8px 0;
+            border-bottom: 1px dashed #444;
+            font-size: 0.95rem;
+        }
+        
+        .log-entry:last-child {
+            border-bottom: none;
+        }
+        
+        .apple-color {
+            color: #ff5252;
+            font-weight: bold;
+        }
+        
+        .adam-color {
+            color: #3498db;
+            font-weight: bold;
+        }
+        
+        .eva-color {
+            color: #e91e63;
+            font-weight: bold;
+        }
+        
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2.2rem;
+            }
+            
+            .stats-container {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .stat-box {
+                width: 100%;
+            }
+            
+            .btn {
+                padding: 12px 20px;
+                font-size: 1rem;
+                margin: 5px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Adam và Eva trong Vườn Địa Đàng</h1>
+            <p class="subtitle">Mô phỏng câu chuyện về hai con người đầu tiên ăn trái táo trong vườn địa đàng</p>
+        </header>
+        
+        <div class="canvas-container">
+            <canvas id="gardenCanvas" width="800" height="500"></canvas>
+        </div>
+        
+        <div class="stats-container">
+            <div class="stat-box">
+                <div class="stat-title">Khối lượng táo còn lại</div>
+                <div id="appleWeight" class="stat-value">10</div>
+            </div>
+            
+            <div class="stat-box">
+                <div class="stat-title">Adam - Cân nặng</div>
+                <div id="adamWeight" class="stat-value">60</div>
+            </div>
+            
+            <div class="stat-box">
+                <div class="stat-title">Eva - Cân nặng</div>
+                <div id="evaWeight" class="stat-value">50</div>
+            </div>
+        </div>
+        
+        <div class="controls">
+            <button id="startBtn" class="btn">Bắt đầu ăn táo</button>
+            <button id="resetBtn" class="btn">Thiết lập lại</button>
+        </div>
+        
+        <div class="event-log">
+            <div class="log-title">Nhật ký sự kiện</div>
+            <div id="logEntries"></div>
+        </div>
+    </div>
 
+    <script>
+        // Lớp Apple
+        class Apple {
+            constructor() {
+                this._weight = 10; // Khối lượng ban đầu
+            }
+            
+            get weight() {
+                return this._weight;
+            }
+            
+            decrease() {
+                if (this._weight > 0) {
+                    this._weight--;
+                }
+            }
+        }
+        
+        // Lớp Human
+        class Human {
+            constructor(name, gender, weight) {
+                this.name = name;
+                this.gender = gender;
+                this._weight = weight;
+            }
+            
+            get weight() {
+                return this._weight;
+            }
+            
+            speak(message) {
+                return message;
+            }
+            
+            eat(apple) {
+                if (apple.weight > 0) {
+                    apple.decrease();
+                    this._weight++;
+                    return true;
+                }
+                return false;
+            }
+            
+            checkAppleWeight(apple) {
+                return apple.weight;
+            }
+        }
+        
+        // Khởi tạo ứng dụng
+        class EdenGarden {
+            constructor() {
+                this.apple = new Apple();
+                this.adam = new Human("Adam", "Nam", 60);
+                this.eva = new Human("Eva", "Nữ", 50);
+                this.canvas = document.getElementById('gardenCanvas');
+                this.ctx = this.canvas.getContext('2d');
+                this.currentTurn = 'adam'; // Bắt đầu với Adam
+                this.isEating = false;
+                this.intervalId = null;
+                this.logEntries = [];
+                
+                // Tham chiếu DOM
+                this.appleWeightEl = document.getElementById('appleWeight');
+                this.adamWeightEl = document.getElementById('adamWeight');
+                this.evaWeightEl = document.getElementById('evaWeight');
+                this.logEntriesEl = document.getElementById('logEntries');
+                this.startBtn = document.getElementById('startBtn');
+                this.resetBtn = document.getElementById('resetBtn');
+                
+                // Thiết lập sự kiện
+                this.startBtn.addEventListener('click', () => this.startEating());
+                this.resetBtn.addEventListener('click', () => this.reset());
+                
+                // Vẽ cảnh ban đầu
+                this.drawGarden();
+                this.updateStats();
+            }
+            
+            startEating() {
+                if (this.isEating || this.apple.weight <= 0) return;
+                
+                this.isEating = true;
+                this.startBtn.disabled = true;
+                
+                this.intervalId = setInterval(() => {
+                    if (this.apple.weight <= 0) {
+                        this.stopEating();
+                        this.addLogEntry("Quả táo đã hết! Adam và Eva không thể ăn thêm.");
+                        return;
+                    }
+                    
+                    let eater = this.currentTurn === 'adam' ? this.adam : this.eva;
+                    const success = eater.eat(this.apple);
+                    
+                    if (success) {
+                        const eaterName = this.currentTurn === 'adam' ? "Adam" : "Eva";
+                        this.addLogEntry(`${eaterName} đã ăn một miếng táo.`);
+                        this.currentTurn = this.currentTurn === 'adam' ? 'eva' : 'adam';
+                    }
+                    
+                    this.drawGarden();
+                    this.updateStats();
+                }, 1000);
+            }
+            
+            stopEating() {
+                clearInterval(this.intervalId);
+                this.isEating = false;
+                this.startBtn.disabled = false;
+            }
+            
+            reset() {
+                this.stopEating();
+                this.apple = new Apple();
+                this.adam = new Human("Adam", "Nam", 60);
+                this.eva = new Human("Eva", "Nữ", 50);
+                this.currentTurn = 'adam';
+                this.logEntries = [];
+                this.logEntriesEl.innerHTML = '';
+                this.startBtn.disabled = false;
+                this.drawGarden();
+                this.updateStats();
+                this.addLogEntry("Vườn địa đàng đã được thiết lập lại.");
+            }
+            
+            updateStats() {
+                this.appleWeightEl.textContent = this.apple.weight;
+                this.adamWeightEl.textContent = this.adam.weight;
+                this.evaWeightEl.textContent = this.eva.weight;
+            }
+            
+            addLogEntry(message) {
+                this.logEntries.push(message);
+                if (this.logEntries.length > 10) {
+                    this.logEntries.shift();
+                }
+                
+                this.logEntriesEl.innerHTML = this.logEntries
+                    .map(entry => `<div class="log-entry">${entry}</div>`)
+                    .join('');
+                
+                // Cuộn xuống dưới cùng
+                this.logEntriesEl.scrollTop = this.logEntriesEl.scrollHeight;
+            }
+            
+            drawGarden() {
+                const ctx = this.ctx;
+                const width = this.canvas.width;
+                const height = this.canvas.height;
+                
+                // Xóa canvas
+                ctx.clearRect(0, 0, width, height);
+                
+                // Vẽ bầu trời
+                const skyGradient = ctx.createLinearGradient(0, 0, 0, height * 0.7);
+                skyGradient.addColorStop(0, '#87CEEB');
+                skyGradient.addColorStop(1, '#1E90FF');
+                ctx.fillStyle = skyGradient;
+                ctx.fillRect(0, 0, width, height * 0.7);
+                
+                // Vẽ mặt đất
+                const groundGradient = ctx.createLinearGradient(0, height * 0.7, 0, height);
+                groundGradient.addColorStop(0, '#32CD32');
+                groundGradient.addColorStop(1, '#228B22');
+                ctx.fillStyle = groundGradient;
+                ctx.fillRect(0, height * 0.7, width, height * 0.3);
+                
+                // Vẽ cây
+                this.drawTree(width * 0.7, height * 0.5, 150);
+                
+                // Vẽ Adam và Eva
+                this.drawPerson(width * 0.3, height * 0.8, this.adam, 'blue');
+                this.drawPerson(width * 0.5, height * 0.8, this.eva, 'pink');
+                
+                // Vẽ quả táo
+                this.drawApple(width * 0.7, height * 0.35, 30);
+                
+                // Vẽ tiêu đề
+                ctx.fillStyle = 'rgba(0, 0, 0, 0.7)';
+                ctx.font = 'bold 24px Arial';
+                ctx.textAlign = 'center';
+                ctx.fillText('Vườn Địa Đàng', width / 2, 40);
+            }
+            
+            drawTree(x, y, size) {
+                const ctx = this.ctx;
+                
+                // Vẽ thân cây
+                ctx.fillStyle = '#8B4513';
+                ctx.fillRect(x - size * 0.1, y, size * 0.2, size * 0.5);
+                
+                // Vẽ tán cây
+                ctx.fillStyle = '#2E8B57';
+                ctx.beginPath();
+                ctx.arc(x, y - size * 0.1, size * 0.4, 0, Math.PI * 2);
+                ctx.fill();
+                
+                ctx.beginPath();
+                ctx.arc(x - size * 0.3, y - size * 0.2, size * 0.35, 0, Math.PI * 2);
+                ctx.fill();
+                
+                ctx.beginPath();
+                ctx.arc(x + size * 0.3, y - size * 0.2, size * 0.35, 0, Math.PI * 2);
+                ctx.fill();
+            }
+            
+            drawApple(x, y, size) {
+                const ctx = this.ctx;
+                
+                // Vẽ quả táo
+                ctx.fillStyle = '#FF4500';
+                ctx.beginPath();
+                ctx.arc(x, y, size, 0, Math.PI * 2);
+                ctx.fill();
+                
+                // Vẽ lá
+                ctx.fillStyle = '#32CD32';
+                ctx.beginPath();
+                ctx.ellipse(x + size * 0.4, y - size * 0.7, size * 0.3, size * 0.4, Math.PI/4, 0, Math.PI * 2);
+                ctx.fill();
+                
+                // Hiển thị khối lượng táo
+                ctx.fillStyle = 'white';
+                ctx.font = 'bold 16px Arial';
+                ctx.textAlign = 'center';
+                ctx.fillText(`${this.apple.weight}`, x, y + 5);
+            }
+            
+            drawPerson(x, y, person, color) {
+                const ctx = this.ctx;
+                const size = 60 + (person.weight - (person.name === 'Adam' ? 60 : 50)) * 0.5;
+                
+                // Vẽ đầu
+                ctx.fillStyle = '#FFEBCD';
+                ctx.beginPath();
+                ctx.arc(x, y - size * 0.4, size * 0.2, 0, Math.PI * 2);
+                ctx.fill();
+                
+                // Vẽ thân
+                ctx.fillStyle = color;
+                ctx.fillRect(x - size * 0.15, y - size * 0.2, size * 0.3, size * 0.4);
+                
+                // Vẽ chân
+                ctx.fillRect(x - size * 0.2, y + size * 0.2, size * 0.15, size * 0.3);
+                ctx.fillRect(x + size * 0.05, y + size * 0.2, size * 0.15, size * 0.3);
+                
+                // Vẽ tay
+                ctx.fillRect(x - size * 0.25, y - size * 0.1, size * 0.1, size * 0.3);
+                ctx.fillRect(x + size * 0.15, y - size * 0.1, size * 0.1, size * 0.3);
+                
+                // Hiển thị tên và cân nặng
+                ctx.fillStyle = 'white';
+                ctx.font = 'bold 16px Arial';
+                ctx.textAlign = 'center';
+                ctx.fillText(person.name, x, y + size * 0.6);
+                ctx.fillText(`${person.weight} kg`, x, y + size * 0.8);
+            }
+        }
+        
+        // Khởi tạo ứng dụng khi trang tải xong
+        window.addEventListener('DOMContentLoaded', () => {
+            const garden = new EdenGarden();
+            garden.addLogEntry("Chào mừng đến với Vườn Địa Đàng!");
+            garden.addLogEntry("Nhấn 'Bắt đầu ăn táo' để bắt đầu câu chuyện.");
+        });
+    </script>
+</body>
+</html>
