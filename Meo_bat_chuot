@@ -1,1 +1,723 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mô Phỏng Mèo Bắt Chuột</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #1a2a6c, #b21f1f, #fdbb2d);
+            padding: 20px;
+            color: #333;
+        }
+        
+        .container {
+            max-width: 1000px;
+            width: 100%;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 20px;
+            padding: 25px;
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3);
+        }
+        
+        header {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+        
+        h1 {
+            font-size: 2.8rem;
+            color: #d35400;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+        }
+        
+        .subtitle {
+            font-size: 1.2rem;
+            color: #7f8c8d;
+            margin-bottom: 20px;
+        }
+        
+        .game-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 25px;
+            margin-bottom: 25px;
+        }
+        
+        .canvas-section {
+            flex: 1;
+            min-width: 300px;
+        }
+        
+        .info-section {
+            flex: 1;
+            min-width: 300px;
+            background: #f9f9f9;
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        canvas {
+            background: #2c3e50;
+            border-radius: 15px;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+            width: 100%;
+            max-width: 600px;
+        }
+        
+        .animal-info {
+            margin-bottom: 25px;
+        }
+        
+        .animal-info h2 {
+            color: #d35400;
+            margin-bottom: 15px;
+            border-bottom: 2px solid #e67e22;
+            padding-bottom: 8px;
+        }
+        
+        .info-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px dashed #ddd;
+        }
+        
+        .info-label {
+            font-weight: bold;
+            color: #2c3e50;
+        }
+        
+        .info-value {
+            color: #27ae60;
+            font-weight: 500;
+        }
+        
+        .event-log {
+            background: #fff;
+            border-radius: 10px;
+            padding: 15px;
+            height: 200px;
+            overflow-y: auto;
+            box-shadow: inset 0 0 5px rgba(0,0,0,0.1);
+            margin-top: 25px;
+            border: 1px solid #eee;
+        }
+        
+        .event-log h2 {
+            color: #d35400;
+            margin-bottom: 10px;
+        }
+        
+        .log-entry {
+            padding: 8px;
+            border-bottom: 1px solid #eee;
+            font-size: 0.9rem;
+        }
+        
+        .log-entry:nth-child(odd) {
+            background-color: #f9f9f9;
+        }
+        
+        .controls {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 25px;
+            flex-wrap: wrap;
+        }
+        
+        button {
+            padding: 12px 25px;
+            font-size: 1rem;
+            font-weight: bold;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            background: #e67e22;
+            color: white;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            min-width: 150px;
+        }
+        
+        button:hover {
+            background: #d35400;
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+        }
+        
+        button:active {
+            transform: translateY(1px);
+        }
+        
+        .instructions {
+            margin-top: 25px;
+            padding: 20px;
+            background: #f1f2f6;
+            border-radius: 15px;
+        }
+        
+        .instructions h2 {
+            color: #d35400;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+        
+        .instructions p {
+            margin-bottom: 15px;
+            line-height: 1.6;
+        }
+        
+        .key-point {
+            background: #fff;
+            border-left: 4px solid #e67e22;
+            padding: 10px 15px;
+            margin: 10px 0;
+            border-radius: 0 5px 5px 0;
+        }
+        
+        footer {
+            margin-top: 20px;
+            text-align: center;
+            color: white;
+            font-size: 0.9rem;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
+        }
+        
+        @media (max-width: 768px) {
+            .game-container {
+                flex-direction: column;
+            }
+            
+            h1 {
+                font-size: 2.2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>MÈO BẮT CHUỘT</h1>
+            <p class="subtitle">Mô phỏng hành vi mèo bắt và ăn chuột sử dụng lập trình hướng đối tượng</p>
+        </header>
+        
+        <div class="game-container">
+            <div class="canvas-section">
+                <canvas id="simulationCanvas" width="600" height="500"></canvas>
+            </div>
+            
+            <div class="info-section">
+                <div class="animal-info">
+                    <h2>Thông tin Mèo</h2>
+                    <div class="info-row">
+                        <span class="info-label">Tên:</span>
+                        <span class="info-value" id="catName">Tom</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">Khối lượng:</span>
+                        <span class="info-value" id="catMass">5 kg</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">Tốc độ:</span>
+                        <span class="info-value" id="catSpeed">8 km/h</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">Chuột đã bắt:</span>
+                        <span class="info-value" id="ratsCaught">0</span>
+                    </div>
+                </div>
+                
+                <div class="animal-info">
+                    <h2>Thông tin Chuột</h2>
+                    <div class="info-row">
+                        <span class="info-label">Số lượng:</span>
+                        <span class="info-value" id="ratCount">5</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">Khối lượng TB:</span>
+                        <span class="info-value" id="avgRatMass">0.3 kg</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">Tốc độ TB:</span>
+                        <span class="info-value" id="avgRatSpeed">5 km/h</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">Sống sót:</span>
+                        <span class="info-value" id="ratsAlive">5</span>
+                    </div>
+                </div>
+                
+                <div class="event-log">
+                    <h2>Nhật ký sự kiện</h2>
+                    <div id="logEntries"></div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="controls">
+            <button id="startBtn">Bắt đầu mô phỏng</button>
+            <button id="addRatBtn">Thêm chuột</button>
+            <button id="resetBtn">Thiết lập lại</button>
+        </div>
+        
+        <div class="instructions">
+            <h2>Hướng dẫn mô phỏng</h2>
+            <p>Mô phỏng này minh họa quá trình mèo bắt và ăn chuột sử dụng lập trình hướng đối tượng:</p>
+            
+            <div class="key-point">Mèo chỉ có thể bắt được chuột nếu tốc độ của mèo lớn hơn tốc độ của chuột</div>
+            
+            <div class="key-point">Mèo chỉ ăn chuột còn sống. Sau khi ăn, khối lượng của mèo tăng lên bằng khối lượng của chuột</div>
+            
+            <div class="key-point">Mỗi con chuột có tên, khối lượng, tốc độ và trạng thái sống/chết riêng</div>
+            
+            <div class="key-point">Chuột sẽ phát ra tiếng kêu khi bị mèo đuổi bắt</div>
+        </div>
+    </div>
+    
+    <footer>
+        Ứng dụng mô phỏng mèo bắt chuột - Lập trình hướng đối tượng với JavaScript
+    </footer>
 
+    <script>
+        // Lớp Rat (Chuột)
+        class Rat {
+            constructor(name, mass, speed) {
+                this.name = name;
+                this.mass = mass;
+                this.speed = speed;
+                this.isAlive = true;
+                this.x = Math.random() * 550 + 25;
+                this.y = Math.random() * 450 + 25;
+                this.direction = Math.random() * Math.PI * 2;
+                this.speedX = Math.cos(this.direction) * (speed / 10);
+                this.speedY = Math.sin(this.direction) * (speed / 10);
+                this.color = `hsl(${Math.random() * 360}, 70%, 60%)`;
+                this.radius = 10 + mass * 3;
+            }
+            
+            // Phương thức kêu
+            squeak() {
+                return `${this.name}: Chít chít!`;
+            }
+            
+            // Cập nhật vị trí
+            update() {
+                if (!this.isAlive) return;
+                
+                // Đổi hướng ngẫu nhiên
+                if (Math.random() < 0.02) {
+                    this.direction = Math.random() * Math.PI * 2;
+                    this.speedX = Math.cos(this.direction) * (this.speed / 10);
+                    this.speedY = Math.sin(this.direction) * (this.speed / 10);
+                }
+                
+                // Di chuyển
+                this.x += this.speedX;
+                this.y += this.speedY;
+                
+                // Xử lý va chạm với tường
+                if (this.x < this.radius || this.x > 600 - this.radius) {
+                    this.speedX = -this.speedX;
+                    this.x = this.x < this.radius ? this.radius : 600 - this.radius;
+                }
+                
+                if (this.y < this.radius || this.y > 500 - this.radius) {
+                    this.speedY = -this.speedY;
+                    this.y = this.y < this.radius ? this.radius : 500 - this.radius;
+                }
+            }
+            
+            // Vẽ chuột
+            draw(ctx) {
+                if (!this.isAlive) return;
+                
+                // Vẽ thân chuột
+                ctx.fillStyle = this.color;
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+                ctx.fill();
+                
+                // Vẽ tai
+                ctx.fillStyle = 'pink';
+                ctx.beginPath();
+                ctx.arc(this.x - this.radius * 0.6, this.y - this.radius * 0.7, this.radius * 0.4, 0, Math.PI * 2);
+                ctx.arc(this.x + this.radius * 0.6, this.y - this.radius * 0.7, this.radius * 0.4, 0, Math.PI * 2);
+                ctx.fill();
+                
+                // Vẽ mắt
+                ctx.fillStyle = 'black';
+                ctx.beginPath();
+                ctx.arc(this.x - this.radius * 0.4, this.y - this.radius * 0.2, this.radius * 0.2, 0, Math.PI * 2);
+                ctx.arc(this.x + this.radius * 0.4, this.y - this.radius * 0.2, this.radius * 0.2, 0, Math.PI * 2);
+                ctx.fill();
+                
+                // Vẽ râu
+                ctx.strokeStyle = 'gray';
+                ctx.lineWidth = 1;
+                for (let i = -1; i <= 1; i++) {
+                    ctx.beginPath();
+                    ctx.moveTo(this.x + this.radius * 0.7, this.y + this.radius * 0.1);
+                    ctx.lineTo(this.x + this.radius * 1.5, this.y + this.radius * 0.1 + i * 5);
+                    ctx.stroke();
+                    
+                    ctx.beginPath();
+                    ctx.moveTo(this.x - this.radius * 0.7, this.y + this.radius * 0.1);
+                    ctx.lineTo(this.x - this.radius * 1.5, this.y + this.radius * 0.1 + i * 5);
+                    ctx.stroke();
+                }
+                
+                // Vẽ đuôi
+                ctx.beginPath();
+                ctx.moveTo(this.x, this.y + this.radius);
+                ctx.bezierCurveTo(
+                    this.x + this.radius * 2, this.y + this.radius,
+                    this.x + this.radius * 2, this.y + this.radius * 2,
+                    this.x, this.y + this.radius * 1.5
+                );
+                ctx.stroke();
+                
+                // Hiển thị tên
+                ctx.fillStyle = 'white';
+                ctx.font = '10px Arial';
+                ctx.textAlign = 'center';
+                ctx.fillText(this.name, this.x, this.y + this.radius + 15);
+            }
+        }
+
+        // Lớp Cat (Mèo)
+        class Cat {
+            constructor(name, mass, maxSpeed) {
+                this.name = name;
+                this.mass = mass;
+                this.maxSpeed = maxSpeed;
+                this.x = 300;
+                this.y = 250;
+                this.ratsCaught = 0;
+                this.target = null;
+                this.radius = 15 + mass * 2;
+                this.color = '#e67e22';
+            }
+            
+            // Phương thức kêu
+            meow() {
+                return `${this.name}: Meo meo!`;
+            }
+            
+            // Phương thức bắt chuột
+            catchRat(rat) {
+                if (!rat.isAlive) return false;
+                
+                // Tính khoảng cách giữa mèo và chuột
+                const dx = this.x - rat.x;
+                const dy = this.y - rat.y;
+                const distance = Math.sqrt(dx * dx + dy * dy);
+                
+                // Kiểm tra nếu mèo có thể bắt được chuột
+                if (distance < this.radius + rat.radius && this.maxSpeed > rat.speed) {
+                    this.ratsCaught++;
+                    return true;
+                }
+                
+                return false;
+            }
+            
+            // Phương thức ăn chuột
+            eatRat(rat) {
+                if (rat.isAlive) {
+                    this.mass += rat.mass;
+                    this.radius = 15 + this.mass * 2;
+                    rat.isAlive = false;
+                    return true;
+                }
+                return false;
+            }
+            
+            // Cập nhật vị trí mèo
+            update(rats) {
+                // Tìm chuột gần nhất còn sống
+                let closestRat = null;
+                let minDistance = Infinity;
+                
+                for (const rat of rats) {
+                    if (rat.isAlive) {
+                        const dx = this.x - rat.x;
+                        const dy = this.y - rat.y;
+                        const distance = Math.sqrt(dx * dx + dy * dy);
+                        
+                        if (distance < minDistance) {
+                            minDistance = distance;
+                            closestRat = rat;
+                        }
+                    }
+                }
+                
+                this.target = closestRat;
+                
+                // Di chuyển về phía chuột
+                if (this.target) {
+                    const dx = this.target.x - this.x;
+                    const dy = this.target.y - this.y;
+                    const distance = Math.sqrt(dx * dx + dy * dy);
+                    
+                    if (distance > 1) {
+                        const speed = Math.min(this.maxSpeed / 10, distance / 2);
+                        this.x += (dx / distance) * speed;
+                        this.y += (dy / distance) * speed;
+                    }
+                }
+            }
+            
+            // Vẽ mèo
+            draw(ctx) {
+                // Vẽ thân mèo
+                ctx.fillStyle = this.color;
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+                ctx.fill();
+                
+                // Vẽ tai
+                ctx.fillStyle = '#d35400';
+                ctx.beginPath();
+                ctx.moveTo(this.x - this.radius * 0.7, this.y - this.radius * 0.5);
+                ctx.lineTo(this.x - this.radius * 1.2, this.y - this.radius * 1.2);
+                ctx.lineTo(this.x - this.radius * 0.3, this.y - this.radius * 0.7);
+                ctx.fill();
+                
+                ctx.beginPath();
+                ctx.moveTo(this.x + this.radius * 0.7, this.y - this.radius * 0.5);
+                ctx.lineTo(this.x + this.radius * 1.2, this.y - this.radius * 1.2);
+                ctx.lineTo(this.x + this.radius * 0.3, this.y - this.radius * 0.7);
+                ctx.fill();
+                
+                // Vẽ mắt
+                ctx.fillStyle = 'black';
+                ctx.beginPath();
+                ctx.arc(this.x - this.radius * 0.4, this.y - this.radius * 0.1, this.radius * 0.2, 0, Math.PI * 2);
+                ctx.arc(this.x + this.radius * 0.4, this.y - this.radius * 0.1, this.radius * 0.2, 0, Math.PI * 2);
+                ctx.fill();
+                
+                // Vẽ mũi
+                ctx.fillStyle = 'pink';
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.radius * 0.15, 0, Math.PI * 2);
+                ctx.fill();
+                
+                // Vẽ râu
+                ctx.strokeStyle = 'gray';
+                ctx.lineWidth = 1;
+                for (let i = -1; i <= 1; i++) {
+                    ctx.beginPath();
+                    ctx.moveTo(this.x + this.radius * 0.3, this.y);
+                    ctx.lineTo(this.x + this.radius * 1.2, this.y + i * 5);
+                    ctx.stroke();
+                    
+                    ctx.beginPath();
+                    ctx.moveTo(this.x - this.radius * 0.3, this.y);
+                    ctx.lineTo(this.x - this.radius * 1.2, this.y + i * 5);
+                    ctx.stroke();
+                }
+                
+                // Hiển thị tên
+                ctx.fillStyle = 'white';
+                ctx.font = 'bold 12px Arial';
+                ctx.textAlign = 'center';
+                ctx.fillText(this.name, this.x, this.y + this.radius + 20);
+            }
+        }
+
+        // Khởi tạo ứng dụng
+        document.addEventListener('DOMContentLoaded', () => {
+            const canvas = document.getElementById('simulationCanvas');
+            const ctx = canvas.getContext('2d');
+            const logEntries = document.getElementById('logEntries');
+            const startBtn = document.getElementById('startBtn');
+            const addRatBtn = document.getElementById('addRatBtn');
+            const resetBtn = document.getElementById('resetBtn');
+            
+            // Các phần tử hiển thị thông tin
+            const catNameEl = document.getElementById('catName');
+            const catMassEl = document.getElementById('catMass');
+            const catSpeedEl = document.getElementById('catSpeed');
+            const ratsCaughtEl = document.getElementById('ratsCaught');
+            const ratCountEl = document.getElementById('ratCount');
+            const avgRatMassEl = document.getElementById('avgRatMass');
+            const avgRatSpeedEl = document.getElementById('avgRatSpeed');
+            const ratsAliveEl = document.getElementById('ratsAlive');
+            
+            // Tạo mèo và chuột
+            let cat;
+            let rats = [];
+            let animationId;
+            let simulationRunning = false;
+            
+            // Khởi tạo mô phỏng
+            function initSimulation() {
+                cat = new Cat('Tom', 5, 8);
+                rats = [];
+                
+                // Tạo 5 con chuột ban đầu
+                for (let i = 0; i < 5; i++) {
+                    const name = `Chuột ${i+1}`;
+                    const mass = 0.2 + Math.random() * 0.3;
+                    const speed = 3 + Math.random() * 4;
+                    rats.push(new Rat(name, mass, speed));
+                }
+                
+                updateInfo();
+                addLogEntry("Mô phỏng đã được khởi tạo!");
+                addLogEntry(cat.meow());
+            }
+            
+            // Thêm chuột mới
+            function addRat() {
+                const name = `Chuột ${rats.length + 1}`;
+                const mass = 0.2 + Math.random() * 0.3;
+                const speed = 3 + Math.random() * 4;
+                rats.push(new Rat(name, mass, speed));
+                addLogEntry(`Một con chuột mới (${name}) đã xuất hiện!`);
+                updateInfo();
+            }
+            
+            // Cập nhật thông tin hiển thị
+            function updateInfo() {
+                catNameEl.textContent = cat.name;
+                catMassEl.textContent = cat.mass.toFixed(1) + " kg";
+                catSpeedEl.textContent = cat.maxSpeed.toFixed(1) + " km/h";
+                ratsCaughtEl.textContent = cat.ratsCaught;
+                
+                ratCountEl.textContent = rats.length;
+                
+                // Tính khối lượng trung bình của chuột
+                const totalMass = rats.reduce((sum, rat) => sum + rat.mass, 0);
+                avgRatMassEl.textContent = (rats.length ? totalMass / rats.length : 0).toFixed(2) + " kg";
+                
+                // Tính tốc độ trung bình của chuột
+                const totalSpeed = rats.reduce((sum, rat) => sum + rat.speed, 0);
+                avgRatSpeedEl.textContent = (rats.length ? totalSpeed / rats.length : 0).toFixed(1) + " km/h";
+                
+                // Đếm số chuột còn sống
+                const aliveRats = rats.filter(rat => rat.isAlive).length;
+                ratsAliveEl.textContent = aliveRats;
+            }
+            
+            // Thêm mục nhật ký
+            function addLogEntry(message) {
+                const entry = document.createElement('div');
+                entry.className = 'log-entry';
+                entry.textContent = message;
+                logEntries.appendChild(entry);
+                logEntries.scrollTop = logEntries.scrollHeight;
+            }
+            
+            // Vẽ cảnh nền
+            function drawBackground() {
+                // Nền
+                ctx.fillStyle = '#2c3e50';
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+                
+                // Vẽ các ô cỏ
+                ctx.fillStyle = '#27ae60';
+                for (let y = 0; y < canvas.height; y += 40) {
+                    for (let x = 0; x < canvas.width; x += 40) {
+                        if ((x/40 + y/40) % 2 === 0) {
+                            ctx.fillRect(x, y, 40, 40);
+                        }
+                    }
+                }
+                
+                // Vẽ các vật cản
+                ctx.fillStyle = '#7f8c8d';
+                ctx.fillRect(100, 150, 80, 80);
+                ctx.fillRect(400, 300, 60, 60);
+                ctx.fillRect(200, 50, 50, 50);
+                ctx.fillRect(500, 150, 70, 70);
+            }
+            
+            // Vòng lặp mô phỏng
+            function simulate() {
+                if (!simulationRunning) return;
+                
+                drawBackground();
+                
+                // Cập nhật và vẽ chuột
+                rats.forEach(rat => {
+                    rat.update();
+                    rat.draw(ctx);
+                });
+                
+                // Cập nhật và vẽ mèo
+                cat.update(rats);
+                cat.draw(ctx);
+                
+                // Kiểm tra va chạm và bắt chuột
+                for (const rat of rats) {
+                    if (rat.isAlive && cat.catchRat(rat)) {
+                        addLogEntry(`${cat.name} đã bắt được ${rat.name}!`);
+                        addLogEntry(rat.squeak());
+                        
+                        if (cat.eatRat(rat)) {
+                            addLogEntry(`${cat.name} đã ăn ${rat.name}! (+${rat.mass.toFixed(1)}kg)`);
+                            addLogEntry(cat.meow());
+                        }
+                        
+                        updateInfo();
+                    }
+                }
+                
+                animationId = requestAnimationFrame(simulate);
+            }
+            
+            // Bắt đầu mô phỏng
+            startBtn.addEventListener('click', () => {
+                if (!simulationRunning) {
+                    simulationRunning = true;
+                    startBtn.textContent = "Tạm dừng";
+                    simulate();
+                    addLogEntry("Mô phỏng đã bắt đầu!");
+                } else {
+                    simulationRunning = false;
+                    startBtn.textContent = "Tiếp tục";
+                    cancelAnimationFrame(animationId);
+                    addLogEntry("Mô phỏng đã tạm dừng.");
+                }
+            });
+            
+            // Thêm chuột
+            addRatBtn.addEventListener('click', () => {
+                addRat();
+            });
+            
+            // Thiết lập lại
+            resetBtn.addEventListener('click', () => {
+                simulationRunning = false;
+                startBtn.textContent = "Bắt đầu mô phỏng";
+                cancelAnimationFrame(animationId);
+                initSimulation();
+                addLogEntry("Mô phỏng đã được thiết lập lại!");
+            });
+            
+            // Khởi động mô phỏng
+            initSimulation();
+            drawBackground();
+            cat.draw(ctx);
+            rats.forEach(rat => rat.draw(ctx));
+        });
+    </script>
+</body>
+</html>
