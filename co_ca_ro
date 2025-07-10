@@ -1,1 +1,573 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cờ Ca-ro - Trò chơi 5 hàng</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #1a2a6c, #b21f1f, #fdbb2d);
+            padding: 20px;
+            color: white;
+        }
+        
+        .container {
+            max-width: 800px;
+            width: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            border-radius: 20px;
+            padding: 25px;
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.5);
+        }
+        
+        header {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+        
+        h1 {
+            font-size: 2.8rem;
+            color: #ffcc00;
+            margin-bottom: 10px;
+            text-shadow: 0 0 10px rgba(255, 204, 0, 0.5);
+        }
+        
+        .subtitle {
+            font-size: 1.2rem;
+            color: #ccc;
+            margin-bottom: 20px;
+        }
+        
+        .game-info {
+            display: flex;
+            justify-content: space-around;
+            margin-bottom: 20px;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 15px;
+            border-radius: 10px;
+        }
+        
+        .player-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .player-symbol {
+            font-size: 2rem;
+            font-weight: bold;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+        }
+        
+        .player-x .player-symbol {
+            background: #ff5252;
+            color: #fff;
+        }
+        
+        .player-o .player-symbol {
+            background: #4caf50;
+            color: #fff;
+        }
+        
+        .player-name {
+            font-size: 1.2rem;
+            font-weight: bold;
+        }
+        
+        .player-x .player-name {
+            color: #ff5252;
+        }
+        
+        .player-o .player-name {
+            color: #4caf50;
+        }
+        
+        .turn-indicator {
+            font-size: 1.5rem;
+            font-weight: bold;
+            text-align: center;
+            margin: 15px 0;
+            height: 40px;
+        }
+        
+        .game-container {
+            position: relative;
+            display: flex;
+            justify-content: center;
+            margin-bottom: 25px;
+        }
+        
+        .board-container {
+            position: relative;
+            width: 500px;
+            height: 500px;
+            background: #e0b76f;
+            border-radius: 8px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+            overflow: hidden;
+        }
+        
+        canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+        
+        .controls {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 20px;
+        }
+        
+        button {
+            padding: 12px 25px;
+            font-size: 1rem;
+            font-weight: bold;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            background: #ffcc00;
+            color: #333;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+        
+        button:hover {
+            background: #ffd740;
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+        }
+        
+        button:active {
+            transform: translateY(1px);
+        }
+        
+        .instructions {
+            margin-top: 25px;
+            padding: 15px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+        }
+        
+        .instructions h3 {
+            color: #ffcc00;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+        
+        .instructions ul {
+            padding-left: 20px;
+        }
+        
+        .instructions li {
+            margin-bottom: 8px;
+            line-height: 1.5;
+        }
+        
+        .winning-message {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0, 0, 0, 0.9);
+            justify-content: center;
+            align-items: center;
+            color: white;
+            font-size: 5rem;
+            flex-direction: column;
+            z-index: 100;
+        }
+        
+        .winning-message.show {
+            display: flex;
+            animation: fadeIn 0.5s ease;
+        }
+        
+        .winning-message button {
+            font-size: 2rem;
+            background-color: #ffcc00;
+            border: none;
+            padding: 15px 30px;
+            margin-top: 30px;
+        }
+        
+        .winning-text {
+            color: #ffcc00;
+            text-shadow: 0 0 10px rgba(255, 204, 0, 0.8);
+            font-size: 4rem;
+            text-align: center;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        .symbol-x {
+            color: #ff5252;
+            font-weight: bold;
+            font-size: 1.2em;
+        }
+        
+        .symbol-o {
+            color: #4caf50;
+            font-weight: bold;
+            font-size: 1.2em;
+        }
+        
+        footer {
+            margin-top: 20px;
+            text-align: center;
+            color: #ccc;
+            font-size: 0.9rem;
+        }
+        
+        @media (max-width: 600px) {
+            .board-container {
+                width: 95vw;
+                height: 95vw;
+            }
+            
+            h1 {
+                font-size: 2rem;
+            }
+            
+            .winning-message {
+                font-size: 3rem;
+            }
+            
+            .winning-text {
+                font-size: 2.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>CỜ CA-RO</h1>
+            <p class="subtitle">Trò chơi 5 hàng liên tiếp - X vs O</p>
+        </header>
+        
+        <div class="game-info">
+            <div class="player-info player-x">
+                <div class="player-symbol">X</div>
+                <div class="player-name">Người Chơi X</div>
+            </div>
+            <div class="player-info player-o">
+                <div class="player-symbol">O</div>
+                <div class="player-name">Người Chơi O</div>
+            </div>
+        </div>
+        
+        <div class="turn-indicator" id="turnIndicator">
+            Lượt của: <span class="symbol-x">X</span>
+        </div>
+        
+        <div class="game-container">
+            <div class="board-container">
+                <canvas id="gameBoard" width="500" height="500"></canvas>
+            </div>
+        </div>
+        
+        <div class="controls">
+            <button id="restartButton">Chơi Lại</button>
+            <button id="newGameButton">Trò Chơi Mới</button>
+        </div>
+        
+        <div class="instructions">
+            <h3>HƯỚNG DẪN CHƠI</h3>
+            <ul>
+                <li>Hai người chơi luân phiên đánh dấu <span class="symbol-x">X</span> hoặc <span class="symbol-o">O</span> vào các ô trống</li>
+                <li>Người chơi đầu tiên tạo được 5 dấu liên tiếp theo hàng ngang, dọc hoặc chéo sẽ thắng</li>
+                <li>Bàn cờ có kích thước 20x20 ô</li>
+                <li>Người chơi <span class="symbol-x">X</span> luôn đi trước</li>
+            </ul>
+        </div>
+        
+        <div id="winningMessage" class="winning-message">
+            <div class="winning-text" id="winningText"></div>
+            <button id="playAgainButton">Chơi Lại</button>
+        </div>
+    </div>
+    
+    <footer>
+        Trò chơi phát triển bởi HTML5 Canvas - © 2023 Cờ Ca-ro
+    </footer>
 
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Kích thước bàn cờ
+            const BOARD_SIZE = 20;
+            const CELL_SIZE = 25;
+            const BOARD_PADDING = 25;
+            
+            // Trạng thái trò chơi
+            let board = Array(BOARD_SIZE).fill().map(() => Array(BOARD_SIZE).fill(null));
+            let currentPlayer = 'X';
+            let gameActive = true;
+            let moveCount = 0;
+            
+            // Lấy các phần tử DOM
+            const canvas = document.getElementById('gameBoard');
+            const ctx = canvas.getContext('2d');
+            const turnIndicator = document.getElementById('turnIndicator');
+            const restartButton = document.getElementById('restartButton');
+            const newGameButton = document.getElementById('newGameButton');
+            const winningMessage = document.getElementById('winningMessage');
+            const winningText = document.getElementById('winningText');
+            const playAgainButton = document.getElementById('playAgainButton');
+            
+            // Khởi tạo trò chơi
+            function initGame() {
+                drawBoard();
+                updateTurnIndicator();
+                
+                // Thêm sự kiện click cho canvas
+                canvas.addEventListener('click', handleCanvasClick);
+                
+                // Thêm sự kiện cho các nút
+                restartButton.addEventListener('click', resetGame);
+                newGameButton.addEventListener('click', resetGame);
+                playAgainButton.addEventListener('click', resetGame);
+            }
+            
+            // Vẽ bàn cờ
+            function drawBoard() {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                
+                // Vẽ nền
+                ctx.fillStyle = '#e0b76f';
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+                
+                // Vẽ lưới
+                ctx.strokeStyle = '#8B4513';
+                ctx.lineWidth = 1;
+                
+                // Vẽ đường kẻ dọc
+                for (let i = 0; i <= BOARD_SIZE; i++) {
+                    ctx.beginPath();
+                    ctx.moveTo(i * CELL_SIZE + BOARD_PADDING, BOARD_PADDING);
+                    ctx.lineTo(i * CELL_SIZE + BOARD_PADDING, BOARD_SIZE * CELL_SIZE + BOARD_PADDING);
+                    ctx.stroke();
+                }
+                
+                // Vẽ đường kẻ ngang
+                for (let i = 0; i <= BOARD_SIZE; i++) {
+                    ctx.beginPath();
+                    ctx.moveTo(BOARD_PADDING, i * CELL_SIZE + BOARD_PADDING);
+                    ctx.lineTo(BOARD_SIZE * CELL_SIZE + BOARD_PADDING, i * CELL_SIZE + BOARD_PADDING);
+                    ctx.stroke();
+                }
+                
+                // Vẽ các quân cờ đã đánh
+                for (let row = 0; row < BOARD_SIZE; row++) {
+                    for (let col = 0; col < BOARD_SIZE; col++) {
+                        if (board[row][col] !== null) {
+                            drawPiece(col, row, board[row][col]);
+                        }
+                    }
+                }
+            }
+            
+            // Vẽ quân cờ
+            function drawPiece(col, row, player) {
+                const x = col * CELL_SIZE + BOARD_PADDING;
+                const y = row * CELL_SIZE + BOARD_PADDING;
+                
+                if (player === 'X') {
+                    ctx.strokeStyle = '#ff5252';
+                    ctx.lineWidth = 3;
+                    
+                    ctx.beginPath();
+                    ctx.moveTo(x + 5, y + 5);
+                    ctx.lineTo(x + CELL_SIZE - 5, y + CELL_SIZE - 5);
+                    ctx.stroke();
+                    
+                    ctx.beginPath();
+                    ctx.moveTo(x + CELL_SIZE - 5, y + 5);
+                    ctx.lineTo(x + 5, y + CELL_SIZE - 5);
+                    ctx.stroke();
+                } else {
+                    ctx.strokeStyle = '#4caf50';
+                    ctx.lineWidth = 3;
+                    
+                    ctx.beginPath();
+                    ctx.arc(x + CELL_SIZE / 2, y + CELL_SIZE / 2, CELL_SIZE / 2 - 6, 0, Math.PI * 2);
+                    ctx.stroke();
+                }
+            }
+            
+            // Cập nhật chỉ báo lượt chơi
+            function updateTurnIndicator() {
+                const playerClass = currentPlayer === 'X' ? 'symbol-x' : 'symbol-o';
+                turnIndicator.innerHTML = `Lượt của: <span class="${playerClass}">${currentPlayer}</span>`;
+            }
+            
+            // Xử lý sự kiện click trên bàn cờ
+            function handleCanvasClick(event) {
+                if (!gameActive) return;
+                
+                const rect = canvas.getBoundingClientRect();
+                const x = event.clientX - rect.left - BOARD_PADDING;
+                const y = event.clientY - rect.top - BOARD_PADDING;
+                
+                // Xác định ô được click
+                const col = Math.floor(x / CELL_SIZE);
+                const row = Math.floor(y / CELL_SIZE);
+                
+                // Kiểm tra ô hợp lệ
+                if (row >= 0 && row < BOARD_SIZE && col >= 0 && col < BOARD_SIZE && board[row][col] === null) {
+                    // Đánh dấu ô
+                    board[row][col] = currentPlayer;
+                    moveCount++;
+                    
+                    // Vẽ quân cờ
+                    drawPiece(col, row, currentPlayer);
+                    
+                    // Kiểm tra thắng thua
+                    if (checkWin(row, col)) {
+                        endGame(false);
+                    } else if (moveCount === BOARD_SIZE * BOARD_SIZE) {
+                        endGame(true);
+                    } else {
+                        // Đổi lượt chơi
+                        currentPlayer = currentPlayer === 'X' ? 'O' : 'X';
+                        updateTurnIndicator();
+                    }
+                }
+            }
+            
+            // Kiểm tra chiến thắng
+            function checkWin(row, col) {
+                const player = board[row][col];
+                if (!player) return false;
+                
+                // Các hướng kiểm tra: ngang, dọc, chéo phải, chéo trái
+                const directions = [
+                    [0, 1],  // ngang
+                    [1, 0],  // dọc
+                    [1, 1],  // chéo phải
+                    [1, -1]  // chéo trái
+                ];
+                
+                for (const [dx, dy] of directions) {
+                    let count = 1;  // Bắt đầu với ô hiện tại
+                    
+                    // Kiểm tra theo hướng chính
+                    count += countDirection(row, col, dx, dy, player);
+                    // Kiểm tra theo hướng ngược lại
+                    count += countDirection(row, col, -dx, -dy, player);
+                    
+                    // Nếu có 5 quân liên tiếp
+                    if (count >= 5) {
+                        // Tô màu dòng chiến thắng
+                        highlightWinningLine(row, col, dx, dy, player);
+                        highlightWinningLine(row, col, -dx, -dy, player);
+                        return true;
+                    }
+                }
+                
+                return false;
+            }
+            
+            // Đếm số quân liên tiếp theo một hướng
+            function countDirection(row, col, dx, dy, player) {
+                let count = 0;
+                let r = row + dx;
+                let c = col + dy;
+                
+                while (
+                    r >= 0 && r < BOARD_SIZE && 
+                    c >= 0 && c < BOARD_SIZE && 
+                    board[r][c] === player
+                ) {
+                    count++;
+                    r += dx;
+                    c += dy;
+                }
+                
+                return count;
+            }
+            
+            // Tô màu dòng chiến thắng
+            function highlightWinningLine(startRow, startCol, dx, dy, player) {
+                let r = startRow;
+                let c = startCol;
+                const color = player === 'X' ? '#ff5252' : '#4caf50';
+                
+                while (
+                    r >= 0 && r < BOARD_SIZE && 
+                    c >= 0 && c < BOARD_SIZE && 
+                    board[r][c] === player
+                ) {
+                    // Vẽ điểm đánh dấu ở giữa ô
+                    const x = c * CELL_SIZE + BOARD_PADDING;
+                    const y = r * CELL_SIZE + BOARD_PADDING;
+                    
+                    ctx.fillStyle = color;
+                    ctx.beginPath();
+                    ctx.arc(x + CELL_SIZE / 2, y + CELL_SIZE / 2, 8, 0, Math.PI * 2);
+                    ctx.fill();
+                    
+                    r += dx;
+                    c += dy;
+                }
+            }
+            
+            // Kết thúc trò chơi
+            function endGame(isDraw) {
+                gameActive = false;
+                
+                if (isDraw) {
+                    winningText.textContent = "Hòa!";
+                } else {
+                    const winner = currentPlayer;
+                    winningText.innerHTML = `Người chơi <span class="${winner === 'X' ? 'symbol-x' : 'symbol-o'}">${winner}</span> thắng!`;
+                }
+                
+                winningMessage.classList.add('show');
+            }
+            
+            // Reset trò chơi
+            function resetGame() {
+                // Xóa bảng
+                board = Array(BOARD_SIZE).fill().map(() => Array(BOARD_SIZE).fill(null));
+                currentPlayer = 'X';
+                gameActive = true;
+                moveCount = 0;
+                
+                // Cập nhật giao diện
+                winningMessage.classList.remove('show');
+                updateTurnIndicator();
+                drawBoard();
+            }
+            
+            // Khởi động trò chơi
+            initGame();
+        });
+    </script>
+</body>
+</html>
