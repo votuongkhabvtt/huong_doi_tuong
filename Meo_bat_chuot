@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mô Phỏng Mèo Bắt Chuột</title>
+    <title>Mô Phỏng Mèo Bắt Chuột với Âm thanh</title>
     <style>
         * {
             margin: 0;
@@ -60,6 +60,7 @@
         .canvas-section {
             flex: 1;
             min-width: 300px;
+            position: relative;
         }
         
         .info-section {
@@ -191,6 +192,23 @@
             border-radius: 0 5px 5px 0;
         }
         
+        .audio-controls {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 15px;
+        }
+        
+        .volume-slider {
+            width: 150px;
+            margin: 0 10px;
+        }
+        
+        .volume-label {
+            font-weight: bold;
+            color: #d35400;
+        }
+        
         footer {
             margin-top: 20px;
             text-align: center;
@@ -214,7 +232,7 @@
     <div class="container">
         <header>
             <h1>MÈO BẮT CHUỘT</h1>
-            <p class="subtitle">Mô phỏng hành vi mèo bắt và ăn chuột sử dụng lập trình hướng đối tượng</p>
+            <p class="subtitle">Mô phỏng hành vi mèo bắt và ăn chuột với âm thanh</p>
         </header>
         
         <div class="game-container">
@@ -276,23 +294,32 @@
             <button id="resetBtn">Thiết lập lại</button>
         </div>
         
+        <div class="audio-controls">
+            <span class="volume-label">Âm lượng mèo:</span>
+            <input type="range" min="0" max="1" step="0.1" value="0.5" class="volume-slider" id="catVolume">
+            <span class="volume-label">Âm lượng chuột:</span>
+            <input type="range" min="0" max="1" step="0.1" value="0.5" class="volume-slider" id="ratVolume">
+        </div>
+        
         <div class="instructions">
             <h2>Hướng dẫn mô phỏng</h2>
-            <p>Mô phỏng này minh họa quá trình mèo bắt và ăn chuột sử dụng lập trình hướng đối tượng:</p>
+            <p>Mô phỏng này minh họa quá trình mèo bắt và ăn chuột với âm thanh:</p>
             
-            <div class="key-point">Mèo chỉ có thể bắt được chuột nếu tốc độ của mèo lớn hơn tốc độ của chuột</div>
+            <div class="key-point">Mèo kêu "Meo meo!" khi ăn chuột</div>
             
-            <div class="key-point">Mèo chỉ ăn chuột còn sống. Sau khi ăn, khối lượng của mèo tăng lên bằng khối lượng của chuột</div>
+            <div class="key-point">Chuột kêu "Chít chít!" khi bị bắt</div>
             
-            <div class="key-point">Mỗi con chuột có tên, khối lượng, tốc độ và trạng thái sống/chết riêng</div>
-            
-            <div class="key-point">Chuột sẽ phát ra tiếng kêu khi bị mèo đuổi bắt</div>
+            <div class="key-point">Điều chỉnh âm lượng riêng cho mèo và chuột</div>
         </div>
     </div>
     
     <footer>
-        Ứng dụng mô phỏng mèo bắt chuột - Lập trình hướng đối tượng với JavaScript
+        Ứng dụng mô phỏng mèo bắt chuột với âm thanh - Lập trình hướng đối tượng với JavaScript
     </footer>
+
+    <!-- Audio elements -->
+    <audio id="meowSound" src="data:audio/mp3;base64,SUQzBAAAAAABEVRYWFgAAAAtAAADY29tbWVudABCaWdTb3VuZEJhbmsuY29tIC8gTGFTb25vdGhlcXVlLm9yZwBURU5DAAAAHQAAA1N3aXRjaCBQbHVzIMKpIE5DSCBTb2Z0d2FyZQBUSVQyAAAABgAAAzIyMzUAVFNTRQAAAA8AAANMYXZmNTcuODMuMTAwAAAAAAAAAAAAAAD/80DEAAAAA0gAAAAATEFNRTMuMTAwVVVVVVVVVVVVVUxBTUUzLjEwMFVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVf/zQsRbAAADSAAAAABVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVf/zQMSkAAADSAAAAABVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV" preload="auto"></audio>
+    <audio id="squeakSound" src="data:audio/mp3;base64,SUQzBAAAAAABEVRYWFgAAAAtAAADY29tbWVudABCaWdTb3VuZEJhbmsuY29tIC8gTGFTb25vdGhlcXVlLm9yZwBURU5DAAAAHQAAA1N3aXRjaCBQbHVzIMKpIE5DSCBTb2Z0d2FyZQBUSVQyAAAABgAAAzIyMzUAVFNTRQAAAA8AAANMYXZmNTcuODMuMTAwAAAAAAAAAAAAAAD/80DEAAAAA0gAAAAATEFNRTMuMTAwVVVVVVVVVVVVVUxBTUUzLjEwMFVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVf/zQsRbAAADSAAAAABVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVf/zQMSkAAADSAAAAABVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV" preload="auto"></audio>
 
     <script>
         // Lớp Rat (Chuột)
@@ -313,6 +340,13 @@
             
             // Phương thức kêu
             squeak() {
+                // Phát âm thanh tiếng chuột
+                const squeakSound = document.getElementById('squeakSound');
+                const volume = parseFloat(document.getElementById('ratVolume').value);
+                squeakSound.volume = volume;
+                squeakSound.currentTime = 0;
+                squeakSound.play().catch(e => console.log("Âm thanh chuột không thể phát: ", e));
+                
                 return `${this.name}: Chít chít!`;
             }
             
@@ -416,6 +450,13 @@
             
             // Phương thức kêu
             meow() {
+                // Phát âm thanh tiếng mèo
+                const meowSound = document.getElementById('meowSound');
+                const volume = parseFloat(document.getElementById('catVolume').value);
+                meowSound.volume = volume;
+                meowSound.currentTime = 0;
+                meowSound.play().catch(e => console.log("Âm thanh mèo không thể phát: ", e));
+                
                 return `${this.name}: Meo meo!`;
             }
             
@@ -549,6 +590,8 @@
             const startBtn = document.getElementById('startBtn');
             const addRatBtn = document.getElementById('addRatBtn');
             const resetBtn = document.getElementById('resetBtn');
+            const catVolume = document.getElementById('catVolume');
+            const ratVolume = document.getElementById('ratVolume');
             
             // Các phần tử hiển thị thông tin
             const catNameEl = document.getElementById('catName');
