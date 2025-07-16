@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Game Câu Cá Premium</title>
+    <title>Game Câu Cá Pro</title>
     <style>
         body {
             display: flex;
@@ -19,6 +19,7 @@
         h1 {
             color: #01579B;
             text-shadow: 1px 1px 2px white;
+            margin-bottom: 5px;
         }
         canvas {
             border: 3px solid #01579B;
@@ -32,26 +33,32 @@
             border-radius: 10px;
             margin-top: 15px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            width: 300px;
         }
         .controls {
             font-size: 14px;
             color: #01579B;
-            margin-top: 5px;
+            margin: 5px 0 15px 0;
+        }
+        .record {
+            font-weight: bold;
+            color: #D32F2F;
         }
     </style>
 </head>
 <body>
-    <h1>Game Câu Cá Premium</h1>
+    <h1>Game Câu Cá Pro</h1>
     <div class="controls">Sử dụng phím mũi tên ← ↑ → ↓ để di chuyển mồi câu</div>
     <canvas id="gameCanvas" width="800" height="600"></canvas>
     <div class="info-panel">
-        <p>Thời gian: <span id="time">10:00</span> | Cá câu được: <span id="fishCaught">0</span> | Điểm: <span id="score">0</span></p>
+        <p>Thời gian: <span id="time">05:00</span> | Cá câu được: <span id="fishCaught">0</span> | Điểm: <span id="score">0</span></p>
+        <p>Kỷ lục: <span id="record">0</span> cá - <span id="recordScore">0</span> điểm</p>
     </div>
 
     <script>
-        // Tỷ lệ chuyển đổi (1cm = 40px, 1m = 4000px)
+        // Tỷ lệ chuyển đổi (1cm = 40px)
         const SCALE = 40;
-        const METER_SCALE = 4000;
         
         // Kích thước hồ nước (10cm x 5cm x 3cm)
         const LAKE_WIDTH = 10 * SCALE;
@@ -62,37 +69,37 @@
         const LAKE_X = 150;
         const LAKE_Y = 300;
         
-        // Khoảng cách mây cách mặt hồ (5m)
-        const CLOUD_HEIGHT = 5 * METER_SCALE / 100; // Giảm tỷ lệ để hiển thị phù hợp
+        // Số cá tối đa trong bể
+        const MAX_FISHES = 5;
         
         // Lớp Cá
         class Fish {
             constructor() {
                 this.width = 0.5 * SCALE;
                 this.height = 0.1 * SCALE;
-                this.color = '#FFD700'; // Màu vàng
+                this.color = this.getRandomColor();
                 this.reset();
                 this.speed = 0.1 * SCALE / 100; // 0.1mm/giây
                 this.direction = Math.random() * Math.PI * 2;
                 this.changeDirectionTimer = 0;
-                this.eating = false;
-                this.eatTimer = 0;
+                this.active = true;
+            }
+            
+            getRandomColor() {
+                const colors = ['#FFD700', '#FFA500', '#FF6347', '#FF8C00', '#F4A460'];
+                return colors[Math.floor(Math.random() * colors.length)];
             }
             
             reset() {
-                this.x = LAKE_X + 0.5 * SCALE;
-                this.y = LAKE_Y + LAKE_HEIGHT - this.height - 0.5 * SCALE;
-                this.z = LAKE_DEPTH - 0.5 * SCALE;
+                this.x = LAKE_X + Math.random() * (LAKE_WIDTH - SCALE) + 0.5 * SCALE;
+                this.y = LAKE_Y + Math.random() * (LAKE_HEIGHT - SCALE) + 0.5 * SCALE;
+                this.z = Math.random() * LAKE_DEPTH;
+                this.active = true;
+                this.changeDirectionTimer = Math.random() * 3000 + 2000;
             }
             
             update(deltaTime) {
-                if (this.eating) {
-                    this.eatTimer -= deltaTime;
-                    if (this.eatTimer <= 0) {
-                        this.eating = false;
-                    }
-                    return;
-                }
+                if (!this.active) return;
                 
                 this.changeDirectionTimer -= deltaTime;
                 if (this.changeDirectionTimer <= 0) {
@@ -123,6 +130,8 @@
             }
             
             draw(ctx) {
+                if (!this.active) return;
+                
                 ctx.save();
                 ctx.translate(this.x, this.y);
                 
@@ -149,9 +158,8 @@
                 ctx.restore();
             }
             
-            eat() {
-                this.eating = true;
-                this.eatTimer = 1500; // 1.5 giây để "ăn"
+            catchFish() {
+                this.active = false;
             }
         }
         
@@ -170,12 +178,9 @@
                     left: false,
                     right: false
                 };
-                this.hooked = false;
             }
             
             update(deltaTime) {
-                if (this.hooked) return;
-                
                 if (this.keys.up && this.y > LAKE_Y + this.radius) {
                     this.y -= this.speed * deltaTime;
                 }
@@ -198,70 +203,24 @@
                 ctx.fill();
                 
                 // Vẽ dây câu
-                if (!this.hooked) {
-                    ctx.strokeStyle = '#555';
-                    ctx.lineWidth = 1.5;
-                    ctx.beginPath();
-                    ctx.moveTo(this.x, this.y);
-                    ctx.lineTo(this.x, LAKE_Y - 20);
-                    ctx.stroke();
-                }
+                ctx.strokeStyle = '#555';
+                ctx.lineWidth = 1.5;
+                ctx.beginPath();
+                ctx.moveTo(this.x, this.y);
+                ctx.lineTo(this.x, LAKE_Y - 20);
+                ctx.stroke();
                 
                 ctx.restore();
             }
             
             checkCollision(fish) {
-                if (this.hooked || fish.eating) return false;
+                if (!fish.active) return false;
                 
                 const dx = this.x - fish.x;
                 const dy = this.y - fish.y;
                 const distance = Math.sqrt(dx * dx + dy * dy);
                 
                 return distance < (this.radius + fish.width / 2);
-            }
-            
-            hook() {
-                this.hooked = true;
-            }
-            
-            reset() {
-                this.x = LAKE_X + LAKE_WIDTH / 2;
-                this.y = LAKE_Y + 0.5 * SCALE;
-                this.hooked = false;
-            }
-        }
-        
-        // Lớp Mây
-        class Cloud {
-            constructor() {
-                this.width = Math.random() * 100 + 50;
-                this.height = this.width * 0.6;
-                this.x = Math.random() * 800;
-                this.y = Math.random() * 100 + 50;
-                this.speed = Math.random() * 0.5 + 0.2;
-            }
-            
-            update(deltaTime) {
-                this.x += this.speed * deltaTime * 0.05;
-                if (this.x > 850) {
-                    this.x = -100;
-                    this.y = Math.random() * 100 + 50;
-                }
-            }
-            
-            draw(ctx) {
-                ctx.save();
-                ctx.fillStyle = 'rgba(255, 255, 255, 0.9)';
-                
-                // Vẽ các phần của đám mây
-                ctx.beginPath();
-                ctx.arc(this.x, this.y, this.height, 0, Math.PI * 2);
-                ctx.arc(this.x + this.width * 0.3, this.y - this.height * 0.2, this.height * 0.8, 0, Math.PI * 2);
-                ctx.arc(this.x + this.width * 0.6, this.y, this.height * 0.7, 0, Math.PI * 2);
-                ctx.arc(this.x + this.width * 0.2, this.y + this.height * 0.1, this.height * 0.6, 0, Math.PI * 2);
-                ctx.fill();
-                
-                ctx.restore();
             }
         }
         
@@ -270,15 +229,19 @@
             constructor() {
                 this.canvas = document.getElementById('gameCanvas');
                 this.ctx = this.canvas.getContext('2d');
-                this.fishes = [new Fish()];
+                this.fishes = Array(MAX_FISHES).fill().map(() => new Fish());
                 this.bait = new Bait();
-                this.clouds = Array(5).fill().map(() => new Cloud());
                 this.score = 0;
                 this.fishCaught = 0;
-                this.gameTime = 10 * 60 * 1000; // 10 phút
-                this.startTime = Date.now();
+                this.gameTime = 5 * 60 * 1000; // 5 phút
                 this.lastTime = 0;
                 this.waveOffset = 0;
+                this.recordFish = localStorage.getItem('recordFish') || 0;
+                this.recordScore = localStorage.getItem('recordScore') || 0;
+                
+                // Hiển thị kỷ lục
+                document.getElementById('record').textContent = this.recordFish;
+                document.getElementById('recordScore').textContent = this.recordScore;
                 
                 // Xử lý sự kiện bàn phím
                 window.addEventListener('keydown', (e) => this.handleKeyDown(e));
@@ -324,9 +287,6 @@
             update(deltaTime) {
                 this.gameTime -= deltaTime;
                 
-                // Cập nhật mây
-                this.clouds.forEach(cloud => cloud.update(deltaTime));
-                
                 // Cập nhật cá
                 this.fishes.forEach(fish => fish.update(deltaTime));
                 
@@ -334,25 +294,21 @@
                 this.bait.update(deltaTime);
                 
                 // Kiểm tra va chạm
-                if (!this.bait.hooked) {
-                    for (let i = 0; i < this.fishes.length; i++) {
-                        if (this.bait.checkCollision(this.fishes[i])) {
-                            this.fishes[i].eat();
-                            this.bait.hook();
-                            this.score += 10;
-                            this.fishCaught++;
-                            
-                            if (this.gameTime > 0) {
-                                setTimeout(() => {
-                                    this.fishes.push(new Fish());
-                                    this.bait.reset();
-                                }, 1500);
-                            }
-                            
-                            document.getElementById('score').textContent = this.score;
-                            document.getElementById('fishCaught').textContent = this.fishCaught;
-                            break;
-                        }
+                for (let i = 0; i < this.fishes.length; i++) {
+                    if (this.bait.checkCollision(this.fishes[i])) {
+                        this.fishes[i].catchFish();
+                        this.score += 10;
+                        this.fishCaught++;
+                        
+                        // Thêm cá mới sau 1 giây
+                        setTimeout(() => {
+                            this.fishes[i].reset();
+                        }, 1000);
+                        
+                        // Cập nhật UI
+                        document.getElementById('score').textContent = this.score;
+                        document.getElementById('fishCaught').textContent = this.fishCaught;
+                        break;
                     }
                 }
                 
@@ -371,9 +327,6 @@
                 skyGradient.addColorStop(1, '#E0F7FA');
                 ctx.fillStyle = skyGradient;
                 ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
-                
-                // Vẽ mây
-                this.clouds.forEach(cloud => cloud.draw(ctx));
                 
                 // Vẽ hồ nước
                 this.drawLake();
@@ -449,20 +402,38 @@
             }
             
             gameOver() {
+                // Kiểm tra và cập nhật kỷ lục
+                if (this.fishCaught > this.recordFish) {
+                    this.recordFish = this.fishCaught;
+                    localStorage.setItem('recordFish', this.recordFish);
+                }
+                if (this.score > this.recordScore) {
+                    this.recordScore = this.score;
+                    localStorage.setItem('recordScore', this.recordScore);
+                }
+                
+                // Hiển thị màn hình kết thúc
                 this.ctx.fillStyle = 'rgba(0, 0, 0, 0.7)';
                 this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
                 
                 this.ctx.fillStyle = 'white';
                 this.ctx.font = '36px Arial';
                 this.ctx.textAlign = 'center';
-                this.ctx.fillText('Hết giờ!', this.canvas.width / 2, this.canvas.height / 2 - 40);
+                this.ctx.fillText('Hết giờ!', this.canvas.width / 2, this.canvas.height / 2 - 60);
                 
                 this.ctx.font = '24px Arial';
-                this.ctx.fillText(`Bạn đã câu được ${this.fishCaught} con cá`, this.canvas.width / 2, this.canvas.height / 2 + 10);
-                this.ctx.fillText(`Tổng điểm: ${this.score}`, this.canvas.width / 2, this.canvas.height / 2 + 50);
+                this.ctx.fillText(`Bạn đã câu được ${this.fishCaught} con cá`, this.canvas.width / 2, this.canvas.height / 2 - 10);
+                this.ctx.fillText(`Tổng điểm: ${this.score}`, this.canvas.width / 2, this.canvas.height / 2 + 30);
                 
+                // Hiển thị kỷ lục nếu phá được
+                if (this.fishCaught == this.recordFish && this.score == this.recordScore) {
+                    this.ctx.fillStyle = '#FFD700';
+                    this.ctx.fillText('Kỷ lục mới!', this.canvas.width / 2, this.canvas.height / 2 + 80);
+                }
+                
+                this.ctx.fillStyle = 'white';
                 this.ctx.font = '20px Arial';
-                this.ctx.fillText('Tải lại trang để chơi lại', this.canvas.width / 2, this.canvas.height / 2 + 100);
+                this.ctx.fillText('Nhấn F5 để chơi lại', this.canvas.width / 2, this.canvas.height / 2 + 130);
             }
         }
         
