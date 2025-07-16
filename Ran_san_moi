@@ -18,7 +18,7 @@
         
         h1 {
             color: #2c3e50;
-            margin-bottom: 20px;
+            margin-bottom: 10px;
         }
         
         #game-container {
@@ -30,7 +30,10 @@
             background-color: #ecf0f1;
         }
         
-        #score-display {
+        #stats-bar {
+            display: flex;
+            justify-content: space-between;
+            width: 400px;
             margin-top: 10px;
             font-size: 18px;
             font-weight: bold;
@@ -66,13 +69,21 @@
         }
         
         .controls {
-            margin-top: 20px;
+            margin-top: 15px;
             text-align: center;
         }
         
         .controls p {
             margin: 5px 0;
             color: #7f8c8d;
+            font-size: 14px;
+        }
+        
+        #timer {
+            margin-top: 10px;
+            font-size: 18px;
+            font-weight: bold;
+            color: #e74c3c;
         }
     </style>
 </head>
@@ -83,16 +94,23 @@
         <canvas id="game-board" width="400" height="400"></canvas>
         <div id="game-over">
             <h2>Game Over!</h2>
-            <p id="final-score">Điểm số: 0</p>
+            <p id="final-score">Điểm số: 0 | Mồi săn được: 0</p>
+            <p id="record-display">Kỷ lục: 0 điểm (0 mồi)</p>
             <button id="restart-btn">Chơi lại</button>
         </div>
     </div>
     
-    <div id="score-display">Điểm: 0</div>
+    <div id="stats-bar">
+        <div id="score-display">Điểm: 0</div>
+        <div id="food-count">Mồi: 0</div>
+        <div id="record-score">Kỷ lục: 0</div>
+    </div>
+    
+    <div id="timer">Thời gian: 03:00</div>
     
     <div class="controls">
         <p>Điều khiển: Mũi tên hoặc W, A, S, D</p>
-        <p>Ấn phím Space để tạm dừng</p>
+        <p>Tốc độ rắn phụ thuộc tốc độ ấn phím</p>
     </div>
 
     <script>
@@ -100,13 +118,20 @@
             const canvas = document.getElementById('game-board');
             const ctx = canvas.getContext('2d');
             const scoreDisplay = document.getElementById('score-display');
+            const foodCountDisplay = document.getElementById('food-count');
+            const recordScoreDisplay = document.getElementById('record-score');
             const gameOverDisplay = document.getElementById('game-over');
             const finalScoreDisplay = document.getElementById('final-score');
+            const recordDisplay = document.getElementById('record-display');
             const restartBtn = document.getElementById('restart-btn');
+            const timerDisplay = document.getElementById('timer');
             
             const gridSize = 20;
             const tileCount = canvas.width / gridSize;
             let score = 0;
+            let foodEaten = 0;
+            let recordScore = localStorage.getItem('snakeRecordScore') || 0;
+            let recordFood = localStorage.getItem('snakeRecordFood') || 0;
             
             // Con rắn
             let snake = [
@@ -114,16 +139,29 @@
             ];
             let velocityX = 0;
             let velocityY = 0;
+            let lastMoveTime = 0;
+            let moveDelay = 100; // Thời gian delay giữa các lần di chuyển (ms)
             
             // Thức ăn
             let foodX = 5;
             let foodY = 5;
+            let foodVelocityX = 0;
+            let foodVelocityY = 0;
+            let lastFoodMoveTime = 0;
+            let foodMoveDelay = 500; // Thời gian di chuyển của thức ăn (ms)
             
             // Game state
             let gameOver = false;
-            let gamePaused = false;
-            let gameSpeed = 150; // ms
+            let gameStartTime = 0;
+            let gameDuration = 3 * 60 * 1000; // 3 phút (ms)
             let gameLoop;
+            let foodMoveLoop;
+            let timerLoop;
+            
+            // Cập nhật kỷ lục
+            function updateRecord() {
+                recordScoreDisplay.textContent = `Kỷ lục: ${recordScore}`;
+            }
             
             // Hàm vẽ game
             function drawGame() {
@@ -133,37 +171,49 @@
                 
                 // Vẽ thức ăn
                 ctx.fillStyle = '#e74c3c';
-                ctx.fillRect(foodX * gridSize, foodY * gridSize, gridSize, gridSize);
+                ctx.beginPath();
+                ctx.arc(
+                    foodX * gridSize + gridSize/2, 
+                    foodY * gridSize + gridSize/2, 
+                    gridSize/2, 
+                    0, 
+                    Math.PI * 2
+                );
+                ctx.fill();
                 
                 // Vẽ rắn
                 ctx.fillStyle = '#2c3e50';
-                snake.forEach(segment => {
+                snake.forEach((segment, index) => {
+                    if (index === 0) {
+                        // Vẽ đầu rắn khác màu
+                        ctx.fillStyle = '#3498db';
+                    } else {
+                        ctx.fillStyle = '#2c3e50';
+                    }
                     ctx.fillRect(segment.x * gridSize, segment.y * gridSize, gridSize, gridSize);
                 });
-                
-                // Vẽ đầu rắn khác màu
-                if (snake.length > 0) {
-                    ctx.fillStyle = '#3498db';
-                    ctx.fillRect(snake[0].x * gridSize, snake[0].y * gridSize, gridSize, gridSize);
-                }
             }
             
             // Hàm di chuyển rắn
             function moveSnake() {
-                if (gameOver || gamePaused) return;
+                if (gameOver) return;
+                
+                const now = Date.now();
+                if (now - lastMoveTime < moveDelay) return;
+                lastMoveTime = now;
                 
                 const head = {x: snake[0].x + velocityX, y: snake[0].y + velocityY};
                 
                 // Kiểm tra va chạm tường
                 if (head.x < 0 || head.x >= tileCount || head.y < 0 || head.y >= tileCount) {
-                    gameOver = true;
+                    endGame();
                     return;
                 }
                 
                 // Kiểm tra va chạm với chính mình
                 for (let i = 1; i < snake.length; i++) {
                     if (head.x === snake[i].x && head.y === snake[i].y) {
-                        gameOver = true;
+                        endGame();
                         return;
                     }
                 }
@@ -174,11 +224,55 @@
                 // Kiểm tra ăn thức ăn
                 if (head.x === foodX && head.y === foodY) {
                     score += 10;
+                    foodEaten++;
                     scoreDisplay.textContent = `Điểm: ${score}`;
+                    foodCountDisplay.textContent = `Mồi: ${foodEaten}`;
                     placeFood();
+                    // Tăng tốc độ rắn sau khi ăn
+                    moveDelay = Math.max(50, moveDelay - 5);
                 } else {
                     // Nếu không ăn thì xóa đuôi
                     snake.pop();
+                }
+            }
+            
+            // Di chuyển thức ăn
+            function moveFood() {
+                const now = Date.now();
+                if (now - lastFoodMoveTime < foodMoveDelay) return;
+                lastFoodMoveTime = now;
+                
+                // Thay đổi hướng di chuyển ngẫu nhiên
+                if (Math.random() < 0.3) {
+                    const directions = [-1, 0, 1];
+                    foodVelocityX = directions[Math.floor(Math.random() * 3)];
+                    foodVelocityY = directions[Math.floor(Math.random() * 3)];
+                    
+                    // Đảm bảo thức ăn không đứng yên
+                    if (foodVelocityX === 0 && foodVelocityY === 0) {
+                        if (Math.random() < 0.5) {
+                            foodVelocityX = Math.random() < 0.5 ? -1 : 1;
+                        } else {
+                            foodVelocityY = Math.random() < 0.5 ? -1 : 1;
+                        }
+                    }
+                }
+                
+                // Di chuyển thức ăn
+                const newX = foodX + foodVelocityX;
+                const newY = foodY + foodVelocityY;
+                
+                // Kiểm tra không ra khỏi biên
+                if (newX >= 0 && newX < tileCount) {
+                    foodX = newX;
+                } else {
+                    foodVelocityX *= -1;
+                }
+                
+                if (newY >= 0 && newY < tileCount) {
+                    foodY = newY;
+                } else {
+                    foodVelocityY *= -1;
                 }
             }
             
@@ -199,6 +293,20 @@
                         }
                     }
                 }
+                
+                // Đặt hướng di chuyển ngẫu nhiên cho thức ăn mới
+                const directions = [-1, 0, 1];
+                foodVelocityX = directions[Math.floor(Math.random() * 3)];
+                foodVelocityY = directions[Math.floor(Math.random() * 3)];
+                
+                // Đảm bảo thức ăn không đứng yên
+                if (foodVelocityX === 0 && foodVelocityY === 0) {
+                    if (Math.random() < 0.5) {
+                        foodVelocityX = Math.random() < 0.5 ? -1 : 1;
+                    } else {
+                        foodVelocityY = Math.random() < 0.5 ? -1 : 1;
+                    }
+                }
             }
             
             // Xử lý sự kiện bàn phím
@@ -212,6 +320,7 @@
                         if (velocityY !== 1) {
                             velocityX = 0;
                             velocityY = -1;
+                            moveSnake(); // Di chuyển ngay khi ấn phím
                         }
                         break;
                     case 'ArrowDown':
@@ -220,6 +329,7 @@
                         if (velocityY !== -1) {
                             velocityX = 0;
                             velocityY = 1;
+                            moveSnake();
                         }
                         break;
                     case 'ArrowLeft':
@@ -228,6 +338,7 @@
                         if (velocityX !== 1) {
                             velocityX = -1;
                             velocityY = 0;
+                            moveSnake();
                         }
                         break;
                     case 'ArrowRight':
@@ -236,12 +347,46 @@
                         if (velocityX !== -1) {
                             velocityX = 1;
                             velocityY = 0;
+                            moveSnake();
                         }
                         break;
-                    case ' ':
-                        gamePaused = !gamePaused;
-                        break;
                 }
+            }
+            
+            // Cập nhật timer
+            function updateTimer() {
+                const now = Date.now();
+                const elapsed = now - gameStartTime;
+                const remaining = Math.max(0, gameDuration - elapsed);
+                
+                const minutes = Math.floor(remaining / 60000);
+                const seconds = Math.floor((remaining % 60000) / 1000);
+                
+                timerDisplay.textContent = `Thời gian: ${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+                
+                if (remaining <= 0) {
+                    endGame();
+                }
+            }
+            
+            // Kết thúc game
+            function endGame() {
+                gameOver = true;
+                clearInterval(gameLoop);
+                clearInterval(foodMoveLoop);
+                clearInterval(timerLoop);
+                
+                // Cập nhật kỷ lục
+                if (score > recordScore) {
+                    recordScore = score;
+                    recordFood = foodEaten;
+                    localStorage.setItem('snakeRecordScore', recordScore);
+                    localStorage.setItem('snakeRecordFood', recordFood);
+                }
+                
+                finalScoreDisplay.textContent = `Điểm số: ${score} | Mồi săn được: ${foodEaten}`;
+                recordDisplay.textContent = `Kỷ lục: ${recordScore} điểm (${recordFood} mồi)`;
+                gameOverDisplay.style.display = 'block';
             }
             
             // Hàm khởi tạo game
@@ -250,29 +395,30 @@
                 velocityX = 0;
                 velocityY = 0;
                 score = 0;
+                foodEaten = 0;
+                moveDelay = 100;
                 scoreDisplay.textContent = `Điểm: ${score}`;
+                foodCountDisplay.textContent = `Mồi: ${foodEaten}`;
+                updateRecord();
                 gameOver = false;
-                gamePaused = false;
+                gameStartTime = Date.now();
                 placeFood();
                 gameOverDisplay.style.display = 'none';
                 
                 if (gameLoop) clearInterval(gameLoop);
-                gameLoop = setInterval(update, gameSpeed);
-            }
-            
-            // Hàm cập nhật game
-            function update() {
-                if (gameOver) {
-                    clearInterval(gameLoop);
-                    finalScoreDisplay.textContent = `Điểm số: ${score}`;
-                    gameOverDisplay.style.display = 'block';
-                    return;
-                }
+                if (foodMoveLoop) clearInterval(foodMoveLoop);
+                if (timerLoop) clearInterval(timerLoop);
                 
-                if (!gamePaused) {
+                gameLoop = setInterval(() => {
                     moveSnake();
                     drawGame();
-                }
+                }, 16); // ~60fps
+                
+                foodMoveLoop = setInterval(moveFood, 100);
+                timerLoop = setInterval(updateTimer, 1000);
+                
+                // Bắt đầu timer ngay lập tức
+                updateTimer();
             }
             
             // Sự kiện nút chơi lại
