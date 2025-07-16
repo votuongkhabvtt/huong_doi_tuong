@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Game Câu Cá Pro</title>
+    <title>Game Câu Cá Hoàn Thiện</title>
     <style>
         body {
             display: flex;
@@ -34,7 +34,7 @@
             margin-top: 15px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
             text-align: center;
-            width: 300px;
+            width: 350px;
         }
         .controls {
             font-size: 14px;
@@ -45,6 +45,23 @@
             font-weight: bold;
             color: #D32F2F;
         }
+        .player-name {
+            margin-top: 10px;
+            display: none;
+        }
+        button {
+            background-color: #4CAF50;
+            border: none;
+            color: white;
+            padding: 8px 16px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 14px;
+            margin: 4px 2px;
+            cursor: pointer;
+            border-radius: 4px;
+        }
     </style>
 </head>
 <body>
@@ -53,7 +70,11 @@
     <canvas id="gameCanvas" width="800" height="600"></canvas>
     <div class="info-panel">
         <p>Thời gian: <span id="time">05:00</span> | Cá câu được: <span id="fishCaught">0</span> | Điểm: <span id="score">0</span></p>
-        <p>Kỷ lục: <span id="record">0</span> cá - <span id="recordScore">0</span> điểm</p>
+        <p>Kỷ lục: <span id="recordHolder">Chưa có</span> - <span id="record">0</span> cá - <span id="recordScore">0</span> điểm</p>
+        <div class="player-name" id="nameInput">
+            <input type="text" id="playerName" placeholder="Nhập tên của bạn" maxlength="20">
+            <button id="saveName">Lưu</button>
+        </div>
     </div>
 
     <script>
@@ -72,6 +93,41 @@
         // Số cá tối đa trong bể
         const MAX_FISHES = 5;
         
+        // Lớp Mây
+        class Cloud {
+            constructor() {
+                this.width = Math.random() * 120 + 80;
+                this.height = this.width * 0.6;
+                this.x = Math.random() * 800;
+                this.y = Math.random() * 150 + 50;
+                this.speed = Math.random() * 0.3 + 0.1;
+                this.opacity = Math.random() * 0.5 + 0.5;
+            }
+            
+            update(deltaTime) {
+                this.x += this.speed * deltaTime * 0.05;
+                if (this.x > 850) {
+                    this.x = -150;
+                    this.y = Math.random() * 150 + 50;
+                }
+            }
+            
+            draw(ctx) {
+                ctx.save();
+                ctx.fillStyle = `rgba(255, 255, 255, ${this.opacity})`;
+                
+                // Vẽ các phần của đám mây
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.height * 0.7, 0, Math.PI * 2);
+                ctx.arc(this.x + this.width * 0.3, this.y - this.height * 0.2, this.height * 0.8, 0, Math.PI * 2);
+                ctx.arc(this.x + this.width * 0.6, this.y, this.height * 0.6, 0, Math.PI * 2);
+                ctx.arc(this.x + this.width * 0.2, this.y + this.height * 0.1, this.height * 0.5, 0, Math.PI * 2);
+                ctx.fill();
+                
+                ctx.restore();
+            }
+        }
+
         // Lớp Cá
         class Fish {
             constructor() {
@@ -230,28 +286,41 @@
                 this.canvas = document.getElementById('gameCanvas');
                 this.ctx = this.canvas.getContext('2d');
                 this.fishes = Array(MAX_FISHES).fill().map(() => new Fish());
+                this.clouds = Array(5).fill().map(() => new Cloud());
                 this.bait = new Bait();
                 this.score = 0;
                 this.fishCaught = 0;
                 this.gameTime = 5 * 60 * 1000; // 5 phút
                 this.lastTime = 0;
                 this.waveOffset = 0;
-                this.recordFish = localStorage.getItem('recordFish') || 0;
-                this.recordScore = localStorage.getItem('recordScore') || 0;
+                this.gameActive = true;
+                
+                // Lấy kỷ lục từ localStorage
+                this.record = JSON.parse(localStorage.getItem('fishingRecord')) || {
+                    name: 'Chưa có',
+                    fish: 0,
+                    score: 0
+                };
                 
                 // Hiển thị kỷ lục
-                document.getElementById('record').textContent = this.recordFish;
-                document.getElementById('recordScore').textContent = this.recordScore;
+                document.getElementById('recordHolder').textContent = this.record.name;
+                document.getElementById('record').textContent = this.record.fish;
+                document.getElementById('recordScore').textContent = this.record.score;
                 
                 // Xử lý sự kiện bàn phím
                 window.addEventListener('keydown', (e) => this.handleKeyDown(e));
                 window.addEventListener('keyup', (e) => this.handleKeyUp(e));
+                
+                // Xử lý nút lưu tên
+                document.getElementById('saveName').addEventListener('click', () => this.savePlayerName());
                 
                 // Bắt đầu game loop
                 requestAnimationFrame((timestamp) => this.gameLoop(timestamp));
             }
             
             handleKeyDown(e) {
+                if (!this.gameActive) return;
+                
                 switch (e.key) {
                     case 'ArrowUp': this.bait.keys.up = true; break;
                     case 'ArrowDown': this.bait.keys.down = true; break;
@@ -269,6 +338,14 @@
                 }
             }
             
+            savePlayerName() {
+                const name = document.getElementById('playerName').value.trim();
+                if (name) {
+                    this.playerName = name;
+                    document.getElementById('nameInput').style.display = 'none';
+                }
+            }
+            
             gameLoop(timestamp) {
                 if (!this.lastTime) this.lastTime = timestamp;
                 const deltaTime = timestamp - this.lastTime;
@@ -279,13 +356,19 @@
                 
                 if (this.gameTime > 0) {
                     requestAnimationFrame((ts) => this.gameLoop(ts));
-                } else {
+                } else if (this.gameActive) {
                     this.gameOver();
+                    this.gameActive = false;
                 }
             }
             
             update(deltaTime) {
+                if (!this.gameActive) return;
+                
                 this.gameTime -= deltaTime;
+                
+                // Cập nhật mây
+                this.clouds.forEach(cloud => cloud.update(deltaTime));
                 
                 // Cập nhật cá
                 this.fishes.forEach(fish => fish.update(deltaTime));
@@ -327,6 +410,9 @@
                 skyGradient.addColorStop(1, '#E0F7FA');
                 ctx.fillStyle = skyGradient;
                 ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
+                
+                // Vẽ mây
+                this.clouds.forEach(cloud => cloud.draw(ctx));
                 
                 // Vẽ hồ nước
                 this.drawLake();
@@ -402,14 +488,22 @@
             }
             
             gameOver() {
-                // Kiểm tra và cập nhật kỷ lục
-                if (this.fishCaught > this.recordFish) {
-                    this.recordFish = this.fishCaught;
-                    localStorage.setItem('recordFish', this.recordFish);
+                // Hiển thị form nhập tên nếu chưa có
+                if (!this.playerName && (this.fishCaught > this.record.fish || this.score > this.record.score)) {
+                    document.getElementById('nameInput').style.display = 'block';
+                    return;
                 }
-                if (this.score > this.recordScore) {
-                    this.recordScore = this.score;
-                    localStorage.setItem('recordScore', this.recordScore);
+                
+                // Kiểm tra và cập nhật kỷ lục
+                let isNewRecord = false;
+                if (this.fishCaught > this.record.fish || this.score > this.record.score) {
+                    this.record = {
+                        name: this.playerName || 'Ẩn danh',
+                        fish: this.fishCaught,
+                        score: this.score
+                    };
+                    localStorage.setItem('fishingRecord', JSON.stringify(this.record));
+                    isNewRecord = true;
                 }
                 
                 // Hiển thị màn hình kết thúc
@@ -419,21 +513,26 @@
                 this.ctx.fillStyle = 'white';
                 this.ctx.font = '36px Arial';
                 this.ctx.textAlign = 'center';
-                this.ctx.fillText('Hết giờ!', this.canvas.width / 2, this.canvas.height / 2 - 60);
+                this.ctx.fillText('Hết giờ!', this.canvas.width / 2, this.canvas.height / 2 - 80);
                 
                 this.ctx.font = '24px Arial';
-                this.ctx.fillText(`Bạn đã câu được ${this.fishCaught} con cá`, this.canvas.width / 2, this.canvas.height / 2 - 10);
-                this.ctx.fillText(`Tổng điểm: ${this.score}`, this.canvas.width / 2, this.canvas.height / 2 + 30);
+                this.ctx.fillText(`Kết quả của bạn:`, this.canvas.width / 2, this.canvas.height / 2 - 30);
+                this.ctx.fillText(`${this.fishCaught} con cá - ${this.score} điểm`, this.canvas.width / 2, this.canvas.height / 2 + 10);
                 
-                // Hiển thị kỷ lục nếu phá được
-                if (this.fishCaught == this.recordFish && this.score == this.recordScore) {
+                // Hiển thị kỷ lục
+                this.ctx.fillText(`Kỷ lục hiện tại:`, this.canvas.width / 2, this.canvas.height / 2 + 60);
+                this.ctx.fillText(`${this.record.name}: ${this.record.fish} con cá - ${this.record.score} điểm`, 
+                                 this.canvas.width / 2, this.canvas.height / 2 + 100);
+                
+                // Thông báo nếu phá kỷ lục
+                if (isNewRecord) {
                     this.ctx.fillStyle = '#FFD700';
-                    this.ctx.fillText('Kỷ lục mới!', this.canvas.width / 2, this.canvas.height / 2 + 80);
+                    this.ctx.fillText('Chúc mừng! Bạn đã lập kỷ lục mới!', this.canvas.width / 2, this.canvas.height / 2 + 150);
                 }
                 
                 this.ctx.fillStyle = 'white';
                 this.ctx.font = '20px Arial';
-                this.ctx.fillText('Nhấn F5 để chơi lại', this.canvas.width / 2, this.canvas.height / 2 + 130);
+                this.ctx.fillText('Nhấn F5 để chơi lại', this.canvas.width / 2, this.canvas.height / 2 + 200);
             }
         }
         
