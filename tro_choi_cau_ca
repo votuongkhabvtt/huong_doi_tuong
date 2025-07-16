@@ -1,143 +1,545 @@
-import pygame
-import random
-import time
-import sys
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Game Câu Cá Hoàn Thiện</title>
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(to bottom, #87CEEB, #E0F7FA);
+            margin: 0;
+            padding: 20px;
+            overflow: hidden;
+            height: 100vh;
+        }
+        h1 {
+            color: #01579B;
+            text-shadow: 1px 1px 2px white;
+            margin-bottom: 5px;
+        }
+        canvas {
+            border: 3px solid #01579B;
+            border-radius: 5px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
+            background-color: #E0F7FA;
+        }
+        .info-panel {
+            background-color: rgba(255, 255, 255, 0.8);
+            padding: 10px 20px;
+            border-radius: 10px;
+            margin-top: 15px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            width: 350px;
+        }
+        .controls {
+            font-size: 14px;
+            color: #01579B;
+            margin: 5px 0 15px 0;
+        }
+        .record {
+            font-weight: bold;
+            color: #D32F2F;
+        }
+        .player-name {
+            margin-top: 10px;
+            display: none;
+        }
+        button {
+            background-color: #4CAF50;
+            border: none;
+            color: white;
+            padding: 8px 16px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 14px;
+            margin: 4px 2px;
+            cursor: pointer;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Game Câu Cá Pro</h1>
+    <div class="controls">Sử dụng phím mũi tên ← ↑ → ↓ để di chuyển mồi câu</div>
+    <canvas id="gameCanvas" width="800" height="600"></canvas>
+    <div class="info-panel">
+        <p>Thời gian: <span id="time">05:00</span> | Cá câu được: <span id="fishCaught">0</span> | Điểm: <span id="score">0</span></p>
+        <p>Kỷ lục: <span id="recordHolder">Chưa có</span> - <span id="record">0</span> cá - <span id="recordScore">0</span> điểm</p>
+        <div class="player-name" id="nameInput">
+            <input type="text" id="playerName" placeholder="Nhập tên của bạn" maxlength="20">
+            <button id="saveName">Lưu</button>
+        </div>
+    </div>
 
-# Khởi tạo pygame
-pygame.init()
-
-# Cài đặt màn hình
-WIDTH, HEIGHT = 800, 600
-screen = pygame.display.set_mode((WIDTH, HEIGHT))
-pygame.display.set_caption("Câu Cá - Phiên bản Nâng cao")
-
-# Màu sắc
-WHITE = (255, 255, 255)
-BLUE = (0, 0, 255)
-BLACK = (0, 0, 0)
-RED = (255, 0, 0)
-GREEN = (0, 255, 0)
-YELLOW = (255, 255, 0)
-
-# Font chữ
-font_large = pygame.font.SysFont('Arial', 36)
-font_medium = pygame.font.SysFont('Arial', 24)
-font_small = pygame.font.SysFont('Arial', 18)
-
-# Biến trò chơi
-score = 0
-fish_count = 0
-high_score = 0
-high_fish_count = 0
-game_over = False
-start_time = time.time()
-game_duration = 180  # 3 phút = 180 giây
-flowers = []
-
-# Hàm tạo bông hoa ngẫu nhiên
-def create_flower():
-    x = random.randint(50, WIDTH - 50)
-    y = random.randint(50, HEIGHT - 150)
-    color = (random.randint(100, 255), random.randint(100, 255), random.randint(100, 255)
-    size = random.randint(20, 40)
-    return {"x": x, "y": y, "color": color, "size": size}
-
-# Hàm vẽ bông hoa
-def draw_flower(flower):
-    pygame.draw.circle(screen, flower["color"], (flower["x"], flower["y"]), flower["size"])
-    pygame.draw.circle(screen, YELLOW, (flower["x"], flower["y"]), flower["size"]//3)
-
-# Hàm vẽ giao diện
-def draw_interface():
-    # Vẽ nền
-    screen.fill(BLUE)
-    
-    # Vẽ thông tin trò chơi
-    time_left = max(0, game_duration - (time.time() - start_time))
-    minutes = int(time_left // 60)
-    seconds = int(time_left % 60)
-    time_text = f"Thời gian: {minutes:02d}:{seconds:02d}"
-    
-    pygame.draw.rect(screen, WHITE, (10, 10, 300, 120))
-    pygame.draw.rect(screen, WHITE, (WIDTH - 310, 10, 300, 120))
-    
-    # Hiển thị điểm và số cá
-    score_text = font_large.render(f"Điểm: {score}", True, BLACK)
-    fish_text = font_medium.render(f"Số cá: {fish_count}", True, BLACK)
-    time_display = font_medium.render(time_text, True, BLACK)
-    
-    screen.blit(score_text, (20, 20))
-    screen.blit(fish_text, (20, 60))
-    screen.blit(time_display, (20, 100))
-    
-    # Hiển thị kỷ lục
-    high_score_text = font_medium.render(f"Kỷ lục điểm: {high_score}", True, BLACK)
-    high_fish_text = font_medium.render(f"Kỷ lục số cá: {high_fish_count}", True, BLACK)
-    
-    screen.blit(high_score_text, (WIDTH - 300, 20))
-    screen.blit(high_fish_text, (WIDTH - 300, 60))
-    
-    # Hiển thị thông báo khi đạt thành tích
-    if fish_count >= 50:
-        congrats_text = font_medium.render("HOAN HÔ! Bạn đạt 50+ cá!", True, YELLOW)
-        screen.blit(congrats_text, (WIDTH//2 - 150, HEIGHT - 50))
+    <script>
+        // Tỷ lệ chuyển đổi (1cm = 40px)
+        const SCALE = 40;
         
-        # Vẽ các bông hoa
-        for flower in flowers:
-            draw_flower(flower)
-    
-    # Hiển thị thông báo game over
-    if game_over:
-        game_over_text = font_large.render("GAME OVER!", True, RED)
-        restart_text = font_medium.render("Nhấn R để chơi lại", True, BLACK)
+        // Kích thước hồ nước (10cm x 5cm x 3cm)
+        const LAKE_WIDTH = 10 * SCALE;
+        const LAKE_HEIGHT = 3 * SCALE;
+        const LAKE_DEPTH = 5 * SCALE;
         
-        screen.blit(game_over_text, (WIDTH//2 - 100, HEIGHT//2 - 50))
-        screen.blit(restart_text, (WIDTH//2 - 100, HEIGHT//2 + 20))
+        // Vị trí hồ trên canvas
+        const LAKE_X = 150;
+        const LAKE_Y = 300;
+        
+        // Số cá tối đa trong bể
+        const MAX_FISHES = 5;
+        
+        // Lớp Mây
+        class Cloud {
+            constructor() {
+                this.width = Math.random() * 120 + 80;
+                this.height = this.width * 0.6;
+                this.x = Math.random() * 800;
+                this.y = Math.random() * 150 + 50;
+                this.speed = Math.random() * 0.3 + 0.1;
+                this.opacity = Math.random() * 0.5 + 0.5;
+            }
+            
+            update(deltaTime) {
+                this.x += this.speed * deltaTime * 0.05;
+                if (this.x > 850) {
+                    this.x = -150;
+                    this.y = Math.random() * 150 + 50;
+                }
+            }
+            
+            draw(ctx) {
+                ctx.save();
+                ctx.fillStyle = `rgba(255, 255, 255, ${this.opacity})`;
+                
+                // Vẽ các phần của đám mây
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.height * 0.7, 0, Math.PI * 2);
+                ctx.arc(this.x + this.width * 0.3, this.y - this.height * 0.2, this.height * 0.8, 0, Math.PI * 2);
+                ctx.arc(this.x + this.width * 0.6, this.y, this.height * 0.6, 0, Math.PI * 2);
+                ctx.arc(this.x + this.width * 0.2, this.y + this.height * 0.1, this.height * 0.5, 0, Math.PI * 2);
+                ctx.fill();
+                
+                ctx.restore();
+            }
+        }
 
-# Hàm bắt cá
-def catch_fish():
-    global score, fish_count
-    
-    score += 10
-    fish_count += 1
-    
-    # Kiểm tra nếu đạt 50 cá thì thêm hoa
-    if fish_count >= 50 and fish_count % 5 == 0:
-        flowers.append(create_flower())
-
-# Hàm reset trò chơi
-def reset_game():
-    global score, fish_count, game_over, start_time, flowers
-    score = 0
-    fish_count = 0
-    game_over = False
-    start_time = time.time()
-    flowers = []
-
-# Vòng lặp chính
-running = True
-while running:
-    for event in pygame.event.get():
-        if event.type == pygame.QUIT:
-            running = False
-        elif event.type == pygame.KEYDOWN:
-            if event.key == pygame.K_r and game_over:
-                reset_game()
-            elif event.key == pygame.K_SPACE and not game_over:
-                catch_fish()
-    
-    # Kiểm tra thời gian
-    if not game_over and time.time() - start_time >= game_duration:
-        game_over = True
-        # Cập nhật kỷ lục
-        if score > high_score:
-            high_score = score
-        if fish_count > high_fish_count:
-            high_fish_count = fish_count
-    
-    # Vẽ giao diện
-    draw_interface()
-    pygame.display.flip()
-
-pygame.quit()
-sys.exit()
+        // Lớp Cá
+        class Fish {
+            constructor() {
+                this.width = 0.5 * SCALE;
+                this.height = 0.1 * SCALE;
+                this.color = this.getRandomColor();
+                this.reset();
+                this.speed = 0.1 * SCALE / 100; // 0.1mm/giây
+                this.direction = Math.random() * Math.PI * 2;
+                this.changeDirectionTimer = 0;
+                this.active = true;
+            }
+            
+            getRandomColor() {
+                const colors = ['#FFD700', '#FFA500', '#FF6347', '#FF8C00', '#F4A460'];
+                return colors[Math.floor(Math.random() * colors.length)];
+            }
+            
+            reset() {
+                this.x = LAKE_X + Math.random() * (LAKE_WIDTH - SCALE) + 0.5 * SCALE;
+                this.y = LAKE_Y + Math.random() * (LAKE_HEIGHT - SCALE) + 0.5 * SCALE;
+                this.z = Math.random() * LAKE_DEPTH;
+                this.active = true;
+                this.changeDirectionTimer = Math.random() * 3000 + 2000;
+            }
+            
+            update(deltaTime) {
+                if (!this.active) return;
+                
+                this.changeDirectionTimer -= deltaTime;
+                if (this.changeDirectionTimer <= 0) {
+                    this.direction = Math.random() * Math.PI * 2;
+                    this.changeDirectionTimer = Math.random() * 3000 + 2000; // 2-5 giây
+                }
+                
+                this.x += Math.cos(this.direction) * this.speed * deltaTime;
+                this.y += Math.sin(this.direction) * this.speed * deltaTime;
+                
+                // Kiểm tra va chạm với thành hồ
+                if (this.x < LAKE_X + 0.5 * SCALE) {
+                    this.x = LAKE_X + 0.5 * SCALE;
+                    this.direction = Math.PI - this.direction;
+                }
+                if (this.x > LAKE_X + LAKE_WIDTH - 0.5 * SCALE) {
+                    this.x = LAKE_X + LAKE_WIDTH - 0.5 * SCALE;
+                    this.direction = Math.PI - this.direction;
+                }
+                if (this.y < LAKE_Y + 0.5 * SCALE) {
+                    this.y = LAKE_Y + 0.5 * SCALE;
+                    this.direction = -this.direction;
+                }
+                if (this.y > LAKE_Y + LAKE_HEIGHT - 0.5 * SCALE) {
+                    this.y = LAKE_Y + LAKE_HEIGHT - 0.5 * SCALE;
+                    this.direction = -this.direction;
+                }
+            }
+            
+            draw(ctx) {
+                if (!this.active) return;
+                
+                ctx.save();
+                ctx.translate(this.x, this.y);
+                
+                // Vẽ thân cá
+                ctx.fillStyle = this.color;
+                ctx.beginPath();
+                ctx.ellipse(0, 0, this.width / 2, this.height / 2, 0, 0, Math.PI * 2);
+                ctx.fill();
+                
+                // Vẽ đuôi cá
+                ctx.beginPath();
+                ctx.moveTo(-this.width / 2, 0);
+                ctx.lineTo(-this.width / 2 - this.height, -this.height / 2);
+                ctx.lineTo(-this.width / 2 - this.height, this.height / 2);
+                ctx.closePath();
+                ctx.fill();
+                
+                // Vẽ mắt cá
+                ctx.fillStyle = 'black';
+                ctx.beginPath();
+                ctx.arc(this.width / 4, -this.height / 4, this.height / 5, 0, Math.PI * 2);
+                ctx.fill();
+                
+                ctx.restore();
+            }
+            
+            catchFish() {
+                this.active = false;
+            }
+        }
+        
+        // Lớp Mồi Câu
+        class Bait {
+            constructor() {
+                this.radius = 0.15 * SCALE; // Đường kính 0.3cm
+                this.color = '#FF0000'; // Màu đỏ
+                this.x = LAKE_X + LAKE_WIDTH / 2; // Giữa mặt hồ
+                this.y = LAKE_Y + 0.5 * SCALE; // Trên bề mặt
+                this.z = LAKE_DEPTH / 2;
+                this.speed = 3 * SCALE / 100; // 3mm/giây
+                this.keys = {
+                    up: false,
+                    down: false,
+                    left: false,
+                    right: false
+                };
+            }
+            
+            update(deltaTime) {
+                if (this.keys.up && this.y > LAKE_Y + this.radius) {
+                    this.y -= this.speed * deltaTime;
+                }
+                if (this.keys.down && this.y < LAKE_Y + LAKE_HEIGHT - this.radius) {
+                    this.y += this.speed * deltaTime;
+                }
+                if (this.keys.left && this.x > LAKE_X + this.radius) {
+                    this.x -= this.speed * deltaTime;
+                }
+                if (this.keys.right && this.x < LAKE_X + LAKE_WIDTH - this.radius) {
+                    this.x += this.speed * deltaTime;
+                }
+            }
+            
+            draw(ctx) {
+                ctx.save();
+                ctx.fillStyle = this.color;
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+                ctx.fill();
+                
+                // Vẽ dây câu
+                ctx.strokeStyle = '#555';
+                ctx.lineWidth = 1.5;
+                ctx.beginPath();
+                ctx.moveTo(this.x, this.y);
+                ctx.lineTo(this.x, LAKE_Y - 20);
+                ctx.stroke();
+                
+                ctx.restore();
+            }
+            
+            checkCollision(fish) {
+                if (!fish.active) return false;
+                
+                const dx = this.x - fish.x;
+                const dy = this.y - fish.y;
+                const distance = Math.sqrt(dx * dx + dy * dy);
+                
+                return distance < (this.radius + fish.width / 2);
+            }
+        }
+        
+        // Lớp Game
+        class FishingGame {
+            constructor() {
+                this.canvas = document.getElementById('gameCanvas');
+                this.ctx = this.canvas.getContext('2d');
+                this.fishes = Array(MAX_FISHES).fill().map(() => new Fish());
+                this.clouds = Array(5).fill().map(() => new Cloud());
+                this.bait = new Bait();
+                this.score = 0;
+                this.fishCaught = 0;
+                this.gameTime = 5 * 60 * 1000; // 5 phút
+                this.lastTime = 0;
+                this.waveOffset = 0;
+                this.gameActive = true;
+                
+                // Lấy kỷ lục từ localStorage
+                this.record = JSON.parse(localStorage.getItem('fishingRecord')) || {
+                    name: 'Chưa có',
+                    fish: 0,
+                    score: 0
+                };
+                
+                // Hiển thị kỷ lục
+                document.getElementById('recordHolder').textContent = this.record.name;
+                document.getElementById('record').textContent = this.record.fish;
+                document.getElementById('recordScore').textContent = this.record.score;
+                
+                // Xử lý sự kiện bàn phím
+                window.addEventListener('keydown', (e) => this.handleKeyDown(e));
+                window.addEventListener('keyup', (e) => this.handleKeyUp(e));
+                
+                // Xử lý nút lưu tên
+                document.getElementById('saveName').addEventListener('click', () => this.savePlayerName());
+                
+                // Bắt đầu game loop
+                requestAnimationFrame((timestamp) => this.gameLoop(timestamp));
+            }
+            
+            handleKeyDown(e) {
+                if (!this.gameActive) return;
+                
+                switch (e.key) {
+                    case 'ArrowUp': this.bait.keys.up = true; break;
+                    case 'ArrowDown': this.bait.keys.down = true; break;
+                    case 'ArrowLeft': this.bait.keys.left = true; break;
+                    case 'ArrowRight': this.bait.keys.right = true; break;
+                }
+            }
+            
+            handleKeyUp(e) {
+                switch (e.key) {
+                    case 'ArrowUp': this.bait.keys.up = false; break;
+                    case 'ArrowDown': this.bait.keys.down = false; break;
+                    case 'ArrowLeft': this.bait.keys.left = false; break;
+                    case 'ArrowRight': this.bait.keys.right = false; break;
+                }
+            }
+            
+            savePlayerName() {
+                const name = document.getElementById('playerName').value.trim();
+                if (name) {
+                    this.playerName = name;
+                    document.getElementById('nameInput').style.display = 'none';
+                }
+            }
+            
+            gameLoop(timestamp) {
+                if (!this.lastTime) this.lastTime = timestamp;
+                const deltaTime = timestamp - this.lastTime;
+                this.lastTime = timestamp;
+                
+                this.update(deltaTime);
+                this.draw();
+                
+                if (this.gameTime > 0) {
+                    requestAnimationFrame((ts) => this.gameLoop(ts));
+                } else if (this.gameActive) {
+                    this.gameOver();
+                    this.gameActive = false;
+                }
+            }
+            
+            update(deltaTime) {
+                if (!this.gameActive) return;
+                
+                this.gameTime -= deltaTime;
+                
+                // Cập nhật mây
+                this.clouds.forEach(cloud => cloud.update(deltaTime));
+                
+                // Cập nhật cá
+                this.fishes.forEach(fish => fish.update(deltaTime));
+                
+                // Cập nhật mồi
+                this.bait.update(deltaTime);
+                
+                // Kiểm tra va chạm
+                for (let i = 0; i < this.fishes.length; i++) {
+                    if (this.bait.checkCollision(this.fishes[i])) {
+                        this.fishes[i].catchFish();
+                        this.score += 10;
+                        this.fishCaught++;
+                        
+                        // Thêm cá mới sau 1 giây
+                        setTimeout(() => {
+                            this.fishes[i].reset();
+                        }, 1000);
+                        
+                        // Cập nhật UI
+                        document.getElementById('score').textContent = this.score;
+                        document.getElementById('fishCaught').textContent = this.fishCaught;
+                        break;
+                    }
+                }
+                
+                this.waveOffset += deltaTime * 0.001;
+            }
+            
+            draw() {
+                const ctx = this.ctx;
+                
+                // Xóa canvas
+                ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+                
+                // Vẽ bầu trời
+                const skyGradient = ctx.createLinearGradient(0, 0, 0, this.canvas.height);
+                skyGradient.addColorStop(0, '#87CEEB');
+                skyGradient.addColorStop(1, '#E0F7FA');
+                ctx.fillStyle = skyGradient;
+                ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
+                
+                // Vẽ mây
+                this.clouds.forEach(cloud => cloud.draw(ctx));
+                
+                // Vẽ hồ nước
+                this.drawLake();
+                
+                // Vẽ cá
+                this.fishes.forEach(fish => fish.draw(ctx));
+                
+                // Vẽ mồi
+                this.bait.draw(ctx);
+                
+                // Cập nhật UI
+                const minutes = Math.floor(this.gameTime / 60000);
+                const seconds = Math.floor((this.gameTime % 60000) / 1000);
+                document.getElementById('time').textContent = 
+                    `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+            }
+            
+            drawLake() {
+                const ctx = this.ctx;
+                
+                // Vẽ đáy hồ với viền đỏ
+                ctx.fillStyle = 'rgba(0, 100, 200, 0.4)';
+                ctx.strokeStyle = 'red';
+                ctx.lineWidth = 3;
+                
+                // Đáy hồ
+                ctx.beginPath();
+                ctx.rect(LAKE_X, LAKE_Y + LAKE_HEIGHT, LAKE_WIDTH, LAKE_DEPTH);
+                ctx.fill();
+                ctx.stroke();
+                
+                // Thành hồ (4 mặt)
+                // Mặt trước
+                ctx.beginPath();
+                ctx.moveTo(LAKE_X, LAKE_Y);
+                ctx.lineTo(LAKE_X + LAKE_WIDTH, LAKE_Y);
+                ctx.lineTo(LAKE_X + LAKE_WIDTH, LAKE_Y + LAKE_HEIGHT);
+                ctx.lineTo(LAKE_X, LAKE_Y + LAKE_HEIGHT);
+                ctx.closePath();
+                ctx.stroke();
+                
+                // Mặt bên trái
+                ctx.beginPath();
+                ctx.moveTo(LAKE_X, LAKE_Y);
+                ctx.lineTo(LAKE_X, LAKE_Y + LAKE_HEIGHT);
+                ctx.lineTo(LAKE_X, LAKE_Y + LAKE_HEIGHT + LAKE_DEPTH);
+                ctx.stroke();
+                
+                // Mặt bên phải
+                ctx.beginPath();
+                ctx.moveTo(LAKE_X + LAKE_WIDTH, LAKE_Y);
+                ctx.lineTo(LAKE_X + LAKE_WIDTH, LAKE_Y + LAKE_HEIGHT);
+                ctx.lineTo(LAKE_X + LAKE_WIDTH, LAKE_Y + LAKE_HEIGHT + LAKE_DEPTH);
+                ctx.stroke();
+                
+                // Vẽ mặt nước với sóng
+                ctx.fillStyle = 'rgba(64, 164, 223, 0.5)';
+                ctx.beginPath();
+                ctx.moveTo(LAKE_X, LAKE_Y);
+                
+                const waveHeight = 3;
+                const waveLength = 60;
+                
+                for (let x = 0; x <= LAKE_WIDTH; x += 5) {
+                    const y = LAKE_Y + Math.sin(x / waveLength + this.waveOffset) * waveHeight;
+                    ctx.lineTo(LAKE_X + x, y);
+                }
+                
+                ctx.lineTo(LAKE_X + LAKE_WIDTH, LAKE_Y + LAKE_HEIGHT);
+                ctx.lineTo(LAKE_X, LAKE_Y + LAKE_HEIGHT);
+                ctx.closePath();
+                ctx.fill();
+            }
+            
+            gameOver() {
+                // Hiển thị form nhập tên nếu chưa có
+                if (!this.playerName && (this.fishCaught > this.record.fish || this.score > this.record.score)) {
+                    document.getElementById('nameInput').style.display = 'block';
+                    return;
+                }
+                
+                // Kiểm tra và cập nhật kỷ lục
+                let isNewRecord = false;
+                if (this.fishCaught > this.record.fish || this.score > this.record.score) {
+                    this.record = {
+                        name: this.playerName || 'Ẩn danh',
+                        fish: this.fishCaught,
+                        score: this.score
+                    };
+                    localStorage.setItem('fishingRecord', JSON.stringify(this.record));
+                    isNewRecord = true;
+                }
+                
+                // Hiển thị màn hình kết thúc
+                this.ctx.fillStyle = 'rgba(0, 0, 0, 0.7)';
+                this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
+                
+                this.ctx.fillStyle = 'white';
+                this.ctx.font = '36px Arial';
+                this.ctx.textAlign = 'center';
+                this.ctx.fillText('Hết giờ!', this.canvas.width / 2, this.canvas.height / 2 - 80);
+                
+                this.ctx.font = '24px Arial';
+                this.ctx.fillText(`Kết quả của bạn:`, this.canvas.width / 2, this.canvas.height / 2 - 30);
+                this.ctx.fillText(`${this.fishCaught} con cá - ${this.score} điểm`, this.canvas.width / 2, this.canvas.height / 2 + 10);
+                
+                // Hiển thị kỷ lục
+                this.ctx.fillText(`Kỷ lục hiện tại:`, this.canvas.width / 2, this.canvas.height / 2 + 60);
+                this.ctx.fillText(`${this.record.name}: ${this.record.fish} con cá - ${this.record.score} điểm`, 
+                                 this.canvas.width / 2, this.canvas.height / 2 + 100);
+                
+                // Thông báo nếu phá kỷ lục
+                if (isNewRecord) {
+                    this.ctx.fillStyle = '#FFD700';
+                    this.ctx.fillText('Chúc mừng! Bạn đã lập kỷ lục mới!', this.canvas.width / 2, this.canvas.height / 2 + 150);
+                }
+                
+                this.ctx.fillStyle = 'white';
+                this.ctx.font = '20px Arial';
+                this.ctx.fillText('Nhấn F5 để chơi lại', this.canvas.width / 2, this.canvas.height / 2 + 200);
+            }
+        }
+        
+        // Khởi tạo game
+        window.onload = () => {
+            new FishingGame();
+        };
+    </script>
+</body>
+</html>
