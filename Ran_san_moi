@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Trò chơi Rắn săn mồi</title>
+    <title>Trò chơi Rắn săn mồi - Tốc độ bằng nhau</title>
     <style>
         body {
             display: flex;
@@ -88,7 +88,7 @@
     </style>
 </head>
 <body>
-    <h1>Trò chơi Rắn săn mồi</h1>
+    <h1>Trò chơi Rắn săn mồi - Tốc độ bằng nhau</h1>
     
     <div id="game-container">
         <canvas id="game-board" width="400" height="400"></canvas>
@@ -110,7 +110,7 @@
     
     <div class="controls">
         <p>Điều khiển: Mũi tên hoặc W, A, S, D</p>
-        <p>Tốc độ rắn phụ thuộc tốc độ ấn phím</p>
+        <p>Rắn và mồi di chuyển cùng tốc độ (1 ô/ấn phím)</p>
     </div>
 
     <script>
@@ -139,22 +139,17 @@
             ];
             let velocityX = 0;
             let velocityY = 0;
-            let lastMoveTime = 0;
-            let moveDelay = 100; // Thời gian delay giữa các lần di chuyển (ms)
             
             // Thức ăn
             let foodX = 5;
             let foodY = 5;
             let foodVelocityX = 0;
             let foodVelocityY = 0;
-            let lastFoodMoveTime = 0;
-            let foodMoveDelay = 500; // Thời gian di chuyển của thức ăn (ms)
             
             // Game state
             let gameOver = false;
             let gameStartTime = 0;
             let gameDuration = 3 * 60 * 1000; // 3 phút (ms)
-            let gameLoop;
             let foodMoveLoop;
             let timerLoop;
             
@@ -198,10 +193,6 @@
             function moveSnake() {
                 if (gameOver) return;
                 
-                const now = Date.now();
-                if (now - lastMoveTime < moveDelay) return;
-                lastMoveTime = now;
-                
                 const head = {x: snake[0].x + velocityX, y: snake[0].y + velocityY};
                 
                 // Kiểm tra va chạm tường
@@ -228,36 +219,16 @@
                     scoreDisplay.textContent = `Điểm: ${score}`;
                     foodCountDisplay.textContent = `Mồi: ${foodEaten}`;
                     placeFood();
-                    // Tăng tốc độ rắn sau khi ăn
-                    moveDelay = Math.max(50, moveDelay - 5);
                 } else {
                     // Nếu không ăn thì xóa đuôi
                     snake.pop();
                 }
+                
+                drawGame();
             }
             
             // Di chuyển thức ăn
             function moveFood() {
-                const now = Date.now();
-                if (now - lastFoodMoveTime < foodMoveDelay) return;
-                lastFoodMoveTime = now;
-                
-                // Thay đổi hướng di chuyển ngẫu nhiên
-                if (Math.random() < 0.3) {
-                    const directions = [-1, 0, 1];
-                    foodVelocityX = directions[Math.floor(Math.random() * 3)];
-                    foodVelocityY = directions[Math.floor(Math.random() * 3)];
-                    
-                    // Đảm bảo thức ăn không đứng yên
-                    if (foodVelocityX === 0 && foodVelocityY === 0) {
-                        if (Math.random() < 0.5) {
-                            foodVelocityX = Math.random() < 0.5 ? -1 : 1;
-                        } else {
-                            foodVelocityY = Math.random() < 0.5 ? -1 : 1;
-                        }
-                    }
-                }
-                
                 // Di chuyển thức ăn
                 const newX = foodX + foodVelocityX;
                 const newY = foodY + foodVelocityY;
@@ -273,6 +244,22 @@
                     foodY = newY;
                 } else {
                     foodVelocityY *= -1;
+                }
+                
+                // Thay đổi hướng di chuyển ngẫu nhiên sau mỗi lần di chuyển
+                if (Math.random() < 0.3) {
+                    const directions = [-1, 0, 1];
+                    foodVelocityX = directions[Math.floor(Math.random() * 3)];
+                    foodVelocityY = directions[Math.floor(Math.random() * 3)];
+                    
+                    // Đảm bảo thức ăn không đứng yên
+                    if (foodVelocityX === 0 && foodVelocityY === 0) {
+                        if (Math.random() < 0.5) {
+                            foodVelocityX = Math.random() < 0.5 ? -1 : 1;
+                        } else {
+                            foodVelocityY = Math.random() < 0.5 ? -1 : 1;
+                        }
+                    }
                 }
             }
             
@@ -320,7 +307,7 @@
                         if (velocityY !== 1) {
                             velocityX = 0;
                             velocityY = -1;
-                            moveSnake(); // Di chuyển ngay khi ấn phím
+                            moveSnake();
                         }
                         break;
                     case 'ArrowDown':
@@ -372,7 +359,6 @@
             // Kết thúc game
             function endGame() {
                 gameOver = true;
-                clearInterval(gameLoop);
                 clearInterval(foodMoveLoop);
                 clearInterval(timerLoop);
                 
@@ -396,7 +382,6 @@
                 velocityY = 0;
                 score = 0;
                 foodEaten = 0;
-                moveDelay = 100;
                 scoreDisplay.textContent = `Điểm: ${score}`;
                 foodCountDisplay.textContent = `Mồi: ${foodEaten}`;
                 updateRecord();
@@ -405,20 +390,22 @@
                 placeFood();
                 gameOverDisplay.style.display = 'none';
                 
-                if (gameLoop) clearInterval(gameLoop);
                 if (foodMoveLoop) clearInterval(foodMoveLoop);
                 if (timerLoop) clearInterval(timerLoop);
                 
-                gameLoop = setInterval(() => {
-                    moveSnake();
+                // Thức ăn di chuyển mỗi 500ms
+                foodMoveLoop = setInterval(() => {
+                    moveFood();
                     drawGame();
-                }, 16); // ~60fps
+                }, 500);
                 
-                foodMoveLoop = setInterval(moveFood, 100);
                 timerLoop = setInterval(updateTimer, 1000);
                 
                 // Bắt đầu timer ngay lập tức
                 updateTimer();
+                
+                // Vẽ game lần đầu
+                drawGame();
             }
             
             // Sự kiện nút chơi lại
