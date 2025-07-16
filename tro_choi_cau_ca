@@ -1,1 +1,475 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Game Câu Cá Premium</title>
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(to bottom, #87CEEB, #E0F7FA);
+            margin: 0;
+            padding: 20px;
+            overflow: hidden;
+            height: 100vh;
+        }
+        h1 {
+            color: #01579B;
+            text-shadow: 1px 1px 2px white;
+        }
+        canvas {
+            border: 3px solid #01579B;
+            border-radius: 5px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
+            background-color: #E0F7FA;
+        }
+        .info-panel {
+            background-color: rgba(255, 255, 255, 0.8);
+            padding: 10px 20px;
+            border-radius: 10px;
+            margin-top: 15px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        .controls {
+            font-size: 14px;
+            color: #01579B;
+            margin-top: 5px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Game Câu Cá Premium</h1>
+    <div class="controls">Sử dụng phím mũi tên ← ↑ → ↓ để di chuyển mồi câu</div>
+    <canvas id="gameCanvas" width="800" height="600"></canvas>
+    <div class="info-panel">
+        <p>Thời gian: <span id="time">10:00</span> | Cá câu được: <span id="fishCaught">0</span> | Điểm: <span id="score">0</span></p>
+    </div>
 
+    <script>
+        // Tỷ lệ chuyển đổi (1cm = 40px, 1m = 4000px)
+        const SCALE = 40;
+        const METER_SCALE = 4000;
+        
+        // Kích thước hồ nước (10cm x 5cm x 3cm)
+        const LAKE_WIDTH = 10 * SCALE;
+        const LAKE_HEIGHT = 3 * SCALE;
+        const LAKE_DEPTH = 5 * SCALE;
+        
+        // Vị trí hồ trên canvas
+        const LAKE_X = 150;
+        const LAKE_Y = 300;
+        
+        // Khoảng cách mây cách mặt hồ (5m)
+        const CLOUD_HEIGHT = 5 * METER_SCALE / 100; // Giảm tỷ lệ để hiển thị phù hợp
+        
+        // Lớp Cá
+        class Fish {
+            constructor() {
+                this.width = 0.5 * SCALE;
+                this.height = 0.1 * SCALE;
+                this.color = '#FFD700'; // Màu vàng
+                this.reset();
+                this.speed = 0.1 * SCALE / 100; // 0.1mm/giây
+                this.direction = Math.random() * Math.PI * 2;
+                this.changeDirectionTimer = 0;
+                this.eating = false;
+                this.eatTimer = 0;
+            }
+            
+            reset() {
+                this.x = LAKE_X + 0.5 * SCALE;
+                this.y = LAKE_Y + LAKE_HEIGHT - this.height - 0.5 * SCALE;
+                this.z = LAKE_DEPTH - 0.5 * SCALE;
+            }
+            
+            update(deltaTime) {
+                if (this.eating) {
+                    this.eatTimer -= deltaTime;
+                    if (this.eatTimer <= 0) {
+                        this.eating = false;
+                    }
+                    return;
+                }
+                
+                this.changeDirectionTimer -= deltaTime;
+                if (this.changeDirectionTimer <= 0) {
+                    this.direction = Math.random() * Math.PI * 2;
+                    this.changeDirectionTimer = Math.random() * 3000 + 2000; // 2-5 giây
+                }
+                
+                this.x += Math.cos(this.direction) * this.speed * deltaTime;
+                this.y += Math.sin(this.direction) * this.speed * deltaTime;
+                
+                // Kiểm tra va chạm với thành hồ
+                if (this.x < LAKE_X + 0.5 * SCALE) {
+                    this.x = LAKE_X + 0.5 * SCALE;
+                    this.direction = Math.PI - this.direction;
+                }
+                if (this.x > LAKE_X + LAKE_WIDTH - 0.5 * SCALE) {
+                    this.x = LAKE_X + LAKE_WIDTH - 0.5 * SCALE;
+                    this.direction = Math.PI - this.direction;
+                }
+                if (this.y < LAKE_Y + 0.5 * SCALE) {
+                    this.y = LAKE_Y + 0.5 * SCALE;
+                    this.direction = -this.direction;
+                }
+                if (this.y > LAKE_Y + LAKE_HEIGHT - 0.5 * SCALE) {
+                    this.y = LAKE_Y + LAKE_HEIGHT - 0.5 * SCALE;
+                    this.direction = -this.direction;
+                }
+            }
+            
+            draw(ctx) {
+                ctx.save();
+                ctx.translate(this.x, this.y);
+                
+                // Vẽ thân cá
+                ctx.fillStyle = this.color;
+                ctx.beginPath();
+                ctx.ellipse(0, 0, this.width / 2, this.height / 2, 0, 0, Math.PI * 2);
+                ctx.fill();
+                
+                // Vẽ đuôi cá
+                ctx.beginPath();
+                ctx.moveTo(-this.width / 2, 0);
+                ctx.lineTo(-this.width / 2 - this.height, -this.height / 2);
+                ctx.lineTo(-this.width / 2 - this.height, this.height / 2);
+                ctx.closePath();
+                ctx.fill();
+                
+                // Vẽ mắt cá
+                ctx.fillStyle = 'black';
+                ctx.beginPath();
+                ctx.arc(this.width / 4, -this.height / 4, this.height / 5, 0, Math.PI * 2);
+                ctx.fill();
+                
+                ctx.restore();
+            }
+            
+            eat() {
+                this.eating = true;
+                this.eatTimer = 1500; // 1.5 giây để "ăn"
+            }
+        }
+        
+        // Lớp Mồi Câu
+        class Bait {
+            constructor() {
+                this.radius = 0.15 * SCALE; // Đường kính 0.3cm
+                this.color = '#FF0000'; // Màu đỏ
+                this.x = LAKE_X + LAKE_WIDTH / 2; // Giữa mặt hồ
+                this.y = LAKE_Y + 0.5 * SCALE; // Trên bề mặt
+                this.z = LAKE_DEPTH / 2;
+                this.speed = 3 * SCALE / 100; // 3mm/giây
+                this.keys = {
+                    up: false,
+                    down: false,
+                    left: false,
+                    right: false
+                };
+                this.hooked = false;
+            }
+            
+            update(deltaTime) {
+                if (this.hooked) return;
+                
+                if (this.keys.up && this.y > LAKE_Y + this.radius) {
+                    this.y -= this.speed * deltaTime;
+                }
+                if (this.keys.down && this.y < LAKE_Y + LAKE_HEIGHT - this.radius) {
+                    this.y += this.speed * deltaTime;
+                }
+                if (this.keys.left && this.x > LAKE_X + this.radius) {
+                    this.x -= this.speed * deltaTime;
+                }
+                if (this.keys.right && this.x < LAKE_X + LAKE_WIDTH - this.radius) {
+                    this.x += this.speed * deltaTime;
+                }
+            }
+            
+            draw(ctx) {
+                ctx.save();
+                ctx.fillStyle = this.color;
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+                ctx.fill();
+                
+                // Vẽ dây câu
+                if (!this.hooked) {
+                    ctx.strokeStyle = '#555';
+                    ctx.lineWidth = 1.5;
+                    ctx.beginPath();
+                    ctx.moveTo(this.x, this.y);
+                    ctx.lineTo(this.x, LAKE_Y - 20);
+                    ctx.stroke();
+                }
+                
+                ctx.restore();
+            }
+            
+            checkCollision(fish) {
+                if (this.hooked || fish.eating) return false;
+                
+                const dx = this.x - fish.x;
+                const dy = this.y - fish.y;
+                const distance = Math.sqrt(dx * dx + dy * dy);
+                
+                return distance < (this.radius + fish.width / 2);
+            }
+            
+            hook() {
+                this.hooked = true;
+            }
+            
+            reset() {
+                this.x = LAKE_X + LAKE_WIDTH / 2;
+                this.y = LAKE_Y + 0.5 * SCALE;
+                this.hooked = false;
+            }
+        }
+        
+        // Lớp Mây
+        class Cloud {
+            constructor() {
+                this.width = Math.random() * 100 + 50;
+                this.height = this.width * 0.6;
+                this.x = Math.random() * 800;
+                this.y = Math.random() * 100 + 50;
+                this.speed = Math.random() * 0.5 + 0.2;
+            }
+            
+            update(deltaTime) {
+                this.x += this.speed * deltaTime * 0.05;
+                if (this.x > 850) {
+                    this.x = -100;
+                    this.y = Math.random() * 100 + 50;
+                }
+            }
+            
+            draw(ctx) {
+                ctx.save();
+                ctx.fillStyle = 'rgba(255, 255, 255, 0.9)';
+                
+                // Vẽ các phần của đám mây
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.height, 0, Math.PI * 2);
+                ctx.arc(this.x + this.width * 0.3, this.y - this.height * 0.2, this.height * 0.8, 0, Math.PI * 2);
+                ctx.arc(this.x + this.width * 0.6, this.y, this.height * 0.7, 0, Math.PI * 2);
+                ctx.arc(this.x + this.width * 0.2, this.y + this.height * 0.1, this.height * 0.6, 0, Math.PI * 2);
+                ctx.fill();
+                
+                ctx.restore();
+            }
+        }
+        
+        // Lớp Game
+        class FishingGame {
+            constructor() {
+                this.canvas = document.getElementById('gameCanvas');
+                this.ctx = this.canvas.getContext('2d');
+                this.fishes = [new Fish()];
+                this.bait = new Bait();
+                this.clouds = Array(5).fill().map(() => new Cloud());
+                this.score = 0;
+                this.fishCaught = 0;
+                this.gameTime = 10 * 60 * 1000; // 10 phút
+                this.startTime = Date.now();
+                this.lastTime = 0;
+                this.waveOffset = 0;
+                
+                // Xử lý sự kiện bàn phím
+                window.addEventListener('keydown', (e) => this.handleKeyDown(e));
+                window.addEventListener('keyup', (e) => this.handleKeyUp(e));
+                
+                // Bắt đầu game loop
+                requestAnimationFrame((timestamp) => this.gameLoop(timestamp));
+            }
+            
+            handleKeyDown(e) {
+                switch (e.key) {
+                    case 'ArrowUp': this.bait.keys.up = true; break;
+                    case 'ArrowDown': this.bait.keys.down = true; break;
+                    case 'ArrowLeft': this.bait.keys.left = true; break;
+                    case 'ArrowRight': this.bait.keys.right = true; break;
+                }
+            }
+            
+            handleKeyUp(e) {
+                switch (e.key) {
+                    case 'ArrowUp': this.bait.keys.up = false; break;
+                    case 'ArrowDown': this.bait.keys.down = false; break;
+                    case 'ArrowLeft': this.bait.keys.left = false; break;
+                    case 'ArrowRight': this.bait.keys.right = false; break;
+                }
+            }
+            
+            gameLoop(timestamp) {
+                if (!this.lastTime) this.lastTime = timestamp;
+                const deltaTime = timestamp - this.lastTime;
+                this.lastTime = timestamp;
+                
+                this.update(deltaTime);
+                this.draw();
+                
+                if (this.gameTime > 0) {
+                    requestAnimationFrame((ts) => this.gameLoop(ts));
+                } else {
+                    this.gameOver();
+                }
+            }
+            
+            update(deltaTime) {
+                this.gameTime -= deltaTime;
+                
+                // Cập nhật mây
+                this.clouds.forEach(cloud => cloud.update(deltaTime));
+                
+                // Cập nhật cá
+                this.fishes.forEach(fish => fish.update(deltaTime));
+                
+                // Cập nhật mồi
+                this.bait.update(deltaTime);
+                
+                // Kiểm tra va chạm
+                if (!this.bait.hooked) {
+                    for (let i = 0; i < this.fishes.length; i++) {
+                        if (this.bait.checkCollision(this.fishes[i])) {
+                            this.fishes[i].eat();
+                            this.bait.hook();
+                            this.score += 10;
+                            this.fishCaught++;
+                            
+                            if (this.gameTime > 0) {
+                                setTimeout(() => {
+                                    this.fishes.push(new Fish());
+                                    this.bait.reset();
+                                }, 1500);
+                            }
+                            
+                            document.getElementById('score').textContent = this.score;
+                            document.getElementById('fishCaught').textContent = this.fishCaught;
+                            break;
+                        }
+                    }
+                }
+                
+                this.waveOffset += deltaTime * 0.001;
+            }
+            
+            draw() {
+                const ctx = this.ctx;
+                
+                // Xóa canvas
+                ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+                
+                // Vẽ bầu trời
+                const skyGradient = ctx.createLinearGradient(0, 0, 0, this.canvas.height);
+                skyGradient.addColorStop(0, '#87CEEB');
+                skyGradient.addColorStop(1, '#E0F7FA');
+                ctx.fillStyle = skyGradient;
+                ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
+                
+                // Vẽ mây
+                this.clouds.forEach(cloud => cloud.draw(ctx));
+                
+                // Vẽ hồ nước
+                this.drawLake();
+                
+                // Vẽ cá
+                this.fishes.forEach(fish => fish.draw(ctx));
+                
+                // Vẽ mồi
+                this.bait.draw(ctx);
+                
+                // Cập nhật UI
+                const minutes = Math.floor(this.gameTime / 60000);
+                const seconds = Math.floor((this.gameTime % 60000) / 1000);
+                document.getElementById('time').textContent = 
+                    `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+            }
+            
+            drawLake() {
+                const ctx = this.ctx;
+                
+                // Vẽ đáy hồ với viền đỏ
+                ctx.fillStyle = 'rgba(0, 100, 200, 0.4)';
+                ctx.strokeStyle = 'red';
+                ctx.lineWidth = 3;
+                
+                // Đáy hồ
+                ctx.beginPath();
+                ctx.rect(LAKE_X, LAKE_Y + LAKE_HEIGHT, LAKE_WIDTH, LAKE_DEPTH);
+                ctx.fill();
+                ctx.stroke();
+                
+                // Thành hồ (4 mặt)
+                // Mặt trước
+                ctx.beginPath();
+                ctx.moveTo(LAKE_X, LAKE_Y);
+                ctx.lineTo(LAKE_X + LAKE_WIDTH, LAKE_Y);
+                ctx.lineTo(LAKE_X + LAKE_WIDTH, LAKE_Y + LAKE_HEIGHT);
+                ctx.lineTo(LAKE_X, LAKE_Y + LAKE_HEIGHT);
+                ctx.closePath();
+                ctx.stroke();
+                
+                // Mặt bên trái
+                ctx.beginPath();
+                ctx.moveTo(LAKE_X, LAKE_Y);
+                ctx.lineTo(LAKE_X, LAKE_Y + LAKE_HEIGHT);
+                ctx.lineTo(LAKE_X, LAKE_Y + LAKE_HEIGHT + LAKE_DEPTH);
+                ctx.stroke();
+                
+                // Mặt bên phải
+                ctx.beginPath();
+                ctx.moveTo(LAKE_X + LAKE_WIDTH, LAKE_Y);
+                ctx.lineTo(LAKE_X + LAKE_WIDTH, LAKE_Y + LAKE_HEIGHT);
+                ctx.lineTo(LAKE_X + LAKE_WIDTH, LAKE_Y + LAKE_HEIGHT + LAKE_DEPTH);
+                ctx.stroke();
+                
+                // Vẽ mặt nước với sóng
+                ctx.fillStyle = 'rgba(64, 164, 223, 0.5)';
+                ctx.beginPath();
+                ctx.moveTo(LAKE_X, LAKE_Y);
+                
+                const waveHeight = 3;
+                const waveLength = 60;
+                
+                for (let x = 0; x <= LAKE_WIDTH; x += 5) {
+                    const y = LAKE_Y + Math.sin(x / waveLength + this.waveOffset) * waveHeight;
+                    ctx.lineTo(LAKE_X + x, y);
+                }
+                
+                ctx.lineTo(LAKE_X + LAKE_WIDTH, LAKE_Y + LAKE_HEIGHT);
+                ctx.lineTo(LAKE_X, LAKE_Y + LAKE_HEIGHT);
+                ctx.closePath();
+                ctx.fill();
+            }
+            
+            gameOver() {
+                this.ctx.fillStyle = 'rgba(0, 0, 0, 0.7)';
+                this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
+                
+                this.ctx.fillStyle = 'white';
+                this.ctx.font = '36px Arial';
+                this.ctx.textAlign = 'center';
+                this.ctx.fillText('Hết giờ!', this.canvas.width / 2, this.canvas.height / 2 - 40);
+                
+                this.ctx.font = '24px Arial';
+                this.ctx.fillText(`Bạn đã câu được ${this.fishCaught} con cá`, this.canvas.width / 2, this.canvas.height / 2 + 10);
+                this.ctx.fillText(`Tổng điểm: ${this.score}`, this.canvas.width / 2, this.canvas.height / 2 + 50);
+                
+                this.ctx.font = '20px Arial';
+                this.ctx.fillText('Tải lại trang để chơi lại', this.canvas.width / 2, this.canvas.height / 2 + 100);
+            }
+        }
+        
+        // Khởi tạo game
+        window.onload = () => {
+            new FishingGame();
+        };
+    </script>
+</body>
+</html>
