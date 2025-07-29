@@ -536,7 +536,7 @@ class Diagnosis {
             return;
         }
         
-        const predictedHeight = (coeffs.CoC * this.inputs.currentHeight) + (coeffs.CoT * boneAge) + coeffs.COTX + coeffs.Hs;
+        const predictedHeight = (coeffs.CoC * this.inputs.currentHeight) + (coeffs.CoT * resCurrentAge) + (coeffs.COTX * resBoneAgeHeight) + coeffs.Hs;
         this.results.boneAgeHeight = parseFloat(predictedHeight.toFixed(1));
     }
     
@@ -634,8 +634,8 @@ document.addEventListener('DOMContentLoaded', () => {
         if (res.boneAgeCoeffs) {
             const { CoC, CoT, COTX, Hs } = res.boneAgeCoeffs;
             document.getElementById('resBoneAgeFormula').innerHTML = `<strong>Chi tiết công thức:</strong><br>
-            ($_H = (CoC \\times Cao) + (CoT \\times Tuổi) + COTX + Hs$)<br>
-            $_H = (${CoC} \\times ${inputs.currentHeight}) + (${CoT} \\times ${inputs.boneAge}) + (${COTX}) + ${Hs} = \\mathbf{${res.boneAgeHeight}\\,cm}$`;
+            ($_H = (CoC \\times Cao) + (CoT \\times Tuổi) + (COTX\\times resBoneAgeHeight) + Hs$)<br>
+            $_H = (${CoC} \\times ${inputs.currentHeight}) + (${CoT} \\times ${inputs.resCurrentAge}) + (${COTX}\\times.resBoneAgeHeight) + ${Hs} = \\mathbf{${res.boneAgeHeight}\\,cm}$`;
         } else {
              document.getElementById('resBoneAgeFormula').textContent = "Không thể tính toán do thiếu dữ liệu tuổi xương.";
         }
