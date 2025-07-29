@@ -418,43 +418,75 @@
 <script>
 // --- DATA SECTION ---
 // Data from "Dự báo chiều cao bé trai"
-const boyCoefficients = {
-    "8": { "CoC": 1.22, "CoT": -7.2, "COTX": -0.4, "Hs": 82 }, "8.5": { "CoC": 1.23, "CoT": -7.0, "COTX": -0.7, "Hs": 82 },
-    "9": { "CoC": 1.22, "CoT": -6.8, "COTX": -0.8, "Hs": 82 }, "9.5": { "CoC": 1.21, "CoT": -6.5, "COTX": -0.8, "Hs": 82 },
-    "10": { "CoC": 1.2, "CoT": -6.2, "COTX": -1.0, "Hs": 83 }, "10.5": { "CoC": 1.19, "CoT": -5.9, "COTX": -1.2, "Hs": 84 },
-    "11": { "CoC": 1.16, "CoT": -5.5, "COTX": -1.6, "Hs": 89 }, "11.5": { "CoC": 1.13, "CoT": -5.1, "COTX": -2.0, "Hs": 94 },
-    "12": { "CoC": 1.08, "CoT": -4.2, "COTX": -2.6, "Hs": 98 }, "12.5": { "CoC": 1.03, "CoT": -3.4, "COTX": -3.2, "Hs": 103 },
-    "13": { "CoC": 0.98, "CoT": -2.6, "COTX": -3.8, "Hs": 108 }, "13.5": { "CoC": 0.94, "CoT": -1.9, "COTX": -4.4, "Hs": 113 },
-    "14": { "CoC": 0.9, "CoT": -1.4, "COTX": -4.5, "Hs": 113 }, "14.5": { "CoC": 0.87, "CoT": -1.0, "COTX": -4.6, "Hs": 114 },
-    "15": { "CoC": 0.84, "CoT": -0.8, "COTX": -3.8, "Hs": 104 }, "15.5": { "CoC": 0.82, "CoT": -0.6, "COTX": -3.1, "Hs": 94 },
-    "16": { "CoC": 0.88, "CoT": -0.4, "COTX": -2.4, "Hs": 70 }, "16.5": { "CoC": 0.94, "CoT": -0.3, "COTX": -1.8, "Hs": 48 },
-    "17": { "CoC": 0.96, "CoT": -0.2, "COTX": -1.2, "Hs": 32 }, "17.5": { "CoC": 0.96, "CoT": -0.2, "COTX": -1.2, "Hs": 33 },
-    "18": { "CoC": 0.97, "CoT": -0.2, "COTX": -1.2, "Hs": 32 }
-};
-
-// Data from "Dự báo chiều cao bé gái chưa dậy thì"
-const girlPrePubertyCoefficients = {
-    "6": { "CoC": 0.95, "CoT": -6.0, "COTX": -0.4, "Hs": 93 }, "6.5": { "CoC": 0.95, "CoT": -5.5, "COTX": -0.8, "Hs": 93 },
-    "7": { "CoC": 0.94, "CoT": -5.1, "COTX": -1.0, "Hs": 93 }, "7.5": { "CoC": 0.93, "CoT": -4.7, "COTX": -1.1, "Hs": 94 },
-    "8": { "CoC": 0.92, "CoT": -4.4, "COTX": -1.5, "Hs": 95 }, "8.5": { "CoC": 0.92, "CoT": -4.0, "COTX": -1.9, "Hs": 96 },
-    "9": { "CoC": 0.92, "CoT": -3.8, "COTX": -2.3, "Hs": 96 }, "9.5": { "CoC": 0.91, "CoT": -3.6, "COTX": -2.7, "Hs": 100 },
-    "10": { "CoC": 0.89, "CoT": -3.2, "COTX": -3.2, "Hs": 104 }, "10.5": { "CoC": 0.87, "CoT": -2.7, "COTX": -3.6, "Hs": 107 },
-    "11": { "CoC": 0.83, "CoT": -2.6, "COTX": -3.6, "Hs": 111 }, "11.5": { "CoC": 0.82, "CoT": -2.5, "COTX": -3.6, "Hs": 112 },
-    "12": { "CoC": 0.83, "CoT": -2.4, "COTX": -3.4, "Hs": 108 }, "12.5": { "CoC": 0.83, "CoT": -2.3, "COTX": -3.4, "Hs": 107 },
-    "13": { "CoC": 0.85, "CoT": -2.0, "COTX": -3.1, "Hs": 97 }, "13.5": { "CoC": 0.87, "CoT": -1.8, "COTX": -3.0, "Hs": 91 },
-    "14": { "CoC": 0.91, "CoT": -1.6, "COTX": -2.8, "Hs": 80 }, "14.5": { "CoC": 0.99, "CoT": -1.4, "COTX": -2.5, "Hs": 61 }
-};
-
-// Data from "Dự báo chiều cao bé gái đã dậy thì"
-const girlPostPubertyCoefficients = {
-    "11": { "CoC": 0.87, "CoT": -2.3, "COTX": -3.3, "Hs": 99 }, "11.5": { "CoC": 0.89, "CoT": -1.9, "COTX": -3.3, "Hs": 92 },
-    "12": { "CoC": 0.91, "CoT": -1.4, "COTX": -3.2, "Hs": 81 }, "12.5": { "CoC": 0.93, "CoT": -1.0, "COTX": -2.7, "Hs": 67 },
-    "13": { "CoC": 0.95, "CoT": -0.9, "COTX": -2.2, "Hs": 55 }, "13.5": { "CoC": 0.96, "CoT": -0.9, "COTX": -1.8, "Hs": 48 },
-    "14": { "CoC": 0.96, "CoT": -0.8, "COTX": -1.4, "Hs": 41 }, "14.5": { "CoC": 0.97, "CoT": -0.8, "COTX": -1.3, "Hs": 38 },
-    "15": { "CoC": 0.98, "CoT": -0.6, "COTX": -1.1, "Hs": 28 }, "15.5": { "CoC": 0.99, "CoT": -0.4, "COTX": -0.7, "Hs": 20 },
-    "16": { "CoC": 0.99, "CoT": -0.4, "COTX": -0.7, "Hs": 20 }, "16.5": { "CoC": 0.99, "CoT": -0.4, "COTX": -0.7, "Hs": 21 },
-    "17": { "CoC": 0.99, "CoT": -0.4, "COTX": -0.7, "Hs": 21 }, "17.5": { "CoC": 0.99, "CoT": -0.4, "COTX": -0.7, "Hs": 21 }
-};
+ const boyData = [
+            { age: 4, cao: 1.2, coc: 1.2, cot: -7.3, tx: 0, cotx: 0, hs: 82 },
+            { age: 5, cao: 1.2, coc: 1.2, cot: -7.3, tx: 0, cotx: 0, hs: 82 },
+            { age: 6, cao: 1.2, coc: 1.2, cot: -7.3, tx: 0, cotx: 0, hs: 82 },
+            { age: 7, cao: 1.2, coc: 1.2, cot: -7.3, tx: 0, cotx: 0, hs: 82 },
+            { age: 8, cao: 1.22, coc: 1.22, cot: -7.2, tx: -0.4, cotx: -0.4, hs: 82 },
+            { age: 8.5, cao: 1.23, coc: 1.23, cot: -7, tx: -0.7, cotx: -0.7, hs: 82 },
+            { age: 9, cao: 1.22, coc: 1.22, cot: -6.8, tx: -0.8, cotx: -0.8, hs: 82 },
+            { age: 9.5, cao: 1.21, coc: 1.21, cot: -6.5, tx: -0.8, cotx: -0.8, hs: 82 },
+            { age: 10, cao: 1.2, coc: 1.2, cot: -6.2, tx: -1, cotx: -1, hs: 83 },
+            { age: 10.5, cao: 1.19, coc: 1.19, cot: -5.9, tx: -1.2, cotx: -1.2, hs: 84 },
+            { age: 11, cao: 1.16, coc: 1.16, cot: -5.5, tx: -1.6, cotx: -1.6, hs: 89 },
+            { age: 11.5, cao: 1.13, coc: 1.13, cot: -5.1, tx: -2, cotx: -2, hs: 94 },
+            { age: 12, cao: 1.08, coc: 1.08, cot: -4.2, tx: -2.6, cotx: -2.6, hs: 98 },
+            { age: 12.5, cao: 1.03, coc: 1.03, cot: -3.4, tx: -3.2, cotx: -3.2, hs: 103 },
+            { age: 13, cao: 0.98, coc: 0.98, cot: -2.6, tx: -3.8, cotx: -3.8, hs: 108 },
+            { age: 13.5, cao: 0.94, coc: 0.94, cot: -1.9, tx: -4.4, cotx: -4.4, hs: 113 },
+            { age: 14, cao: 0.9, coc: 0.9, cot: -1.4, tx: -4.5, cotx: -4.5, hs: 113 },
+            { age: 14.5, cao: 0.87, coc: 0.87, cot: -1, tx: -4.6, cotx: -4.6, hs: 114 },
+            { age: 15, cao: 0.84, coc: 0.84, cot: -0.8, tx: -3.8, cotx: -3.8, hs: 104 },
+            { age: 15.5, cao: 0.82, coc: 0.82, cot: -0.6, tx: -3.1, cotx: -3.1, hs: 94 },
+            { age: 16, cao: 0.88, coc: 0.88, cot: -0.4, tx: -2.4, cotx: -2.4, hs: 70 },
+            { age: 16.5, cao: 0.94, coc: 0.94, cot: -0.3, tx: -1.8, cotx: -1.8, hs: 48 },
+            { age: 17, cao: 0.96, coc: 0.96, cot: -0.2, tx: -1.2, cotx: -1.2, hs: 32 },
+            { age: 17.5, cao: 0.96, coc: 0.96, cot: -0.2, tx: -1.2, cotx: -1.2, hs: 33 },
+            { age: 18, cao: 0.97, coc: 0.97, cot: -0.2, tx: -1.2, cotx: -1.2, hs: 32 }
+        ];
+        
+        // Dữ liệu hệ số cho bé gái chưa dậy thì
+        const girlPreData = [
+            { age: 4, cao: 0.95, coc: 0.95, cot: -6.5, tx: 0, cotx: 0, hs: 93 },
+            { age: 5, cao: 0.95, coc: 0.95, cot: -6.5, tx: 0, cotx: 0, hs: 93 },
+            { age: 6, cao: 0.95, coc: 0.95, cot: -6, tx: -0.4, cotx: -0.4, hs: 93 },
+            { age: 6.5, cao: 0.95, coc: 0.95, cot: -5.5, tx: -0.8, cotx: -0.8, hs: 93 },
+            { age: 7, cao: 0.94, coc: 0.94, cot: -5.1, tx: -1, cotx: -1, hs: 93 },
+            { age: 7.5, cao: 0.93, coc: 0.93, cot: -4.7, tx: -1.1, cotx: -1.1, hs: 94 },
+            { age: 8, cao: 0.92, coc: 0.92, cot: -4.4, tx: -1.5, cotx: -1.5, hs: 95 },
+            { age: 8.5, cao: 0.92, coc: 0.92, cot: -4, tx: -1.9, cotx: -1.9, hs: 96 },
+            { age: 9, cao: 0.92, coc: 0.92, cot: -3.8, tx: -2.3, cotx: -2.3, hs: 96 },
+            { age: 9.5, cao: 0.91, coc: 0.91, cot: -3.6, tx: -2.7, cotx: -2.7, hs: 100 },
+            { age: 10, cao: 0.89, coc: 0.89, cot: -3.2, tx: -3.2, cotx: -3.2, hs: 104 },
+            { age: 10.5, cao: 0.87, coc: 0.87, cot: -2.7, tx: -3.6, cotx: -3.6, hs: 107 },
+            { age: 11, cao: 0.83, coc: 0.83, cot: -2.6, tx: -3.6, cotx: -3.6, hs: 111 },
+            { age: 11.5, cao: 0.82, coc: 0.82, cot: -2.5, tx: -3.6, cotx: -3.6, hs: 112 },
+            { age: 12, cao: 0.83, coc: 0.83, cot: -2.4, tx: -3.4, cotx: -3.4, hs: 108 },
+            { age: 12.5, cao: 0.83, coc: 0.83, cot: -2.3, tx: -3.4, cotx: -3.4, hs: 107 },
+            { age: 13, cao: 0.85, coc: 0.85, cot: -2, tx: -3.1, cotx: -3.1, hs: 97 },
+            { age: 13.5, cao: 0.87, coc: 0.87, cot: -1.8, tx: -3, cotx: -3, hs: 91 },
+            { age: 14, cao: 0.91, coc: 0.91, cot: -1.6, tx: -2.8, cotx: -2.8, hs: 80 },
+            { age: 14.5, cao: 0.99, coc: 0.99, cot: -1.4, tx: -2.5, cotx: -2.5, hs: 61 }
+        ];
+        
+        // Dữ liệu hệ số cho bé gái đã dậy thì
+        const girlPostData = [
+            { age: 11, cao: 0.87, coc: 0.87, cot: -2.3, tx: -3.3, cotx: -3.3, hs: 99 },
+            { age: 11.5, cao: 0.89, coc: 0.89, cot: -1.9, tx: -3.3, cotx: -3.3, hs: 92 },
+            { age: 12, cao: 0.91, coc: 0.91, cot: -1.4, tx: -3.2, cotx: -3.2, hs: 81 },
+            { age: 12.5, cao: 0.93, coc: 0.93, cot: -1, tx: -2.7, cotx: -2.7, hs: 67 },
+            { age: 13, cao: 0.95, coc: 0.95, cot: -0.9, tx: -2.2, cotx: -2.2, hs: 55 },
+            { age: 13.5, cao: 0.96, coc: 0.96, cot: -0.9, tx: -1.8, cotx: -1.8, hs: 48 },
+            { age: 14, cao: 0.96, coc: 0.96, cot: -0.8, tx: -1.4, cotx: -1.4, hs: 41 },
+            { age: 14.5, cao: 0.97, coc: 0.97, cot: -0.8, tx: -1.3, cotx: -1.3, hs: 38 },
+            { age: 15, cao: 0.98, coc: 0.98, cot: -0.6, tx: -1.1, cotx: -1.1, hs: 28 },
+            { age: 15.5, cao: 0.99, coc: 0.99, cot: -0.4, tx: -0.7, cotx: -0.7, hs: 20 },
+            { age: 16, cao: 0.99, coc: 0.99, cot: -0.4, tx: -0.7, cotx: -0.7, hs: 20 },
+            { age: 16.5, cao: 0.99, coc: 0.99, cot: -0.4, tx: -0.7, cotx: -0.7, hs: 21 },
+            { age: 17, cao: 0.99, coc: 0.99, cot: -0.4, tx: -0.7, cotx: -0.7, hs: 21 },
+            { age: 17.5, cao: 0.99, coc: 0.99, cot: -0.4, tx: -0.7, cotx: -0.7, hs: 21 }
+        ];
 
 // Simplified WHO LMS data for demonstration. 
 const whoData = {
