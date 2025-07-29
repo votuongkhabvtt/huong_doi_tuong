@@ -399,388 +399,917 @@
 <script>
 // --- DATA SECTION ---
 // Data transcribed from provided documents
-const boyCoefficients = {
-    "8": { "CoC": 1.22, "CoT": -7.2, "COTX": -0.4, "Hs": 82 },
-    "8.5": { "CoC": 1.23, "CoT": -7.0, "COTX": -0.7, "Hs": 82 },
-    "9": { "CoC": 1.22, "CoT": -6.8, "COTX": -0.8, "Hs": 82 },
-    "9.5": { "CoC": 1.21, "CoT": -6.5, "COTX": -0.8, "Hs": 82 },
-    "10": { "CoC": 1.2, "CoT": -6.2, "COTX": -1.0, "Hs": 83 },
-    "10.5": { "CoC": 1.19, "CoT": -5.9, "COTX": -1.2, "Hs": 84 },
-    "11": { "CoC": 1.16, "CoT": -5.5, "COTX": -1.6, "Hs": 89 },
-    "11.5": { "CoC": 1.13, "CoT": -5.1, "COTX": -2.0, "Hs": 94 },
-    "12": { "CoC": 1.08, "CoT": -4.2, "COTX": -2.6, "Hs": 98 },
-    "12.5": { "CoC": 1.03, "CoT": -3.4, "COTX": -3.2, "Hs": 103 },
-    "13": { "CoC": 0.98, "CoT": -2.6, "COTX": -3.8, "Hs": 108 },
-    "13.5": { "CoC": 0.94, "CoT": -1.9, "COTX": -4.4, "Hs": 113 },
-    "14": { "CoC": 0.9, "CoT": -1.4, "COTX": -4.5, "Hs": 113 },
-    "14.5": { "CoC": 0.87, "CoT": -1.0, "COTX": -4.6, "Hs": 114 },
-    "15": { "CoC": 0.84, "CoT": -0.8, "COTX": -3.8, "Hs": 104 },
-    "15.5": { "CoC": 0.82, "CoT": -0.6, "COTX": -3.1, "Hs": 94 },
-    "16": { "CoC": 0.88, "CoT": -0.4, "COTX": -2.4, "Hs": 70 },
-    "16.5": { "CoC": 0.94, "CoT": -0.3, "COTX": -1.8, "Hs": 48 },
-    "17": { "CoC": 0.96, "CoT": -0.2, "COTX": -1.2, "Hs": 32 },
-    "17.5": { "CoC": 0.96, "CoT": -0.2, "COTX": -1.2, "Hs": 33 },
-    "18": { "CoC": 0.97, "CoT": -0.2, "COTX": -1.2, "Hs": 32 }
-};
-
-const girlPrePubertyCoefficients = {
-    "6": { "CoC": 0.95, "CoT": -6.0, "COTX": -0.4, "Hs": 93 },
-    "6.5": { "CoC": 0.95, "CoT": -5.5, "COTX": -0.8, "Hs": 93 },
-    "7": { "CoC": 0.94, "CoT": -5.1, "COTX": -1.0, "Hs": 93 },
-    "7.5": { "CoC": 0.93, "CoT": -4.7, "COTX": -1.1, "Hs": 94 },
-    "8": { "CoC": 0.92, "CoT": -4.4, "COTX": -1.5, "Hs": 95 },
-    "8.5": { "CoC": 0.92, "CoT": -4.0, "COTX": -1.9, "Hs": 96 },
-    "9": { "CoC": 0.92, "CoT": -3.8, "COTX": -2.3, "Hs": 96 },
-    "9.5": { "CoC": 0.91, "CoT": -3.6, "COTX": -2.7, "Hs": 100 },
-    "10": { "CoC": 0.89, "CoT": -3.2, "COTX": -3.2, "Hs": 104 },
-    "10.5": { "CoC": 0.87, "CoT": -2.7, "COTX": -3.6, "Hs": 107 },
-    "11": { "CoC": 0.83, "CoT": -2.6, "COTX": -3.6, "Hs": 111 },
-    "11.5": { "CoC": 0.82, "CoT": -2.5, "COTX": -3.6, "Hs": 112 },
-    "12": { "CoC": 0.83, "CoT": -2.4, "COTX": -3.4, "Hs": 108 },
-    "12.5": { "CoC": 0.83, "CoT": -2.3, "COTX": -3.4, "Hs": 107 },
-    "13": { "CoC": 0.85, "CoT": -2.0, "COTX": -3.1, "Hs": 97 },
-    "13.5": { "CoC": 0.87, "CoT": -1.8, "COTX": -3.0, "Hs": 91 },
-    "14": { "CoC": 0.91, "CoT": -1.6, "COTX": -2.8, "Hs": 80 },
-    "14.5": { "CoC": 0.99, "CoT": -1.4, "COTX": -2.5, "Hs": 61 }
-};
-
-const girlPostPubertyCoefficients = {
-    "11": { "CoC": 0.87, "CoT": -2.3, "COTX": -3.3, "Hs": 99 },
-    "11.5": { "CoC": 0.89, "CoT": -1.9, "COTX": -3.3, "Hs": 92 },
-    "12": { "CoC": 0.91, "CoT": -1.4, "COTX": -3.2, "Hs": 81 },
-    "12.5": { "CoC": 0.93, "CoT": -1.0, "COTX": -2.7, "Hs": 67 },
-    "13": { "CoC": 0.95, "CoT": -0.9, "COTX": -2.2, "Hs": 55 },
-    "13.5": { "CoC": 0.96, "CoT": -0.9, "COTX": -1.8, "Hs": 48 },
-    "14": { "CoC": 0.96, "CoT": -0.8, "COTX": -1.4, "Hs": 41 },
-    "14.5": { "CoC": 0.97, "CoT": -0.8, "COTX": -1.3, "Hs": 38 },
-    "15": { "CoC": 0.98, "CoT": -0.6, "COTX": -1.1, "Hs": 28 },
-    "15.5": { "CoC": 0.99, "CoT": -0.4, "COTX": -0.7, "Hs": 20 },
-    "16": { "CoC": 0.99, "CoT": -0.4, "COTX": -0.7, "Hs": 20 },
-    "16.5": { "CoC": 0.99, "CoT": -0.4, "COTX": -0.7, "Hs": 21 },
-    "17": { "CoC": 0.99, "CoT": -0.4, "COTX": -0.7, "Hs": 21 },
-    "17.5": { "CoC": 0.99, "CoT": -0.4, "COTX": -0.7, "Hs": 21 }
-};
-
-// Simplified WHO LMS data for demonstration. 
-// In a real application, this would be a much larger dataset.
-// L, M, S values for median height (cm) and BMI at specific ages in months.
-const whoData = {
-    male: {
-        height: {
-            // Months: { L, M, S }
-            61: { l: 1, m: 110.3, s: 0.0417 }, 84: { l: 1, m: 121.7, s: 0.0416 },
-            120: { l: 1, m: 137.5, s: 0.0441 }, 180: { l: 1, m: 170.1, s: 0.0447 },
-            228: { l: 1, m: 176.5, s: 0.042 } // 19 years
-        },
-        bmi: {
-            61: { l: -0.7387, m: 15.2641, s: 0.08390 }, 84: { l: -1.0289, m: 15.3418, s: 0.08984 },
-            120: { l: -1.6180, m: 16.4227, s: 0.10842 }, 180: { l: -1.7423, m: 20.8930, s: 0.15579 },
-            228: { l: -0.9669, m: 22.7317, s: 0.16975 }
-        }
-    },
-    female: {
-        height: {
-            61: { l: 1, m: 109.6, s: 0.043 }, 84: { l: 1, m: 120.8, s: 0.0435 },
-            120: { l: 1, m: 138.6, s: 0.048 }, 144: { l: 1, m: 151.7, s: 0.052 },
-            228: { l: 1, m: 163.2, s: 0.041 } // 19 years
-        },
-        bmi: {
-            61: { l: -0.8886, m: 15.2441, s: 0.09692 }, 84: { l: -1.0371, m: 15.2014, s: 0.10013 },
-            120: { l: -1.3359, m: 16.5946, s: 0.12354 }, 144: { l: -1.3361, m: 18.2435, s: 0.14925 },
-            228: { l: -0.6695, m: 22.8256, s: 0.19179 }
-        }
-    }
-};
-
-// --- LOGIC SECTION ---
-class Diagnosis {
-    constructor(inputs) {
-        this.inputs = inputs;
-        this.results = {};
-        this.calculate();
-    }
-    
-    // Main calculation method
-    calculate() {
-        this.calculateAge();
-        this.calculateBMI();
-        this.predictGeneticHeight();
-        this.predictBoneAgeHeight();
-        this.classifyAll();
-    }
-    
-    // 1. Calculate current age in years
-    calculateAge() {
-        const birthDate = new Date(this.inputs.dob);
-        const today = new Date();
-        let age = today.getFullYear() - birthDate.getFullYear();
-        const m = today.getMonth() - birthDate.getMonth();
-        if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
-            age--;
-        }
-        const ageDecimal = (today - birthDate) / (1000 * 60 * 60 * 24 * 365.25);
-        this.results.age = parseFloat(ageDecimal.toFixed(2));
-        this.results.ageInMonths = Math.floor(this.results.age * 12);
-    }
-
-    // 2. Calculate BMI
-    calculateBMI() {
-        const heightM = this.inputs.currentHeight / 100;
-        const bmi = this.inputs.currentWeight / (heightM * heightM);
-        this.results.bmi = parseFloat(bmi.toFixed(2));
-    }
-
-    // 3. Predict height based on genetics
-    predictGeneticHeight() {
-        const midParentalHeight = (this.inputs.fatherHeight + this.inputs.motherHeight) / 2;
-        const adjustment = this.inputs.gender === 'male' ? 6.5 : -6.5;
-        this.results.geneticHeight = parseFloat((midParentalHeight + adjustment).toFixed(1));
-    }
-
-    // 4. Predict height based on bone age
-    predictBoneAgeHeight() {
-        // Custom rounding rule for bone age
-        const boneAge = this.inputs.boneAge;
-        const decimalPart = boneAge % 1;
-        let roundedBoneAge;
-        if (decimalPart <= 0.3) {
-            roundedBoneAge = Math.floor(boneAge);
-        } else if (decimalPart < 0.7) {
-            roundedBoneAge = Math.floor(boneAge) + 0.5;
-        } else {
-            roundedBoneAge = Math.ceil(boneAge);
-        }
-
-        let coeffs;
-        if (this.inputs.gender === 'male') {
-            coeffs = boyCoefficients[roundedBoneAge];
-        } else {
-            coeffs = this.inputs.pubertyStatus === 'pre' ? girlPrePubertyCoefficients[roundedBoneAge] : girlPostPubertyCoefficients[roundedBoneAge];
-        }
-
-        if (!coeffs) {
-            this.results.boneAgeHeight = "Không có dữ liệu cho tuổi xương này";
-            return;
-        }
+const boyData = [
+            { age: 4, cao: 1.2, coc: 1.2, cot: -7.3, tx: 0, cotx: 0, hs: 82 },
+            { age: 5, cao: 1.2, coc: 1.2, cot: -7.3, tx: 0, cotx: 0, hs: 82 },
+            { age: 6, cao: 1.2, coc: 1.2, cot: -7.3, tx: 0, cotx: 0, hs: 82 },
+            { age: 7, cao: 1.2, coc: 1.2, cot: -7.3, tx: 0, cotx: 0, hs: 82 },
+            { age: 8, cao: 1.22, coc: 1.22, cot: -7.2, tx: -0.4, cotx: -0.4, hs: 82 },
+            { age: 8.5, cao: 1.23, coc: 1.23, cot: -7, tx: -0.7, cotx: -0.7, hs: 82 },
+            { age: 9, cao: 1.22, coc: 1.22, cot: -6.8, tx: -0.8, cotx: -0.8, hs: 82 },
+            { age: 9.5, cao: 1.21, coc: 1.21, cot: -6.5, tx: -0.8, cotx: -0.8, hs: 82 },
+            { age: 10, cao: 1.2, coc: 1.2, cot: -6.2, tx: -1, cotx: -1, hs: 83 },
+            { age: 10.5, cao: 1.19, coc: 1.19, cot: -5.9, tx: -1.2, cotx: -1.2, hs: 84 },
+            { age: 11, cao: 1.16, coc: 1.16, cot: -5.5, tx: -1.6, cotx: -1.6, hs: 89 },
+            { age: 11.5, cao: 1.13, coc: 1.13, cot: -5.1, tx: -2, cotx: -2, hs: 94 },
+            { age: 12, cao: 1.08, coc: 1.08, cot: -4.2, tx: -2.6, cotx: -2.6, hs: 98 },
+            { age: 12.5, cao: 1.03, coc: 1.03, cot: -3.4, tx: -3.2, cotx: -3.2, hs: 103 },
+            { age: 13, cao: 0.98, coc: 0.98, cot: -2.6, tx: -3.8, cotx: -3.8, hs: 108 },
+            { age: 13.5, cao: 0.94, coc: 0.94, cot: -1.9, tx: -4.4, cotx: -4.4, hs: 113 },
+            { age: 14, cao: 0.9, coc: 0.9, cot: -1.4, tx: -4.5, cotx: -4.5, hs: 113 },
+            { age: 14.5, cao: 0.87, coc: 0.87, cot: -1, tx: -4.6, cotx: -4.6, hs: 114 },
+            { age: 15, cao: 0.84, coc: 0.84, cot: -0.8, tx: -3.8, cotx: -3.8, hs: 104 },
+            { age: 15.5, cao: 0.82, coc: 0.82, cot: -0.6, tx: -3.1, cotx: -3.1, hs: 94 },
+            { age: 16, cao: 0.88, coc: 0.88, cot: -0.4, tx: -2.4, cotx: -2.4, hs: 70 },
+            { age: 16.5, cao: 0.94, coc: 0.94, cot: -0.3, tx: -1.8, cotx: -1.8, hs: 48 },
+            { age: 17, cao: 0.96, coc: 0.96, cot: -0.2, tx: -1.2, cotx: -1.2, hs: 32 },
+            { age: 17.5, cao: 0.96, coc: 0.96, cot: -0.2, tx: -1.2, cotx: -1.2, hs: 33 },
+            { age: 18, cao: 0.97, coc: 0.97, cot: -0.2, tx: -1.2, cotx: -1.2, hs: 32 }
+        ];
         
-        // Formula: (CoC*Cao) + (CoT*Tuổi) + COTX + Hs
-        // NOTE: Based on analysis, the most logical formula is adding COTX as a constant.
-        const predictedHeight = (coeffs.CoC * this.inputs.currentHeight) + 
-                                (coeffs.CoT * boneAge) + 
-                                coeffs.COTX + 
-                                coeffs.Hs;
-
-        this.results.boneAgeHeight = parseFloat(predictedHeight.toFixed(1));
-    }
-    
-    // 5. Get Z-Score based on WHO LMS data
-    getZScore(type, ageInMonths, value) {
-        const data = whoData[this.inputs.gender][type];
-        const ageKeys = Object.keys(data).map(Number);
+        // Dữ liệu hệ số cho bé gái chưa dậy thì
+        const girlPreData = [
+            { age: 4, cao: 0.95, coc: 0.95, cot: -6.5, tx: 0, cotx: 0, hs: 93 },
+            { age: 5, cao: 0.95, coc: 0.95, cot: -6.5, tx: 0, cotx: 0, hs: 93 },
+            { age: 6, cao: 0.95, coc: 0.95, cot: -6, tx: -0.4, cotx: -0.4, hs: 93 },
+            { age: 6.5, cao: 0.95, coc: 0.95, cot: -5.5, tx: -0.8, cotx: -0.8, hs: 93 },
+            { age: 7, cao: 0.94, coc: 0.94, cot: -5.1, tx: -1, cotx: -1, hs: 93 },
+            { age: 7.5, cao: 0.93, coc: 0.93, cot: -4.7, tx: -1.1, cotx: -1.1, hs: 94 },
+            { age: 8, cao: 0.92, coc: 0.92, cot: -4.4, tx: -1.5, cotx: -1.5, hs: 95 },
+            { age: 8.5, cao: 0.92, coc: 0.92, cot: -4, tx: -1.9, cotx: -1.9, hs: 96 },
+            { age: 9, cao: 0.92, coc: 0.92, cot: -3.8, tx: -2.3, cotx: -2.3, hs: 96 },
+            { age: 9.5, cao: 0.91, coc: 0.91, cot: -3.6, tx: -2.7, cotx: -2.7, hs: 100 },
+            { age: 10, cao: 0.89, coc: 0.89, cot: -3.2, tx: -3.2, cotx: -3.2, hs: 104 },
+            { age: 10.5, cao: 0.87, coc: 0.87, cot: -2.7, tx: -3.6, cotx: -3.6, hs: 107 },
+            { age: 11, cao: 0.83, coc: 0.83, cot: -2.6, tx: -3.6, cotx: -3.6, hs: 111 },
+            { age: 11.5, cao: 0.82, coc: 0.82, cot: -2.5, tx: -3.6, cotx: -3.6, hs: 112 },
+            { age: 12, cao: 0.83, coc: 0.83, cot: -2.4, tx: -3.4, cotx: -3.4, hs: 108 },
+            { age: 12.5, cao: 0.83, coc: 0.83, cot: -2.3, tx: -3.4, cotx: -3.4, hs: 107 },
+            { age: 13, cao: 0.85, coc: 0.85, cot: -2, tx: -3.1, cotx: -3.1, hs: 97 },
+            { age: 13.5, cao: 0.87, coc: 0.87, cot: -1.8, tx: -3, cotx: -3, hs: 91 },
+            { age: 14, cao: 0.91, coc: 0.91, cot: -1.6, tx: -2.8, cotx: -2.8, hs: 80 },
+            { age: 14.5, cao: 0.99, coc: 0.99, cot: -1.4, tx: -2.5, cotx: -2.5, hs: 61 }
+        ];
         
-        // Find nearest age data points for interpolation
-        let lowerAge = Math.max(...ageKeys.filter(k => k <= ageInMonths));
-        let upperAge = Math.min(...ageKeys.filter(k => k >= ageInMonths));
-
-        if (!lowerAge) lowerAge = Math.min(...ageKeys);
-        if (!upperAge) upperAge = Math.max(...ageKeys);
-
-        const l = data[lowerAge].l;
-        const m = data[lowerAge].m;
-        const s = data[lowerAge].s;
+        // Dữ liệu hệ số cho bé gái đã dậy thì
+        const girlPostData = [
+            { age: 11, cao: 0.87, coc: 0.87, cot: -2.3, tx: -3.3, cotx: -3.3, hs: 99 },
+            { age: 11.5, cao: 0.89, coc: 0.89, cot: -1.9, tx: -3.3, cotx: -3.3, hs: 92 },
+            { age: 12, cao: 0.91, coc: 0.91, cot: -1.4, tx: -3.2, cotx: -3.2, hs: 81 },
+            { age: 12.5, cao: 0.93, coc: 0.93, cot: -1, tx: -2.7, cotx: -2.7, hs: 67 },
+            { age: 13, cao: 0.95, coc: 0.95, cot: -0.9, tx: -2.2, cotx: -2.2, hs: 55 },
+            { age: 13.5, cao: 0.96, coc: 0.96, cot: -0.9, tx: -1.8, cotx: -1.8, hs: 48 },
+            { age: 14, cao: 0.96, coc: 0.96, cot: -0.8, tx: -1.4, cotx: -1.4, hs: 41 },
+            { age: 14.5, cao: 0.97, coc: 0.97, cot: -0.8, tx: -1.3, cotx: -1.3, hs: 38 },
+            { age: 15, cao: 0.98, coc: 0.98, cot: -0.6, tx: -1.1, cotx: -1.1, hs: 28 },
+            { age: 15.5, cao: 0.99, coc: 0.99, cot: -0.4, tx: -0.7, cotx: -0.7, hs: 20 },
+            { age: 16, cao: 0.99, coc: 0.99, cot: -0.4, tx: -0.7, cotx: -0.7, hs: 20 },
+            { age: 16.5, cao: 0.99, coc: 0.99, cot: -0.4, tx: -0.7, cotx: -0.7, hs: 21 },
+            { age: 17, cao: 0.99, coc: 0.99, cot: -0.4, tx: -0.7, cotx: -0.7, hs: 21 },
+            { age: 17.5, cao: 0.99, coc: 0.99, cot: -0.4, tx: -0.7, cotx: -0.7, hs: 21 }
+        ];
         
-        if (l === 0) {
-            return Math.log(value / m) / s;
-        } else {
-            return (Math.pow(value / m, l) - 1) / (l * s);
-        }
-    }
-    
-    // 6. Classify results
-    classifyAll() {
-        // Adult BMI Classification
-        if (this.results.age >= 18) {
-            const bmi = this.results.bmi;
-            if (bmi < 18.5) this.results.bmiClassification = "Gầy";
-            else if (bmi < 25) this.results.bmiClassification = "Bình thường";
-            else if (bmi < 30) this.results.bmiClassification = "Thừa cân";
-            else this.results.bmiClassification = `Béo phì (BMI: ${bmi})`;
-        } else { // Child BMI Classification
-            const bmiZScore = this.getZScore('bmi', this.results.ageInMonths, this.results.bmi);
-            if (bmiZScore < -2) this.results.bmiClassification = "Gầy";
-            else if (bmiZScore < -1) this.results.bmiClassification = "Nguy cơ gầy";
-            else if (bmiZScore <= 1) this.results.bmiClassification = "Bình thường";
-            else if (bmiZScore <= 2) this.results.bmiClassification = "Thừa cân";
-            else this.results.bmiClassification = "Béo phì";
-        }
-        
-        // Current Height Classification
-        const heightZScore = this.getZScore('height', this.results.ageInMonths, this.inputs.currentHeight);
-        this.results.heightClassification = this.classifyHeightZScore(heightZScore);
-        
-        // Predicted Adult Height Classification
-        const adultHeightZScore = this.getZScore('height', 228, this.results.boneAgeHeight); // 228 months = 19 years
-        this.results.predictedHeightClassification = this.classifyHeightZScore(adultHeightZScore, true);
-    }
-    
-    classifyHeightZScore(zScore, isPredicted = false) {
-        const terms = isPredicted ? ["Lùn", "Thấp", "Bình thường", "Trội", "Vượt trội"] : ["Rất thấp", "Thấp", "Bình thường", "Cao", "Rất cao"];
-        if (zScore < -2) return terms[0];
-        if (zScore < -1) return terms[1];
-        if (zScore <= 1) return terms[2];
-        if (zScore <= 2) return terms[3];
-        return terms[4];
-    }
-}
-
-
-// --- UI / EVENT HANDLING SECTION ---
-document.addEventListener('DOMContentLoaded', () => {
-    const form = document.getElementById('diagnosisForm');
-    const genderSelect = document.getElementById('gender');
-    const girlSpecificQuestions = document.getElementById('girlSpecificQuestions');
-    let heightChartInstance, bmiChartInstance;
-
-    genderSelect.addEventListener('change', () => {
-        girlSpecificQuestions.style.display = genderSelect.value === 'female' ? 'block' : 'none';
-    });
-
-    form.addEventListener('submit', (e) => {
-        e.preventDefault();
-        
-        // 1. Gather inputs
-        const inputs = {
-            fullName: document.getElementById('fullName').value,
-            dob: document.getElementById('dob').value,
-            gender: document.getElementById('gender').value,
-            currentHeight: parseFloat(document.getElementById('currentHeight').value),
-            currentWeight: parseFloat(document.getElementById('currentWeight').value),
-            fatherHeight: parseFloat(document.getElementById('fatherHeight').value),
-            motherHeight: parseFloat(document.getElementById('motherHeight').value),
-            boneAge: parseFloat(document.getElementById('boneAge').value),
-            pubertyStatus: document.getElementById('pubertyStatus').value
+        // Dữ liệu tham chiếu WHO
+        const boyHeightRef = {
+            4: { mean: 102.3, sd: 4.1 },
+            5: { mean: 109.2, sd: 4.5 },
+            6: { mean: 115.5, sd: 4.9 },
+            7: { mean: 121.7, sd: 5.2 },
+            8: { mean: 127.0, sd: 5.4 },
+            9: { mean: 132.2, sd: 5.7 },
+            10: { mean: 137.5, sd: 6.0 },
+            11: { mean: 143.1, sd: 6.4 },
+            12: { mean: 149.3, sd: 7.1 },
+            13: { mean: 156.4, sd: 8.0 },
+            14: { mean: 163.9, sd: 8.4 },
+            15: { mean: 169.9, sd: 7.9 },
+            16: { mean: 173.4, sd: 7.0 },
+            17: { mean: 175.2, sd: 6.6 },
+            18: { mean: 176.1, sd: 6.4 }
         };
-
-        // 2. Create Diagnosis instance and run calculations
-        const diagnosis = new Diagnosis(inputs);
-        const res = diagnosis.results;
         
-        // 3. Display results on the page
-        document.getElementById('resFullName').textContent = inputs.fullName;
-        document.getElementById('resDob').textContent = new Date(inputs.dob).toLocaleDateString('vi-VN');
-        document.getElementById('resCurrentAge').textContent = `${res.age} tuổi`;
-        document.getElementById('resGender').textContent = inputs.gender === 'male' ? 'Bé trai' : 'Bé gái';
+        const girlHeightRef = {
+            4: { mean: 101.0, sd: 4.1 },
+            5: { mean: 107.9, sd: 4.4 },
+            6: { mean: 114.1, sd: 4.7 },
+            7: { mean: 120.2, sd: 5.1 },
+            8: { mean: 125.7, sd: 5.4 },
+            9: { mean: 131.3, sd: 5.7 },
+            10: { mean: 137.1, sd: 6.1 },
+            11: { mean: 143.2, sd: 6.6 },
+            12: { mean: 149.8, sd: 7.1 },
+            13: { mean: 155.7, sd: 6.6 },
+            14: { mean: 159.7, sd: 5.9 },
+            15: { mean: 161.8, sd: 5.4 },
+            16: { mean: 162.5, sd: 5.2 },
+            17: { mean: 162.9, sd: 5.1 },
+            18: { mean: 163.1, sd: 5.0 }
+        };
         
-        document.getElementById('resCurrentHeight').textContent = inputs.currentHeight;
-        document.getElementById('resCurrentWeight').textContent = inputs.currentWeight;
-        document.getElementById('resBmi').textContent = res.bmi;
-        document.getElementById('resBmiClass').textContent = res.bmiClassification;
-        document.getElementById('resHeightClass').textContent = res.heightClassification;
+        const boyBMIRef = {
+            4: { mean: 15.7, sd: 1.3 },
+            5: { mean: 15.4, sd: 1.3 },
+            6: { mean: 15.3, sd: 1.4 },
+            7: { mean: 15.3, sd: 1.5 },
+            8: { mean: 15.5, sd: 1.7 },
+            9: { mean: 15.9, sd: 1.9 },
+            10: { mean: 16.5, sd: 2.2 },
+            11: { mean: 17.2, sd: 2.6 },
+            12: { mean: 18.0, sd: 3.0 },
+            13: { mean: 18.8, sd: 3.3 },
+            14: { mean: 19.6, sd: 3.5 },
+            15: { mean: 20.3, sd: 3.6 },
+            16: { mean: 20.9, sd: 3.6 },
+            17: { mean: 21.3, sd: 3.5 },
+            18: { mean: 21.6, sd: 3.4 }
+        };
         
-        document.getElementById('resGeneticHeight').textContent = res.geneticHeight;
-        document.getElementById('resBoneAgeHeight').textContent = res.boneAgeHeight;
-        document.getElementById('resPredictedHeightClass').textContent = res.predictedHeightClassification;
-
-        const today = new Date();
-        document.getElementById('reportDate').textContent = `Hà Nội, ngày ${today.getDate()} tháng ${today.getMonth() + 1} năm ${today.getFullYear()}`;
-
-        // 4. Generate conclusion text
-        document.getElementById('finalConclusion').innerHTML = `
-            <strong>Hiện tại:</strong> Bé ${inputs.fullName} (${res.age} tuổi) có chiều cao là ${inputs.currentHeight} cm (phân loại: <strong>${res.heightClassification}</strong>) và chỉ số BMI là ${res.bmi} (phân loại: <strong>${res.bmiClassification}</strong>) so với chuẩn tăng trưởng của WHO cho trẻ cùng tuổi và giới tính.<br><br>
-            <strong>Dự báo:</strong> Chiều cao của bé khi trưởng thành (18 tuổi) được dự báo là khoảng <strong>${res.boneAgeHeight} cm</strong> (dựa trên tuổi xương), thuộc nhóm phân loại <strong>${res.predictedHeightClassification}</strong> so với quần thể.
-        `;
+        const girlBMIRef = {
+            4: { mean: 15.5, sd: 1.3 },
+            5: { mean: 15.2, sd: 1.4 },
+            6: { mean: 15.1, sd: 1.5 },
+            7: { mean: 15.2, sd: 1.7 },
+            8: { mean: 15.5, sd: 2.0 },
+            9: { mean: 16.0, sd: 2.3 },
+            10: { mean: 16.7, sd: 2.7 },
+            11: { mean: 17.5, sd: 3.1 },
+            12: { mean: 18.4, sd: 3.4 },
+            13: { mean: 19.1, sd: 3.5 },
+            14: { mean: 19.7, sd: 3.5 },
+            15: { mean: 20.2, sd: 3.4 },
+            16: { mean: 20.6, sd: 3.3 },
+            17: { mean: 20.9, sd: 3.2 },
+            18: { mean: 21.1, sd: 3.1 }
+        };
         
-        // 5. Draw charts
-        if (heightChartInstance) heightChartInstance.destroy();
-        if (bmiChartInstance) bmiChartInstance.destroy();
-        heightChartInstance = drawChart('height', inputs, diagnosis);
-        bmiChartInstance = drawChart('bmi', inputs, diagnosis);
-
-        // 6. Show results
-        document.getElementById('resultContainer').style.display = 'block';
-        window.scrollTo(0, document.body.scrollHeight);
-    });
-    
-    function getLMSValue(gender, type, zScore, ageInMonths) {
-        const data = whoData[gender][type];
-        const ageKeys = Object.keys(data).map(Number);
-        let nearestAge = ageKeys.reduce((prev, curr) => Math.abs(curr - ageInMonths) < Math.abs(prev - ageInMonths) ? curr : prev);
-        
-        const { l, m, s } = data[nearestAge];
-        
-        if (l === 0) {
-            return m * Math.exp(s * zScore);
+        // Hiển thị dữ liệu trong các bảng
+        function populateTable(data, tableId) {
+            const tableBody = document.getElementById(tableId);
+            tableBody.innerHTML = '';
+            
+            data.forEach(item => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${item.age}</td>
+                    <td>${item.cao}</td>
+                    <td>${item.coc}</td>
+                    <td>${item.cot}</td>
+                    <td>${item.tx}</td>
+                    <td>${item.cotx}</td>
+                    <td>${item.hs}</td>
+                `;
+                tableBody.appendChild(row);
+            });
         }
-        return m * Math.pow((l * s * zScore) + 1, 1 / l);
-    }
-
-    function drawChart(type, inputs, diagnosis) {
-        const ctx = document.getElementById(type + 'Chart').getContext('2d');
-        const isHeight = type === 'height';
-        const labels = Array.from({ length: 14 }, (_, i) => i + 5); // Ages 5 to 18
         
-        const datasets = [-2, -1, 0, 1, 2].map(z => {
-            return {
-                label: `SD ${z > 0 ? '+' : ''}${z}`,
-                data: labels.map(age => getLMSValue(inputs.gender, type, z, age * 12)),
-                borderColor: z === 0 ? 'rgba(255, 99, 132, 1)' : 'rgba(54, 162, 235, 0.5)',
-                borderWidth: z === 0 ? 3 : 2,
-                pointRadius: 0,
-                fill: false,
-                tension: 0.4
-            };
+        // Chuyển đổi giữa các tab
+        function openTab(evt, tabName) {
+            const tabContents = document.getElementsByClassName('tab-content');
+            for (let i = 0; i < tabContents.length; i++) {
+                tabContents[i].classList.remove('active');
+            }
+            
+            const tabButtons = document.getElementsByClassName('tab-button');
+            for (let i = 0; i < tabButtons.length; i++) {
+                tabButtons[i].classList.remove('active');
+            }
+            
+            document.getElementById(tabName).classList.add('active');
+            evt.currentTarget.classList.add('active');
+        }
+        
+        // Hiển thị/ẩn các trường liên quan đến kinh nguyệt khi giới tính thay đổi
+        document.getElementById('gender').addEventListener('change', function() {
+            const isFemale = this.value === 'female';
+            document.getElementById('menarcheGroup').style.display = isFemale ? 'block' : 'none';
         });
         
-        // Add patient data
-        const patientData = {
-            label: 'Dữ liệu của bé',
-            data: [],
-            backgroundColor: 'rgba(75, 192, 192, 1)',
-            borderColor: 'rgba(75, 192, 192, 1)',
-            pointRadius: 6,
-            pointHoverRadius: 8,
-            fill: false
-        };
+        // Xử lý khi nhấn nút tính toán
+        document.getElementById('calculateBtn').addEventListener('click', function() {
+            // Lấy thông tin từ form
+            const patient = new Patient(
+                document.getElementById('name').value,
+                document.getElementById('dob').value,
+                document.getElementById('gender').value,
+                parseFloat(document.getElementById('currentHeight').value),
+                parseFloat(document.getElementById('currentWeight').value),
+                parseFloat(document.getElementById('fatherHeight').value),
+                parseFloat(document.getElementById('motherHeight').value),
+                document.getElementById('menarcheDate').value,
+                parseFloat(document.getElementById('boneAge').value)
+            );
+            
+            // Kiểm tra tuổi
+            const age = patient.calculateAge();
+            if (age < 4 || age >= 18) {
+                alert('Chương trình chỉ áp dụng cho trẻ từ 4 tuổi đến dưới 18 tuổi');
+                return;
+            }
+            
+            // Tính toán kết quả
+            const results = patient.calculateResults();
+            
+            // Hiển thị kết quả
+            displayResults(results, patient.gender, age);
+            
+            // Hiển thị section kết quả
+            document.getElementById('results').style.display = 'block';
+            
+            // Cuộn đến phần kết quả
+            document.getElementById('results').scrollIntoView({ behavior: 'smooth' });
+        });
         
-        const currentVal = isHeight ? inputs.currentHeight : diagnosis.results.bmi;
-        patientData.data.push({ x: diagnosis.results.age, y: currentVal });
-        
-        if (isHeight) {
-            patientData.data.push({ x: 18, y: diagnosis.results.boneAgeHeight });
+        // Lớp Patient để lưu trữ thông tin bệnh nhân và tính toán
+        class Patient {
+            constructor(name, dob, gender, currentHeight, currentWeight, 
+                        fatherHeight, motherHeight, menarcheDate, boneAge) {
+                this.name = name;
+                this.dob = dob;
+                this.gender = gender;
+                this.currentHeight = currentHeight;
+                this.currentWeight = currentWeight;
+                this.fatherHeight = fatherHeight;
+                this.motherHeight = motherHeight;
+                this.menarcheDate = menarcheDate;
+                this.boneAge = boneAge;
+            }
+            
+            calculateAge() {
+                const birthDate = new Date(this.dob);
+                const today = new Date();
+                let age = today.getFullYear() - birthDate.getFullYear();
+                const monthDiff = today.getMonth() - birthDate.getMonth();
+                
+                if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
+                    age--;
+                }
+                
+                // Tính phần thập phân của tuổi
+                const nextBirthday = new Date(today.getFullYear(), birthDate.getMonth(), birthDate.getDate());
+                if (today > nextBirthday) {
+                    nextBirthday.setFullYear(nextBirthday.getFullYear() + 1);
+                }
+                
+                const daysPassed = (nextBirthday - today) / (1000 * 60 * 60 * 24);
+                const decimalAge = age + (1 - daysPassed / 365);
+                
+                // Làm tròn tuổi theo quy tắc
+                const decimalPart = decimalAge - Math.floor(decimalAge);
+                
+                if (decimalPart <= 0.3) {
+                    return Math.floor(decimalAge);
+                } else if (decimalPart > 0.3 && decimalPart < 0.7) {
+                    return Math.floor(decimalAge) + 0.5;
+                } else {
+                    return Math.ceil(decimalAge);
+                }
+            }
+            
+            calculateResults() {
+                const age = this.calculateAge();
+                const isFemale = this.gender === 'female';
+                const hasMenarche = isFemale && this.menarcheDate;
+                
+                // 1. Tính chiều cao trưởng thành theo di truyền
+                const geneticHeight = this.calculateGeneticHeight(isFemale);
+                
+                // 2. Tính chiều cao trưởng thành theo tuổi xương
+                const boneAgeHeight = this.calculateBoneAgeHeight(age, isFemale, hasMenarche);
+                
+                // 3. Tính BMI hiện tại
+                const bmi = this.currentWeight / Math.pow(this.currentHeight / 100, 2);
+                
+                // 4. Phân loại BMI và chiều cao
+                const bmiClassification = this.classifyBMI(bmi, age, isFemale);
+                const heightClassification = this.classifyCurrentHeight(age, isFemale);
+                const geneticHeightClassification = this.classifyAdultHeight(geneticHeight, isFemale);
+                const boneAgeHeightClassification = this.classifyAdultHeight(boneAgeHeight, isFemale);
+                
+                return {
+                    name: this.name,
+                    age,
+                    gender: this.gender,
+                    currentHeight: this.currentHeight,
+                    currentWeight: this.currentWeight,
+                    bmi,
+                    bmiClassification,
+                    heightClassification,
+                    geneticHeight,
+                    geneticHeightClassification,
+                    boneAgeHeight,
+                    boneAgeHeightClassification,
+                    isFemale
+                };
+            }
+            
+            calculateGeneticHeight(isFemale) {
+                const C = isFemale ? -6.5 : 6.5;
+                return (this.fatherHeight + this.motherHeight) / 2 + C;
+            }
+            
+            calculateBoneAgeHeight(age, isFemale, hasMenarche) {
+                // Tìm hệ số phù hợp
+                let coefficients;
+                
+                if (!isFemale) {
+                    coefficients = this.findCoefficients(boyData, age);
+                } else {
+                    if (hasMenarche) {
+                        coefficients = this.findCoefficients(girlPostData, age);
+                    } else {
+                        coefficients = this.findCoefficients(girlPreData, age);
+                    }
+                }
+                
+                if (!coefficients) {
+                    console.error('Không tìm thấy hệ số cho tuổi này');
+                    return 0;
+                }
+                
+                return (coefficients.coc * this.currentHeight) + 
+                       (coefficients.cot * age) + 
+                       (coefficients.cotx * this.boneAge) + 
+                       coefficients.hs;
+            }
+            
+            findCoefficients(data, age) {
+                // Tìm giá trị chính xác hoặc gần nhất
+                let exactMatch = data.find(item => item.age === age);
+                if (exactMatch) return exactMatch;
+                
+                // Nếu không tìm thấy chính xác, tìm giá trị gần nhất
+                let closest = null;
+                let minDiff = Infinity;
+                
+                for (const item of data) {
+                    const diff = Math.abs(item.age - age);
+                    if (diff < minDiff) {
+                        minDiff = diff;
+                        closest = item;
+                    }
+                }
+                
+                return closest;
+            }
+            
+            classifyBMI(bmi, age, isFemale) {
+                const refData = isFemale ? girlBMIRef : boyBMIRef;
+                let refAge = Math.floor(age);
+                if (age % 1 >= 0.5) refAge += 0.5;
+                
+                // Tìm giá trị tham chiếu gần nhất
+                let closestRef = null;
+                let minDiff = Infinity;
+                
+                for (const [a, values] of Object.entries(refData)) {
+                    const diff = Math.abs(a - refAge);
+                    if (diff < minDiff) {
+                        minDiff = diff;
+                        closestRef = values;
+                    }
+                }
+                
+                if (!closestRef) {
+                    closestRef = isFemale ? { mean: 21.1, sd: 3.1 } : { mean: 21.6, sd: 3.4 };
+                }
+                
+                const { mean, sd } = closestRef;
+                const zScore = (bmi - mean) / sd;
+                
+                if (zScore < -2) return { category: "Rất gầy", level: -2, zScore };
+                if (zScore < -1) return { category: "Gầy", level: -1, zScore };
+                if (zScore < 1) return { category: "Bình thường", level: 0, zScore };
+                if (zScore < 2) return { category: "Thừa cân", level: 1, zScore };
+                
+                // Phân loại béo phì theo độ
+                if (zScore < 3) return { category: "Béo phì độ I", level: 2, zScore };
+                if (zScore < 4) return { category: "Béo phì độ II", level: 3, zScore };
+                return { category: "Béo phì độ III", level: 4, zScore };
+            }
+            
+            classifyCurrentHeight(age, isFemale) {
+                const refData = isFemale ? girlHeightRef : boyHeightRef;
+                let refAge = Math.floor(age);
+                if (age % 1 >= 0.5) refAge += 0.5;
+                
+                // Tìm giá trị tham chiếu gần nhất
+                let closestRef = null;
+                let minDiff = Infinity;
+                
+                for (const [a, values] of Object.entries(refData)) {
+                    const diff = Math.abs(a - refAge);
+                    if (diff < minDiff) {
+                        minDiff = diff;
+                        closestRef = values;
+                    }
+                }
+                
+                if (!closestRef) {
+                    closestRef = isFemale ? { mean: 163.1, sd: 5.0 } : { mean: 176.1, sd: 6.4 };
+                }
+                
+                const { mean, sd } = closestRef;
+                const zScore = (this.currentHeight - mean) / sd;
+                
+                if (zScore < -2) return { category: "Rất thấp", level: -2, zScore };
+                if (zScore < -1) return { category: "Thấp", level: -1, zScore };
+                if (zScore < 1) return { category: "Bình thường", level: 0, zScore };
+                if (zScore < 2) return { category: "Cao", level: 1, zScore };
+                return { category: "Rất cao", level: 2, zScore };
+            }
+            
+            classifyAdultHeight(height, isFemale) {
+                const mean = isFemale ? 163.1 : 176.1;
+                const sd = isFemale ? 5.0 : 6.4;
+                const zScore = (height - mean) / sd;
+                
+                if (zScore < -2) return { category: "Lùn", level: -2, zScore };
+                if (zScore < -1) return { category: "Thấp", level: -1, zScore };
+                if (zScore < 1) return { category: "Bình thường", level: 0, zScore };
+                if (zScore < 2) return { category: "Trội", level: 1, zScore };
+                return { category: "Vượt trội", level: 2, zScore };
+            }
         }
         
-        datasets.push(patientData);
-
-        return new Chart(ctx, {
-            type: 'line',
-            data: { labels, datasets },
-            options: {
-                responsive: true,
-                plugins: {
-                    title: {
-                        display: true,
-                        text: isHeight ? 'Biểu đồ Chiều cao theo Tuổi' : 'Biểu đồ BMI theo Tuổi'
-                    }
+        // Hiển thị kết quả
+        function displayResults(results, gender, currentAge) {
+            // Hiển thị thông tin cơ bản
+            document.getElementById('resultName').textContent = results.name;
+            document.getElementById('resultAge').textContent = results.age;
+            document.getElementById('resultGender').textContent = gender === 'male' ? 'Nam' : 'Nữ';
+            
+            // Hiển thị chiều cao hiện tại
+            const heightPercentile = calculatePercentile(results.heightClassification.zScore);
+            document.getElementById('currentHeightValue').textContent = results.currentHeight.toFixed(1);
+            document.getElementById('currentHeightCategory').textContent = results.heightClassification.category;
+            document.getElementById('currentHeightZScore').textContent = results.heightClassification.zScore.toFixed(2);
+            document.getElementById('currentHeightPercentile').textContent = heightPercentile.toFixed(1) + '%';
+            document.getElementById('heightMarker').style.left = heightPercentile + '%';
+            document.getElementById('currentHeightComment').innerHTML = getHeightComment(
+                results.currentHeight, 
+                results.heightClassification, 
+                currentAge, 
+                results.isFemale
+            );
+            
+            // Hiển thị BMI hiện tại
+            const bmiPercentile = calculatePercentile(results.bmiClassification.zScore);
+            document.getElementById('currentBMIValue').textContent = results.bmi.toFixed(1);
+            document.getElementById('currentBMICategory').textContent = results.bmiClassification.category;
+            document.getElementById('currentBMIZScore').textContent = results.bmiClassification.zScore.toFixed(2);
+            document.getElementById('currentBMIPercentile').textContent = bmiPercentile.toFixed(1) + '%';
+            document.getElementById('bmiMarker').style.left = bmiPercentile + '%';
+            document.getElementById('currentBMIComment').innerHTML = getBMIComment(
+                results.bmi, 
+                results.bmiClassification, 
+                currentAge, 
+                results.isFemale
+            );
+            
+            // Hiển thị chiều cao di truyền
+            const geneticHeightPercentile = calculatePercentile(results.geneticHeightClassification.zScore);
+            document.getElementById('geneticHeightValue').textContent = results.geneticHeight.toFixed(1);
+            document.getElementById('geneticHeightCategory').textContent = results.geneticHeightClassification.category;
+            document.getElementById('geneticHeightZScore').textContent = results.geneticHeightClassification.zScore.toFixed(2);
+            document.getElementById('geneticHeightPercentile').textContent = geneticHeightPercentile.toFixed(1) + '%';
+            document.getElementById('geneticHeightMarker').style.left = geneticHeightPercentile + '%';
+            document.getElementById('geneticHeightComment').innerHTML = getAdultHeightComment(
+                results.geneticHeight, 
+                results.geneticHeightClassification, 
+                results.isFemale
+            );
+            
+            // Hiển thị chiều cao theo tuổi xương
+            const boneAgeHeightPercentile = calculatePercentile(results.boneAgeHeightClassification.zScore);
+            document.getElementById('boneAgeHeightValue').textContent = results.boneAgeHeight.toFixed(1);
+            document.getElementById('boneAgeHeightCategory').textContent = results.boneAgeHeightClassification.category;
+            document.getElementById('boneAgeHeightZScore').textContent = results.boneAgeHeightClassification.zScore.toFixed(2);
+            document.getElementById('boneAgeHeightPercentile').textContent = boneAgeHeightPercentile.toFixed(1) + '%';
+            document.getElementById('boneAgeHeightMarker').style.left = boneAgeHeightPercentile + '%';
+            document.getElementById('boneAgeHeightComment').innerHTML = getAdultHeightComment(
+                results.boneAgeHeight, 
+                results.boneAgeHeightClassification, 
+                results.isFemale
+            );
+            
+            // Nhận xét tổng quan
+            document.getElementById('overallComment').innerHTML = getOverallComment(results, currentAge);
+            
+            // Vẽ biểu đồ
+            drawGrowthChart(results, currentAge);
+        }
+        
+        // Tính phân vị từ z-score
+        function calculatePercentile(zScore) {
+            // Sử dụng xấp xỉ phân phối chuẩn
+            const percent = 100 * (1 + erf(zScore / Math.sqrt(2))) / 2;
+            return Math.min(100, Math.max(0, percent));
+        }
+        
+        // Hàm xấp xỉ hàm sai số (error function)
+        function erf(x) {
+            // Xấp xỉ với độ chính xác cao
+            const a1 =  0.254829592;
+            const a2 = -0.284496736;
+            const a3 =  1.421413741;
+            const a4 = -1.453152027;
+            const a5 =  1.061405429;
+            const p  =  0.3275911;
+            
+            const sign = x < 0 ? -1 : 1;
+            x = Math.abs(x);
+            
+            const t = 1.0 / (1.0 + p * x);
+            const y = 1.0 - (((((a5 * t + a4) * t) + a3) * t + a2) * t + a1) * t * Math.exp(-x * x);
+            
+            return sign * y;
+        }
+        
+        // Tạo nhận xét về chiều cao hiện tại
+        function getHeightComment(height, classification, age, isFemale) {
+            const refData = isFemale ? girlHeightRef : boyHeightRef;
+            let refAge = Math.floor(age);
+            if (age % 1 >= 0.5) refAge += 0.5;
+            
+            // Tìm giá trị tham chiếu gần nhất
+            let closestRef = null;
+            let minDiff = Infinity;
+            
+            for (const [a, values] of Object.entries(refData)) {
+                const diff = Math.abs(a - refAge);
+                if (diff < minDiff) {
+                    minDiff = diff;
+                    closestRef = values;
+                }
+            }
+            
+            if (!closestRef) {
+                closestRef = isFemale ? { mean: 163.1, sd: 5.0 } : { mean: 176.1, sd: 6.4 };
+            }
+            
+            const { mean, sd } = closestRef;
+            const diff = height - mean;
+            
+            let comment = `Chiều cao hiện tại của trẻ `;
+            
+            if (classification.level <= -2) {
+                comment += `thấp hơn đáng kể so với trung bình (thấp hơn ${Math.abs(diff).toFixed(1)} cm so với mức trung bình ${mean} cm). `;
+                comment += `Điều này có thể liên quan đến các yếu tố di truyền, dinh dưỡng hoặc bệnh lý. `;
+                comment += `Cần đánh giá thêm về tình trạng dinh dưỡng, nội tiết và các yếu tố khác.`;
+            } else if (classification.level === -1) {
+                comment += `thấp hơn một chút so với trung bình (thấp hơn ${Math.abs(diff).toFixed(1)} cm so với mức trung bình ${mean} cm). `;
+                comment += `Có thể nằm trong phạm vi bình thường nhưng cần theo dõi thêm tốc độ tăng trưởng.`;
+            } else if (classification.level === 0) {
+                comment += `ở mức trung bình (${mean} cm). `;
+                comment += `Tốc độ tăng trưởng hiện tại phù hợp với độ tuổi.`;
+            } else if (classification.level === 1) {
+                comment += `cao hơn một chút so với trung bình (cao hơn ${diff.toFixed(1)} cm so với mức trung bình ${mean} cm). `;
+                comment += `Điều này có thể do yếu tố di truyền hoặc phát triển sớm.`;
+            } else {
+                comment += `cao hơn đáng kể so với trung bình (cao hơn ${diff.toFixed(1)} cm so với mức trung bình ${mean} cm). `;
+                comment += `Cần đánh giá thêm về tình trạng dậy thì sớm nếu có.`;
+            }
+            
+            return comment;
+        }
+        
+        // Tạo nhận xét về BMI hiện tại
+        function getBMIComment(bmi, classification, age, isFemale) {
+            const refData = isFemale ? girlBMIRef : boyBMIRef;
+            let refAge = Math.floor(age);
+            if (age % 1 >= 0.5) refAge += 0.5;
+            
+            // Tìm giá trị tham chiếu gần nhất
+            let closestRef = null;
+            let minDiff = Infinity;
+            
+            for (const [a, values] of Object.entries(refData)) {
+                const diff = Math.abs(a - refAge);
+                if (diff < minDiff) {
+                    minDiff = diff;
+                    closestRef = values;
+                }
+            }
+            
+            if (!closestRef) {
+                closestRef = isFemale ? { mean: 21.1, sd: 3.1 } : { mean: 21.6, sd: 3.4 };
+            }
+            
+            const { mean, sd } = closestRef;
+            const diff = bmi - mean;
+            
+            let comment = `Chỉ số BMI hiện tại của trẻ `;
+            
+            if (classification.level <= -2) {
+                comment += `thấp hơn đáng kể so với trung bình (thấp hơn ${Math.abs(diff).toFixed(1)} so với mức trung bình ${mean.toFixed(1)}). `;
+                comment += `Điều này có thể liên quan đến dinh dưỡng không đầy đủ hoặc các vấn đề sức khỏe khác. `;
+                comment += `Cần đánh giá thêm về chế độ ăn và tình trạng sức khỏe chung.`;
+            } else if (classification.level === -1) {
+                comment += `thấp hơn một chút so với trung bình (thấp hơn ${Math.abs(diff).toFixed(1)} so với mức trung bình ${mean.toFixed(1)}). `;
+                comment += `Có thể nằm trong phạm vi bình thường nhưng cần theo dõi thêm.`;
+            } else if (classification.level === 0) {
+                comment += `ở mức trung bình (${mean.toFixed(1)}). `;
+                comment += `Tình trạng dinh dưỡng hiện tại phù hợp với độ tuổi.`;
+            } else if (classification.level === 1) {
+                comment += `cao hơn một chút so với trung bình (cao hơn ${diff.toFixed(1)} so với mức trung bình ${mean.toFixed(1)}). `;
+                comment += `Cần chú ý đến chế độ ăn và hoạt động thể chất để duy trì cân nặng hợp lý.`;
+            } else if (classification.level === 2) {
+                comment += `ở mức béo phì độ I (cao hơn ${diff.toFixed(1)} so với mức trung bình ${mean.toFixed(1)}). `;
+                comment += `Cần điều chỉnh chế độ ăn và tăng cường hoạt động thể chất.`;
+            } else if (classification.level === 3) {
+                comment += `ở mức béo phì độ II (cao hơn ${diff.toFixed(1)} so với mức trung bình ${mean.toFixed(1)}). `;
+                comment += `Cần can thiệp tích cực về dinh dưỡng và lối sống.`;
+            } else {
+                comment += `ở mức béo phì độ III (cao hơn ${diff.toFixed(1)} so với mức trung bình ${mean.toFixed(1)}). `;
+                comment += `Cần đánh giá y tế toàn diện và can thiệp đa ngành.`;
+            }
+            
+            return comment;
+        }
+        
+        // Tạo nhận xét về chiều cao trưởng thành
+        function getAdultHeightComment(height, classification, isFemale) {
+            const mean = isFemale ? 163.1 : 176.1;
+            const diff = height - mean;
+            
+            let comment = `Dự báo chiều cao khi trưởng thành `;
+            
+            if (classification.level <= -2) {
+                comment += `thấp hơn đáng kể so với trung bình (thấp hơn ${Math.abs(diff).toFixed(1)} cm so với mức trung bình ${mean} cm). `;
+                comment += `Điều này có thể liên quan đến các yếu tố di truyền, dinh dưỡng hoặc bệnh lý. `;
+                comment += `Cần đánh giá thêm về các yếu tố ảnh hưởng đến tăng trưởng.`;
+            } else if (classification.level === -1) {
+                comment += `thấp hơn một chút so với trung bình (thấp hơn ${Math.abs(diff).toFixed(1)} cm so với mức trung bình ${mean} cm). `;
+                comment += `Vẫn nằm trong phạm vi bình thường nhưng ở mức thấp.`;
+            } else if (classification.level === 0) {
+                comment += `ở mức trung bình (${mean} cm). `;
+                comment += `Phù hợp với chiều cao trung bình của người trưởng thành.`;
+            } else if (classification.level === 1) {
+                comment += `cao hơn một chút so với trung bình (cao hơn ${diff.toFixed(1)} cm so với mức trung bình ${mean} cm). `;
+                comment += `Điều này có thể do yếu tố di truyền hoặc phát triển tốt.`;
+            } else {
+                comment += `cao hơn đáng kể so với trung bình (cao hơn ${diff.toFixed(1)} cm so với mức trung bình ${mean} cm). `;
+                comment += `Chiều cao vượt trội có thể do di truyền hoặc các yếu tố khác.`;
+            }
+            
+            return comment;
+        }
+        
+        // Tạo nhận xét tổng quan
+        function getOverallComment(results, currentAge) {
+            let comment = `Tổng quan: `;
+            
+            // Đánh giá chiều cao hiện tại
+            if (results.heightClassification.level <= -2) {
+                comment += `Chiều cao hiện tại của trẻ thấp hơn đáng kể so với trẻ cùng tuổi. `;
+            } else if (results.heightClassification.level === -1) {
+                comment += `Chiều cao hiện tại của trẻ thấp hơn một chút so với trẻ cùng tuổi. `;
+            } else if (results.heightClassification.level === 0) {
+                comment += `Chiều cao hiện tại của trẻ ở mức trung bình so với trẻ cùng tuổi. `;
+            } else if (results.heightClassification.level === 1) {
+                comment += `Chiều cao hiện tại của trẻ cao hơn một chút so với trẻ cùng tuổi. `;
+            } else {
+                comment += `Chiều cao hiện tại của trẻ cao hơn đáng kể so với trẻ cùng tuổi. `;
+            }
+            
+            // Đánh giá BMI hiện tại
+            if (results.bmiClassification.level <= -2) {
+                comment += `Tình trạng dinh dưỡng hiện tại ở mức rất gầy. `;
+            } else if (results.bmiClassification.level === -1) {
+                comment += `Tình trạng dinh dưỡng hiện tại hơi thấp so với trẻ cùng tuổi. `;
+            } else if (results.bmiClassification.level === 0) {
+                comment += `Tình trạng dinh dưỡng hiện tại ở mức bình thường. `;
+            } else if (results.bmiClassification.level === 1) {
+                comment += `Tình trạng dinh dưỡng hiện tại hơi cao so với trẻ cùng tuổi. `;
+            } else if (results.bmiClassification.level === 2) {
+                comment += `Tình trạng dinh dưỡng hiện tại ở mức béo phì độ I. `;
+            } else if (results.bmiClassification.level === 3) {
+                comment += `Tình trạng dinh dưỡng hiện tại ở mức béo phì độ II. `;
+            } else {
+                comment += `Tình trạng dinh dưỡng hiện tại ở mức béo phì độ III. `;
+            }
+            
+            // So sánh hai phương pháp dự báo chiều cao
+            const heightDiff = Math.abs(results.geneticHeight - results.boneAgeHeight);
+            if (heightDiff < 3) {
+                comment += `Hai phương pháp dự báo chiều cao cho kết quả tương đồng, đáng tin cậy. `;
+            } else if (heightDiff < 5) {
+                comment += `Có sự khác biệt nhỏ giữa hai phương pháp dự báo chiều cao. `;
+            } else {
+                comment += `Có sự khác biệt đáng kể giữa hai phương pháp dự báo chiều cao, cần đánh giá thêm. `;
+            }
+            
+            // Khuyến nghị chung
+            if (results.heightClassification.level <= -1 || results.bmiClassification.level <= -1) {
+                comment += `Khuyến nghị: Cần đánh giá thêm về dinh dưỡng, nội tiết và các yếu tố ảnh hưởng đến tăng trưởng. `;
+            } else if (results.bmiClassification.level >= 1) {
+                comment += `Khuyến nghị: Cần điều chỉnh chế độ ăn và tăng cường hoạt động thể chất. `;
+            } else {
+                comment += `Khuyến nghị: Duy trì chế độ dinh dưỡng và sinh hoạt hợp lý để tiếp tục phát triển tốt. `;
+            }
+            
+            return comment;
+        }
+        
+        // Vẽ biểu đồ tăng trưởng
+        function drawGrowthChart(results, currentAge) {
+            const ctx = document.getElementById('growthChart').getContext('2d');
+            
+            const isFemale = results.gender === 'female';
+            const heightRef = isFemale ? girlHeightRef : boyHeightRef;
+            const bmiRef = isFemale ? girlBMIRef : boyBMIRef;
+            
+            // Chuẩn bị dữ liệu cho biểu đồ
+            const labels = [];
+            const heightData = [];
+            const heightRefData = [];
+            const bmiData = [];
+            const bmiRefData = [];
+            
+            for (let age = 4; age <= 18; age++) {
+                labels.push(age);
+                
+                // Chiều cao
+                if (age === Math.floor(currentAge)) {
+                    heightData.push(results.currentHeight);
+                } else if (age === 18) {
+                    heightData.push((results.geneticHeight + results.boneAgeHeight) / 2);
+                } else {
+                    heightData.push(null);
+                }
+                
+                if (heightRef[age]) {
+                    heightRefData.push(heightRef[age].mean);
+                } else {
+                    heightRefData.push(null);
+                }
+                
+                // BMI
+                if (age === Math.floor(currentAge)) {
+                    bmiData.push(results.bmi);
+                } else {
+                    bmiData.push(null);
+                }
+                
+                if (bmiRef[age]) {
+                    bmiRefData.push(bmiRef[age].mean);
+                } else {
+                    bmiRefData.push(null);
+                }
+            }
+            
+            // Tạo biểu đồ
+            new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: labels,
+                    datasets: [
+                        {
+                            label: 'Chiều cao của trẻ (cm)',
+                            data: heightData,
+                            borderColor: 'rgb(75, 192, 192)',
+                            backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                            borderWidth: 3,
+                            pointRadius: 5,
+                            pointHoverRadius: 7,
+                            fill: false,
+                            yAxisID: 'y'
+                        },
+                        {
+                            label: 'Chiều cao trung bình (cm)',
+                            data: heightRefData,
+                            borderColor: 'rgb(54, 162, 235)',
+                            backgroundColor: 'rgba(54, 162, 235, 0.1)',
+                            borderWidth: 2,
+                            borderDash: [5, 5],
+                            pointRadius: 0,
+                            fill: false,
+                            yAxisID: 'y'
+                        },
+                        {
+                            label: 'BMI của trẻ',
+                            data: bmiData,
+                            borderColor: 'rgb(255, 99, 132)',
+                            backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                            borderWidth: 3,
+                            pointRadius: 5,
+                            pointHoverRadius: 7,
+                            fill: false,
+                            yAxisID: 'y1'
+                        },
+                        {
+                            label: 'BMI trung bình',
+                            data: bmiRefData,
+                            borderColor: 'rgb(255, 159, 64)',
+                            backgroundColor: 'rgba(255, 159, 64, 0.1)',
+                            borderWidth: 2,
+                            borderDash: [5, 5],
+                            pointRadius: 0,
+                            fill: false,
+                            yAxisID: 'y1'
+                        }
+                    ]
                 },
-                scales: {
-                    x: {
-                        type: 'linear',
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    interaction: {
+                        mode: 'index',
+                        intersect: false,
+                    },
+                    plugins: {
                         title: {
                             display: true,
-                            text: 'Tuổi (năm)'
+                            text: 'Biểu đồ theo dõi tăng trưởng chiều cao và BMI',
+                            font: {
+                                size: 16,
+                                weight: 'bold'
+                            }
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    let label = context.dataset.label || '';
+                                    if (label) {
+                                        label += ': ';
+                                    }
+                                    if (context.parsed.y !== null) {
+                                        label += context.parsed.y.toFixed(1);
+                                    }
+                                    return label;
+                                }
+                            }
+                        },
+                        legend: {
+                            position: 'top',
+                            labels: {
+                                font: {
+                                    size: 12
+                                }
+                            }
                         }
                     },
-                    y: {
-                        title: {
+                    scales: {
+                        x: {
+                            title: {
+                                display: true,
+                                text: 'Tuổi (năm)',
+                                font: {
+                                    weight: 'bold'
+                                }
+                            },
+                            grid: {
+                                display: false
+                            }
+                        },
+                        y: {
+                            type: 'linear',
                             display: true,
-                            text: isHeight ? 'Chiều cao (cm)' : 'Chỉ số BMI (kg/m²)'
+                            position: 'left',
+                            title: {
+                                display: true,
+                                text: 'Chiều cao (cm)',
+                                font: {
+                                    weight: 'bold'
+                                }
+                            },
+                            min: isFemale ? 90 : 95,
+                            max: isFemale ? 180 : 190,
+                            grid: {
+                                color: 'rgba(0, 0, 0, 0.1)'
+                            }
+                        },
+                        y1: {
+                            type: 'linear',
+                            display: true,
+                            position: 'right',
+                            title: {
+                                display: true,
+                                text: 'BMI',
+                                font: {
+                                    weight: 'bold'
+                                }
+                            },
+                            min: 12,
+                            max: 30,
+                            grid: {
+                                drawOnChartArea: false
+                            }
+                        }
+                    },
+                    elements: {
+                        line: {
+                            tension: 0.4
                         }
                     }
                 }
-            }
-        });
-    }
-});
-</script>
+            });
+        }
+        
+        // Khởi tạo các bảng dữ liệu
+        populateTable(boyData, 'boyDataBody');
+        populateTable(girlPreData, 'girlPreDataBody');
+        populateTable(girlPostData, 'girlPostDataBody');
+    </script>
 </body>
 </html>
