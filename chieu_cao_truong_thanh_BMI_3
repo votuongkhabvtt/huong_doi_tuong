@@ -1,1 +1,1318 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Phòng khám YHTT và YHCT PGS.TS.Bs. Võ Tường Kha</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #e6f7ff;
+            color: #333;
+        }
+        
+        .header {
+            background-color: #005b96;
+            color: white;
+            padding: 15px 0;
+            text-align: center;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+        
+        .header h1 {
+            margin: 0;
+            font-size: 24px;
+        }
+        
+        .header p {
+            margin: 5px 0 0;
+            font-size: 14px;
+        }
+        
+        .menu {
+            display: flex;
+            background-color: #003d66;
+            justify-content: center;
+            padding: 10px 0;
+        }
+        
+        .menu a {
+            color: white;
+            text-decoration: none;
+            padding: 10px 20px;
+            margin: 0 5px;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+        
+        .menu a:nth-child(1) { background-color: #4CAF50; }
+        .menu a:nth-child(2) { background-color: #2196F3; }
+        .menu a:nth-child(3) { background-color: #FF9800; }
+        .menu a:nth-child(4) { background-color: #9C27B0; }
+        
+        .menu a:hover {
+            background-color: #001a33;
+        }
+        
+        .container {
+            max-width: 1000px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        
+        h2 {
+            color: #005b96;
+            border-bottom: 2px solid #005b96;
+            padding-bottom: 5px;
+        }
+        
+        .form-group {
+            margin-bottom: 15px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        
+        input, select {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        
+        .row {
+            display: flex;
+            gap: 15px;
+        }
+        
+        .col {
+            flex: 1;
+        }
+        
+        button {
+            background-color: #005b96;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s;
+            margin-right: 10px;
+        }
+        
+        button:hover {
+            background-color: #003d66;
+        }
+        
+        .result-section {
+            margin-top: 30px;
+            padding: 20px;
+            background-color: #f5f5f5;
+            border-radius: 8px;
+        }
+        
+        .result-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+        
+        .result-box {
+            background-color: white;
+            padding: 15px;
+            border-radius: 5px;
+            box-shadow: 0 0 5px rgba(0,0,0,0.1);
+        }
+        
+        .chart-container {
+            margin-top: 20px;
+            height: 300px;
+            background-color: white;
+            padding: 15px;
+            border-radius: 5px;
+            box-shadow: 0 0 5px rgba(0,0,0,0.1);
+        }
+        
+        .chart-title {
+            text-align: center;
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: #005b96;
+        }
+        
+        .footer {
+            background-color: #005b96;
+            color: white;
+            text-align: center;
+            padding: 15px 0;
+            margin-top: 30px;
+        }
+        
+        .print-section {
+            display: none;
+        }
+        
+        @media print {
+            body {
+                background-color: white;
+            }
+            
+            .no-print {
+                display: none;
+            }
+            
+            .print-section {
+                display: block;
+                background-color: #e6f7ff;
+                padding: 20px;
+                min-height: 100vh;
+            }
+            
+            .print-header {
+                text-align: center;
+                margin-bottom: 20px;
+            }
+            
+            .print-logo {
+                text-align: center;
+                margin-bottom: 20px;
+            }
+            
+            .doctor-image {
+                text-align: center;
+                margin: 20px 0;
+            }
+            
+            .print-footer {
+                margin-top: 30px;
+                text-align: center;
+                font-size: 12px;
+            }
+        }
+        
+        .loading {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+            z-index: 9999;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            color: white;
+        }
+        
+        .spinner {
+            border: 5px solid #f3f3f3;
+            border-top: 5px solid #3498db;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            animation: spin 1s linear infinite;
+            margin-bottom: 15px;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .percentile-info {
+            margin-top: 10px;
+            padding: 10px;
+            background-color: #f0f8ff;
+            border-radius: 5px;
+            border-left: 4px solid #005b96;
+        }
+    </style>
+</head>
+<body>
+    <div class="loading" id="loading">
+        <div class="spinner"></div>
+        <p>Đang tạo PDF và gửi email, vui lòng chờ...</p>
+    </div>
 
+    <div class="no-print">
+        <div class="header">
+            <h1>Phòng khám YHTT và YHCT PGS.TS.Bs. Võ Tường Kha</h1>
+            <p>Web: votuongkha.net | Tel: 0913504755 | Email: votuongkhabvtt@gmail.com</p>
+        </div>
+        
+        <div class="menu">
+            <a href="https://votuongkha.net" target="_blank">Trang chủ</a>
+            <a href="https://forms.gle/mqCBZZnT2nxR43WS8" target="_blank">Dịch vụ</a>
+            <a href="https://forms.gle/ikK8uFukM86wxpM46" target="_blank">Đặt lịch</a>
+            <a href="tel:0913504755">Liên hệ</a>
+        </div>
+        
+        <div class="container" id="inputForm">
+            <h2>Chẩn đoán dự báo chiều cao và BMI</h2>
+            
+            <form id="patientForm">
+                <div class="row">
+                    <div class="col">
+                        <div class="form-group">
+                            <label for="name">Họ tên khách hàng:</label>
+                            <input type="text" id="name" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="dob">Ngày tháng năm sinh:</label>
+                            <input type="date" id="dob" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="address">Địa chỉ nơi ở:</label>
+                            <input type="text" id="address" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="phone">Điện thoại:</label>
+                            <input type="tel" id="phone" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="email">Email:</label>
+                            <input type="email" id="email" required>
+                        </div>
+                    </div>
+                    
+                    <div class="col">
+                        <div class="form-group">
+                            <label for="gender">Giới tính:</label>
+                            <select id="gender" required>
+                                <option value="">Chọn giới tính</option>
+                                <option value="male">Bé trai</option>
+                                <option value="female">Bé gái</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="currentHeight">Chiều cao hiện tại (cm):</label>
+                            <input type="number" id="currentHeight" step="0.1" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="currentWeight">Cân nặng hiện tại (kg):</label>
+                            <input type="number" id="currentWeight" step="0.1" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="fatherHeight">Chiều cao của bố (cm):</label>
+                            <input type="number" id="fatherHeight" step="0.1" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="motherHeight">Chiều cao của mẹ (cm):</label>
+                            <input type="number" id="motherHeight" step="0.1" required>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="row" id="girlFields" style="display: none;">
+                    <div class="col">
+                        <div class="form-group">
+                            <label for="firstPeriodDate">Ngày kinh đầu tiên (nếu có):</label>
+                            <input type="date" id="firstPeriodDate">
+                        </div>
+                    </div>
+                    
+                    <div class="col">
+                        <div class="form-group">
+                            <label for="heightAtFirstPeriod">Chiều cao ngày kinh đầu tiên (cm):</label>
+                            <input type="number" id="heightAtFirstPeriod" step="0.1">
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="boneAge">Tuổi xương bàn tay không thuận hiện tại:</label>
+                    <input type="number" id="boneAge" step="0.1" required>
+                </div>
+                
+                <button type="button" onclick="calculate()">Tính toán</button>
+            </form>
+        </div>
+        
+        <div id="results" class="result-section" style="display: none;">
+            <div style="text-align: right; margin-bottom: 15px;">
+                <button onclick="resetForm()" style="background-color: #6c757d;">Nhập lại</button>
+            </div>
+            
+            <h2>Kết quả</h2>
+            
+            <div class="result-grid">
+                <div class="result-box">
+                    <h3>Thông tin bệnh nhân</h3>
+                    <p><strong>Họ tên:</strong> <span id="resultName"></span></p>
+                    <p><strong>Tuổi:</strong> <span id="resultAge"></span></p>
+                    <p><strong>Giới tính:</strong> <span id="resultGender"></span></p>
+                </div>
+                
+                <div class="result-box">
+                    <h3>Chỉ số hiện tại</h3>
+                    <p><strong>Chiều cao:</strong> <span id="resultCurrentHeight"></span> cm</p>
+                    <p><strong>Phân loại chiều cao:</strong> <span id="resultHeightCategory"></span></p>
+                    <div class="percentile-info" id="heightPercentileInfo"></div>
+                    <p><strong>BMI:</strong> <span id="resultBMI"></span></p>
+                    <p><strong>Phân loại BMI:</strong> <span id="resultBMICategory"></span></p>
+                    <div class="percentile-info" id="bmiPercentileInfo"></div>
+                </div>
+                
+                <div class="result-box">
+                    <h3>Dự báo chiều cao</h3>
+                    <p><strong>Theo di truyền:</strong> <span id="resultGeneticHeight"></span> cm</p>
+                    <p><strong>Theo tuổi xương:</strong> <span id="resultBoneAgeHeight"></span> cm</p>
+                </div>
+                
+                <div class="result-box">
+                    <h3>Phân loại chiều cao trưởng thành</h3>
+                    <p><strong>Dự báo:</strong> <span id="resultAdultHeight"></span> cm</p>
+                    <p><strong>Phân loại:</strong> <span id="resultAdultHeightCategory"></span></p>
+                    <div class="percentile-info" id="adultHeightPercentileInfo"></div>
+                </div>
+            </div>
+            
+            <div class="chart-container">
+                <div class="chart-title">Biểu đồ tăng trưởng chiều cao theo tuổi (WHO)</div>
+                <canvas id="heightGrowthChart"></canvas>
+            </div>
+            
+            <div class="chart-container">
+                <div class="chart-title">Biểu đồ tăng trưởng BMI theo tuổi (WHO)</div>
+                <canvas id="bmiGrowthChart"></canvas>
+            </div>
+            
+            <div class="chart-container">
+                <div class="chart-title">So sánh chiều cao hiện tại với chuẩn WHO</div>
+                <canvas id="heightComparisonChart"></canvas>
+            </div>
+            
+            <div class="chart-container">
+                <div class="chart-title">So sánh BMI hiện tại với chuẩn WHO</div>
+                <canvas id="bmiComparisonChart"></canvas>
+            </div>
+            
+            <div class="chart-container">
+                <div class="chart-title">Dự báo chiều cao trưởng thành so với chuẩn WHO</div>
+                <canvas id="adultHeightChart"></canvas>
+            </div>
+            
+            <div class="form-group" style="text-align: center;">
+                <button onclick="printResults()">In kết quả</button>
+                <button onclick="sendResults()">Gửi kết quả qua email</button>
+            </div>
+        </div>
+        
+        <div class="footer">
+            <p>Bác sỹ khám: PGS.TS.Bs. Võ Tường Kha</p>
+            <p id="footerInfo"></p>
+        </div>
+    </div>
+    
+    <div id="printContent" class="print-section">
+        <div class="print-header">
+            <h1>PHÒNG KHÁM YHTT VÀ YHCT</h1>
+            <h2>PGS.TS.Bs. Võ Tường Kha</h2>
+            <p>Web: votuongkha.net | Tel: 0913504755 | Email: votuongkhabvtt@gmail.com</p>
+        </div>
+        
+        <div class="print-logo">
+            <h3>KẾT QUẢ CHẨN ĐOÁN DỰ BÁO CHIỀU CAO VÀ BMI</h3>
+        </div>
+        
+        <div class="doctor-image">
+            <div style="text-align: center; margin: 20px 0;">
+                <div style="width: 200px; height: 150px; background-color: #ddd; margin: 0 auto; display: flex; align-items: center; justify-content: center;">
+                    [Hình bác sỹ đo chiều cao cho bé]
+                </div>
+            </div>
+        </div>
+        
+        <div style="margin-bottom: 20px;">
+            <h3>Thông tin bệnh nhân</h3>
+            <p><strong>Họ tên:</strong> <span id="printName"></span></p>
+            <p><strong>Ngày sinh:</strong> <span id="printDOB"></span></p>
+            <p><strong>Địa chỉ:</strong> <span id="printAddress"></span></p>
+            <p><strong>Điện thoại:</strong> <span id="printPhone"></span></p>
+            <p><strong>Email:</strong> <span id="printEmail"></span></p>
+            <p><strong>Giới tính:</strong> <span id="printGender"></span></p>
+            <p><strong>Tuổi:</strong> <span id="printAge"></span></p>
+        </div>
+        
+        <div style="margin-bottom: 20px;">
+            <h3>Kết quả hiện tại</h3>
+            <p><strong>Chiều cao hiện tại:</strong> <span id="printCurrentHeight"></span> cm - <span id="printHeightCategory"></span></p>
+            <p id="printHeightPercentileInfo"></p>
+            <p><strong>Cân nặng hiện tại:</strong> <span id="printCurrentWeight"></span> kg</p>
+            <p><strong>Chỉ số BMI:</strong> <span id="printBMI"></span> - <span id="printBMICategory"></span></p>
+            <p id="printBMIPercentileInfo"></p>
+        </div>
+        
+        <div style="margin-bottom: 20px;">
+            <h3>Dự báo chiều cao trưởng thành</h3>
+            <p><strong>Theo di truyền:</strong> <span id="printGeneticHeight"></span> cm</p>
+            <p><strong>Theo tuổi xương:</strong> <span id="printBoneAgeHeight"></span> cm</p>
+            <p><strong>Dự báo chiều cao trưởng thành:</strong> <span id="printAdultHeight"></span> cm - <span id="printAdultHeightCategory"></span></p>
+            <p id="printAdultHeightPercentileInfo"></p>
+        </div>
+        
+        <div style="margin-bottom: 20px;">
+            <h3>Nhận xét</h3>
+            <p id="printComments"></p>
+        </div>
+        
+        <div class="print-footer">
+            <p>Mã số: <span id="printCode"></span></p>
+            <p>Ngày in: <span id="printDate"></span></p>
+            <p>Bác sỹ khám: PGS.TS.Bs. Võ Tường Kha</p>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        // Dữ liệu tham chiếu WHO cho bé trai và bé gái
+        const whoReferences = {
+            // BMI-for-age Boys 5-19 years (z-scores)
+            bmiBoys: {
+                5: { L: -0.3053, M: 15.4214, S: 0.08224 },
+                5.5: { L: -0.3833, M: 15.2866, S: 0.08284 },
+                6: { L: -0.4684, M: 15.1802, S: 0.08361 },
+                6.5: { L: -0.5599, M: 15.1043, S: 0.08453 },
+                7: { L: -0.6571, M: 15.0601, S: 0.08558 },
+                7.5: { L: -0.7593, M: 15.0478, S: 0.08673 },
+                8: { L: -0.8656, M: 15.0666, S: 0.08795 },
+                8.5: { L: -0.9752, M: 15.1147, S: 0.08920 },
+                9: { L: -1.0873, M: 15.1893, S: 0.09045 },
+                9.5: { L: -1.2011, M: 15.2869, S: 0.09168 },
+                10: { L: -1.3157, M: 15.4037, S: 0.09285 },
+                10.5: { L: -1.4304, M: 15.5361, S: 0.09395 },
+                11: { L: -1.5445, M: 15.6809, S: 0.09496 },
+                11.5: { L: -1.6573, M: 15.8353, S: 0.09587 },
+                12: { L: -1.7683, M: 15.9973, S: 0.09668 },
+                12.5: { L: -1.8770, M: 16.1653, S: 0.09739 },
+                13: { L: -1.9830, M: 16.3383, S: 0.09800 },
+                13.5: { L: -2.0861, M: 16.5159, S: 0.09853 },
+                14: { L: -2.1860, M: 16.6974, S: 0.09899 },
+                14.5: { L: -2.2826, M: 16.8826, S: 0.09939 },
+                15: { L: -2.3759, M: 17.0713, S: 0.09974 },
+                15.5: { L: -2.4659, M: 17.2633, S: 0.10006 },
+                16: { L: -2.5526, M: 17.4584, S: 0.10036 },
+                16.5: { L: -2.6362, M: 17.6564, S: 0.10064 },
+                17: { L: -2.7167, M: 17.8571, S: 0.10092 },
+                17.5: { L: -2.7943, M: 18.0603, S: 0.10120 },
+                18: { L: -2.8691, M: 18.2658, S: 0.10149 },
+                18.5: { L: -2.9412, M: 18.4733, S: 0.10180 },
+                19: { L: -3.0107, M: 18.6826, S: 0.10212 }
+            },
+            
+            // BMI-for-age Girls 5-19 years (z-scores)
+            bmiGirls: {
+                5: { L: -0.0631, M: 15.1477, S: 0.09158 },
+                5.5: { L: -0.1496, M: 15.0036, S: 0.09227 },
+                6: { L: -0.2380, M: 14.8856, S: 0.09309 },
+                6.5: { L: -0.3283, M: 14.7957, S: 0.09403 },
+                7: { L: -0.4204, M: 14.7349, S: 0.09508 },
+                7.5: { L: -0.5143, M: 14.7034, S: 0.09621 },
+                8: { L: -0.6099, M: 14.7006, S: 0.09741 },
+                8.5: { L: -0.7070, M: 14.7253, S: 0.09864 },
+                9: { L: -0.8055, M: 14.7760, S: 0.09989 },
+                9.5: { L: -0.9053, M: 14.8508, S: 0.10113 },
+                10: { L: -1.0062, M: 14.9476, S: 0.10234 },
+                10.5: { L: -1.1080, M: 15.0639, S: 0.10351 },
+                11: { L: -1.2106, M: 15.1973, S: 0.10462 },
+                11.5: { L: -1.3138, M: 15.3455, S: 0.10567 },
+                12: { L: -1.4174, M: 15.5065, S: 0.10665 },
+                12.5: { L: -1.5213, M: 15.6787, S: 0.10757 },
+                13: { L: -1.6253, M: 15.8607, S: 0.10843 },
+                13.5: { L: -1.7292, M: 16.0514, S: 0.10923 },
+                14: { L: -1.8329, M: 16.2499, S: 0.10998 },
+                14.5: { L: -1.9363, M: 16.4553, S: 0.11070 },
+                15: { L: -2.0393, M: 16.6669, S: 0.11139 },
+                15.5: { L: -2.1418, M: 16.8841, S: 0.11206 },
+                16: { L: -2.2437, M: 17.1064, S: 0.11272 },
+                16.5: { L: -2.3450, M: 17.3333, S: 0.11338 },
+                17: { L: -2.4457, M: 17.5644, S: 0.11403 },
+                17.5: { L: -2.5457, M: 17.7993, S: 0.11469 },
+                18: { L: -2.6450, M: 18.0376, S: 0.11536 },
+                18.5: { L: -2.7436, M: 18.2790, S: 0.11604 },
+                19: { L: -2.8415, M: 18.5232, S: 0.11674 }
+            },
+            
+            // Height-for-age Boys 5-19 years (percentiles)
+            heightBoys: {
+                5: { P3: 100.7, P15: 103.3, P50: 106.4, P85: 109.5, P97: 112.1 },
+                5.5: { P3: 103.4, P15: 106.0, P50: 109.1, P85: 112.2, P97: 114.8 },
+                6: { P3: 106.1, P15: 108.7, P50: 111.8, P85: 114.9, P97: 117.5 },
+                6.5: { P3: 108.7, P15: 111.4, P50: 114.5, P85: 117.6, P97: 120.2 },
+                7: { P3: 111.2, P15: 113.9, P50: 117.0, P85: 120.2, P97: 122.8 },
+                7.5: { P3: 113.6, P15: 116.3, P50: 119.5, P85: 122.7, P97: 125.3 },
+                8: { P3: 115.9, P15: 118.6, P50: 121.8, P85: 125.0, P97: 127.7 },
+                8.5: { P3: 118.2, P15: 120.9, P50: 124.1, P85: 127.3, P97: 130.0 },
+                9: { P3: 120.4, P15: 123.1, P50: 126.3, P85: 129.5, P97: 132.2 },
+                9.5: { P3: 122.6, P15: 125.3, P50: 128.5, P85: 131.7, P97: 134.4 },
+                10: { P3: 124.8, P15: 127.5, P50: 130.7, P85: 133.9, P97: 136.6 },
+                10.5: { P3: 127.0, P15: 129.7, P50: 132.9, P85: 136.1, P97: 138.8 },
+                11: { P3: 129.2, P15: 131.9, P50: 135.1, P85: 138.3, P97: 141.0 },
+                11.5: { P3: 131.4, P15: 134.1, P50: 137.3, P85: 140.5, P97: 143.2 },
+                12: { P3: 133.6, P15: 136.3, P50: 139.5, P85: 142.7, P97: 145.4 },
+                12.5: { P3: 135.8, P15: 138.5, P50: 141.7, P85: 144.9, P97: 147.6 },
+                13: { P3: 138.0, P15: 140.7, P50: 143.9, P85: 147.1, P97: 149.8 },
+                13.5: { P3: 140.2, P15: 142.9, P50: 146.1, P85: 149.3, P97: 152.0 },
+                14: { P3: 142.4, P15: 145.1, P50: 148.3, P85: 151.5, P97: 154.2 },
+                14.5: { P3: 144.6, P15: 147.3, P50: 150.5, P85: 153.7, P97: 156.4 },
+                15: { P3: 146.8, P15: 149.5, P50: 152.7, P85: 155.9, P97: 158.6 },
+                15.5: { P3: 149.0, P15: 151.7, P50: 154.9, P85: 158.1, P97: 160.8 },
+                16: { P3: 151.2, P15: 153.9, P50: 157.1, P85: 160.3, P97: 163.0 },
+                16.5: { P3: 153.4, P15: 156.1, P50: 159.3, P85: 162.5, P97: 165.2 },
+                17: { P3: 155.6, P15: 158.3, P50: 161.5, P85: 164.7, P97: 167.4 },
+                17.5: { P3: 157.8, P15: 160.5, P50: 163.7, P85: 166.9, P97: 169.6 },
+                18: { P3: 160.0, P15: 162.7, P50: 165.9, P85: 169.1, P97: 171.8 },
+                18.5: { P3: 162.2, P15: 164.9, P50: 168.1, P85: 171.3, P97: 174.0 },
+                19: { P3: 164.4, P15: 167.1, P50: 170.3, P85: 173.5, P97: 176.2 }
+            },
+            
+            // Height-for-age Girls 5-19 years (percentiles)
+            heightGirls: {
+                5: { P3: 99.9, P15: 102.5, P50: 105.6, P85: 108.8, P97: 111.4 },
+                5.5: { P3: 102.5, P15: 105.1, P50: 108.2, P85: 111.4, P97: 114.0 },
+                6: { P3: 105.0, P15: 107.6, P50: 110.7, P85: 113.9, P97: 116.5 },
+                6.5: { P3: 107.4, P15: 110.0, P50: 113.2, P85: 116.4, P97: 119.0 },
+                7: { P3: 109.8, P15: 112.4, P50: 115.6, P85: 118.8, P97: 121.4 },
+                7.5: { P3: 112.1, P15: 114.7, P50: 117.9, P85: 121.1, P97: 123.7 },
+                8: { P3: 114.4, P15: 117.0, P50: 120.2, P85: 123.4, P97: 126.0 },
+                8.5: { P3: 116.7, P15: 119.3, P50: 122.5, P85: 125.7, P97: 128.3 },
+                9: { P3: 119.0, P15: 121.6, P50: 124.8, P85: 128.0, P97: 130.6 },
+                9.5: { P3: 121.3, P15: 123.9, P50: 127.1, P85: 130.3, P97: 132.9 },
+                10: { P3: 123.6, P15: 126.2, P50: 129.4, P85: 132.6, P97: 135.2 },
+                10.5: { P3: 125.9, P15: 128.5, P50: 131.7, P85: 134.9, P97: 137.5 },
+                11: { P3: 128.2, P15: 130.8, P50: 134.0, P85: 137.2, P97: 139.8 },
+                11.5: { P3: 130.5, P15: 133.1, P50: 136.3, P85: 139.5, P97: 142.1 },
+                12: { P3: 132.8, P15: 135.4, P50: 138.6, P85: 141.8, P97: 144.4 },
+                12.5: { P3: 135.1, P15: 137.7, P50: 140.9, P85: 144.1, P97: 146.7 },
+                13: { P3: 137.4, P15: 140.0, P50: 143.2, P85: 146.4, P97: 149.0 },
+                13.5: { P3: 139.7, P15: 142.3, P50: 145.5, P85: 148.7, P97: 151.3 },
+                14: { P3: 142.0, P15: 144.6, P50: 147.8, P85: 151.0, P97: 153.6 },
+                14.5: { P3: 144.3, P15: 146.9, P50: 150.1, P85: 153.3, P97: 155.9 },
+                15: { P3: 146.6, P15: 149.2, P50: 152.4, P85: 155.6, P97: 158.2 },
+                15.5: { P3: 148.9, P15: 151.5, P50: 154.7, P85: 157.9, P97: 160.5 },
+                16: { P3: 151.2, P15: 153.8, P50: 157.0, P85: 160.2, P97: 162.8 },
+                16.5: { P3: 153.5, P15: 156.1, P50: 159.3, P85: 162.5, P97: 165.1 },
+                17: { P3: 155.8, P15: 158.4, P50: 161.6, P85: 164.8, P97: 167.4 },
+                17.5: { P3: 158.1, P15: 160.7, P50: 163.9, P85: 167.1, P97: 169.7 },
+                18: { P3: 160.4, P15: 163.0, P50: 166.2, P85: 169.4, P97: 172.0 },
+                18.5: { P3: 162.7, P15: 165.3, P50: 168.5, P85: 171.7, P97: 174.3 },
+                19: { P3: 165.0, P15: 167.6, P50: 170.8, P85: 174.0, P97: 176.6 }
+            }
+        };
+
+        // Bảng dữ liệu cho bé trai
+        const boyData = {
+            4: { CoC: 1.2, CoT: -7.3, CoTX: 0, Hs: 82 },
+            5: { CoC: 1.2, CoT: -7.3, CoTX: 0, Hs: 82 },
+            6: { CoC: 1.2, CoT: -7.3, CoTX: 0, Hs: 82 },
+            7: { CoC: 1.2, CoT: -7.3, CoTX: 0, Hs: 82 },
+            8: { CoC: 1.22, CoT: -7.2, CoTX: -0.4, Hs: 82 },
+            8.5: { CoC: 1.23, CoT: -7, CoTX: -0.7, Hs: 82 },
+            9: { CoC: 1.22, CoT: -6.8, CoTX: -0.8, Hs: 82 },
+            9.5: { CoC: 1.21, CoT: -6.5, CoTX: -0.8, Hs: 82 },
+            10: { CoC: 1.2, CoT: -6.2, CoTX: -1, Hs: 83 },
+            10.5: { CoC: 1.19, CoT: -5.9, CoTX: -1.2, Hs: 84 },
+            11: { CoC: 1.16, CoT: -5.5, CoTX: -1.6, Hs: 89 },
+            11.5: { CoC: 1.13, CoT: -5.1, CoTX: -2, Hs: 94 },
+            12: { CoC: 1.08, CoT: -4.2, CoTX: -2.6, Hs: 98 },
+            12.5: { CoC: 1.03, CoT: -3.4, CoTX: -3.2, Hs: 103 },
+            13: { CoC: 0.98, CoT: -2.6, CoTX: -3.8, Hs: 108 },
+            13.5: { CoC: 0.94, CoT: -1.9, CoTX: -4.4, Hs: 113 },
+            14: { CoC: 0.9, CoT: -1.4, CoTX: -4.5, Hs: 113 },
+            14.5: { CoC: 0.87, CoT: -1, CoTX: -4.6, Hs: 114 },
+            15: { CoC: 0.84, CoT: -0.8, CoTX: -3.8, Hs: 104 },
+            15.5: { CoC: 0.82, CoT: -0.6, CoTX: -3.1, Hs: 94 },
+            16: { CoC: 0.88, CoT: -0.4, CoTX: -2.4, Hs: 70 },
+            16.5: { CoC: 0.94, CoT: -0.3, CoTX: -1.8, Hs: 48 },
+            17: { CoC: 0.96, CoT: -0.2, CoTX: -1.2, Hs: 32 },
+            17.5: { CoC: 0.96, CoT: -0.2, CoTX: -1.2, Hs: 33 },
+            18: { CoC: 0.97, CoT: -0.2, CoTX: -1.2, Hs: 32 },
+            18.5: { CoC: 0.97, CoT: -0.2, CoTX: -1.2, Hs: 32 }
+        };
+
+        // Bảng dữ liệu cho bé gái đã dậy thì
+        const girlPubertyData = {
+            11: { CoC: 0.87, CoT: -2.3, CoTX: -3.3, Hs: 99 },
+            11.5: { CoC: 0.89, CoT: -1.9, CoTX: -3.3, Hs: 92 },
+            12: { CoC: 0.91, CoT: -1.4, CoTX: -3.2, Hs: 81 },
+            12.5: { CoC: 0.93, CoT: -1, CoTX: -2.7, Hs: 67 },
+            13: { CoC: 0.95, CoT: -0.9, CoTX: -2.2, Hs: 55 },
+            13.5: { CoC: 0.96, CoT: -0.9, CoTX: -1.8, Hs: 48 },
+            14: { CoC: 0.96, CoT: -0.8, CoTX: -1.4, Hs: 41 },
+            14.5: { CoC: 0.97, CoT: -0.8, CoTX: -1.3, Hs: 38 },
+            15: { CoC: 0.98, CoT: -0.6, CoTX: -1.1, Hs: 28 },
+            15.5: { CoC: 0.99, CoT: -0.4, CoTX: -0.7, Hs: 20 },
+            16: { CoC: 0.99, CoT: -0.4, CoTX: -0.7, Hs: 20 },
+            16.5: { CoC: 0.99, CoT: -0.4, CoTX: -0.7, Hs: 21 },
+            17: { CoC: 0.99, CoT: -0.4, CoTX: -0.7, Hs: 21 },
+            17.5: { CoC: 0.99, CoT: -0.4, CoTX: -0.7, Hs: 21 }
+        };
+
+        // Bảng dữ liệu cho bé gái chưa dậy thì
+        const girlPrePubertyData = {
+            4: { CoC: 0.95, CoT: -6.5, CoTX: 0, Hs: 93 },
+            5: { CoC: 0.95, CoT: -6.5, CoTX: 0, Hs: 93 },
+            6: { CoC: 0.95, CoT: -6, CoTX: -0.4, Hs: 93 },
+            6.5: { CoC: 0.95, CoT: -5.5, CoTX: -0.8, Hs: 93 },
+            7: { CoC: 0.94, CoT: -5.1, CoTX: -1, Hs: 93 },
+            7.5: { CoC: 0.93, CoT: -4.7, CoTX: -1.1, Hs: 94 },
+            8: { CoC: 0.92, CoT: -4.4, CoTX: -1.5, Hs: 95 },
+            8.5: { CoC: 0.92, CoT: -4, CoTX: -1.9, Hs: 96 },
+            9: { CoC: 0.92, CoT: -3.8, CoTX: -2.3, Hs: 96 },
+            9.5: { CoC: 0.91, CoT: -3.6, CoTX: -2.7, Hs: 100 },
+            10: { CoC: 0.89, CoT: -3.2, CoTX: -3.2, Hs: 104 },
+            10.5: { CoC: 0.87, CoT: -2.7, CoTX: -3.6, Hs: 107 },
+            11: { CoC: 0.83, CoT: -2.6, CoTX: -3.6, Hs: 111 },
+            11.5: { CoC: 0.82, CoT: -2.5, CoTX: -3.6, Hs: 112 },
+            12: { CoC: 0.83, CoT: -2.4, CoTX: -3.4, Hs: 108 },
+            12.5: { CoC: 0.83, CoT: -2.3, CoTX: -3.4, Hs: 107 },
+            13: { CoC: 0.85, CoT: -2, CoTX: -3.1, Hs: 97 },
+            13.5: { CoC: 0.87, CoT: -1.8, CoTX: -3, Hs: 91 },
+            14: { CoC: 0.91, CoT: -1.6, CoTX: -2.8, Hs: 80 },
+            14.5: { CoC: 0.99, CoT: -1.4, CoTX: -2.5, Hs: 61 }
+        };
+
+        // Show/hide girl-specific fields based on gender selection
+        document.getElementById('gender').addEventListener('change', function() {
+            const girlFields = document.getElementById('girlFields');
+            if (this.value === 'female') {
+                girlFields.style.display = 'flex';
+            } else {
+                girlFields.style.display = 'none';
+            }
+        });
+        
+        // Generate footer info
+        function generateFooterInfo() {
+            const now = new Date();
+            const options = { year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' };
+            const dateTime = now.toLocaleDateString('vi-VN', options);
+            
+            const location = "Hà Nội"; 
+            document.getElementById('footerInfo').textContent = `${location}, ${dateTime}`;
+        }
+        
+        // Round age according to specifications
+        function roundAge(age) {
+            const decimal = age - Math.floor(age);
+            
+            if (decimal <= 0.3) {
+                return Math.floor(age);
+            } else if (decimal > 0.3 && decimal < 0.7) {
+                return Math.floor(age) + 0.5;
+            } else {
+                return Math.ceil(age);
+            }
+        }
+        
+        // Calculate age from date of birth
+        function calculateAge(dob) {
+            const birthDate = new Date(dob);
+            const today = new Date();
+            
+            let age = today.getFullYear() - birthDate.getFullYear();
+            const monthDiff = today.getMonth() - birthDate.getMonth();
+            
+            if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
+                age--;
+            }
+            
+            let months = today.getMonth() - birthDate.getMonth();
+            if (months < 0 || (months === 0 && today.getDate() < birthDate.getDate())) {
+                months += 12;
+            }
+            
+            const decimalAge = age + (months / 12);
+            return decimalAge;
+        }
+        
+        // Get data from tables based on age and gender
+        function getTableData(age, gender, hasPeriod) {
+            const roundedAge = roundAge(age);
+            
+            if (gender === 'male') {
+                return boyData[roundedAge] || { CoC: 1.0, CoT: -5.0, CoTX: -2.0, Hs: 100 };
+            } else if (gender === 'female') {
+                if (hasPeriod) {
+                    return girlPubertyData[roundedAge] || { CoC: 0.9, CoT: -2.0, CoTX: -2.5, Hs: 80 };
+                } else {
+                    return girlPrePubertyData[roundedAge] || { CoC: 0.9, CoT: -3.0, CoTX: -2.0, Hs: 90 };
+                }
+            }
+            
+            return { CoC: 1.0, CoT: -5.0, CoTX: -2.0, Hs: 100 };
+        }
+        
+        // Calculate BMI z-score based on WHO standards
+        function calculateBmiZScore(bmi, age, gender) {
+            const roundedAge = roundAge(age);
+            let refData;
+            
+            if (gender === 'male') {
+                refData = whoReferences.bmiBoys[roundedAge] || whoReferences.bmiBoys[19];
+            } else {
+                refData = whoReferences.bmiGirls[roundedAge] || whoReferences.bmiGirls[19];
+            }
+            
+            const { L, M, S } = refData;
+            const z = (Math.pow(bmi / M, L) - 1) / (L * S);
+            return z;
+        }
+        
+        // Calculate height percentile based on WHO standards
+        function calculateHeightPercentile(height, age, gender) {
+            const roundedAge = roundAge(age);
+            let refData;
+            
+            if (gender === 'male') {
+                refData = whoReferences.heightBoys[roundedAge] || whoReferences.heightBoys[19];
+            } else {
+                refData = whoReferences.heightGirls[roundedAge] || whoReferences.heightGirls[19];
+            }
+            
+            const { P3, P15, P50, P85, P97 } = refData;
+            
+            if (height < P3) return { percentile: '<3', description: 'Dưới bách phân vị 3' };
+            if (height < P15) return { percentile: '3-15', description: 'Bách phân vị 3-15' };
+            if (height < P50) return { percentile: '15-50', description: 'Bách phân vị 15-50' };
+            if (height < P85) return { percentile: '50-85', description: 'Bách phân vị 50-85' };
+            if (height < P97) return { percentile: '85-97', description: 'Bách phân vị 85-97' };
+            return { percentile: '>97', description: 'Trên bách phân vị 97' };
+        }
+        
+        // Classify height based on WHO standards
+        function classifyHeight(height, age, gender) {
+            const percentile = calculateHeightPercentile(height, age, gender);
+            
+            if (percentile.percentile === '<3') return "Rất thấp (< P3)";
+            if (percentile.percentile === '3-15') return "Thấp (P3-P15)";
+            if (percentile.percentile === '15-50') return "Trung bình thấp (P15-P50)";
+            if (percentile.percentile === '50-85') return "Trung bình cao (P50-P85)";
+            if (percentile.percentile === '85-97') return "Cao (P85-P97)";
+            return "Rất cao (> P97)";
+        }
+        
+        // Classify BMI based on WHO standards
+        function classifyBMI(bmi, age, gender) {
+            const zScore = calculateBmiZScore(bmi, age, gender);
+            
+            if (zScore < -3) return "Suy dinh dưỡng nặng (Z < -3)";
+            if (zScore < -2) return "Suy dinh dưỡng (Z -3 đến -2)";
+            if (zScore < -1) return "Nguy cơ suy dinh dưỡng (Z -2 đến -1)";
+            if (zScore < 1) return "Bình thường (Z -1 đến 1)";
+            if (zScore < 2) return "Nguy cơ thừa cân (Z 1 đến 2)";
+            if (zScore < 3) return "Thừa cân (Z 2 đến 3)";
+            return "Béo phì (Z > 3)";
+        }
+        
+        // Get WHO reference data for growth charts
+        function getGrowthChartData(gender, type) {
+            const data = [];
+            const refData = type === 'height' ? 
+                (gender === 'male' ? whoReferences.heightBoys : whoReferences.heightGirls) :
+                (gender === 'male' ? whoReferences.bmiBoys : whoReferences.bmiGirls);
+            
+            for (let age = 5; age <= 19; age += 0.5) {
+                const roundedAge = roundAge(age);
+                if (refData[roundedAge]) {
+                    if (type === 'height') {
+                        data.push({
+                            age: roundedAge,
+                            P3: refData[roundedAge].P3,
+                            P15: refData[roundedAge].P15,
+                            P50: refData[roundedAge].P50,
+                            P85: refData[roundedAge].P85,
+                            P97: refData[roundedAge].P97
+                        });
+                    } else {
+                        const { L, M, S } = refData[roundedAge];
+                        // Calculate percentiles from LMS
+                        const P3 = M * Math.pow(1 + L * S * -1.88, 1/L);
+                        const P15 = M * Math.pow(1 + L * S * -1.036, 1/L);
+                        const P50 = M;
+                        const P85 = M * Math.pow(1 + L * S * 1.036, 1/L);
+                        const P97 = M * Math.pow(1 + L * S * 1.88, 1/L);
+                        
+                        data.push({
+                            age: roundedAge,
+                            P3,
+                            P15,
+                            P50,
+                            P85,
+                            P97
+                        });
+                    }
+                }
+            }
+            
+            return data;
+        }
+        
+        // Main calculation function
+        function calculate() {
+            // Get form values
+            const name = document.getElementById('name').value;
+            const dob = document.getElementById('dob').value;
+            const gender = document.getElementById('gender').value;
+            const currentHeight = parseFloat(document.getElementById('currentHeight').value);
+            const currentWeight = parseFloat(document.getElementById('currentWeight').value);
+            const fatherHeight = parseFloat(document.getElementById('fatherHeight').value);
+            const motherHeight = parseFloat(document.getElementById('motherHeight').value);
+            const boneAge = parseFloat(document.getElementById('boneAge').value);
+            
+            // Check if girl has had first period
+            let hasPeriod = false;
+            if (gender === 'female') {
+                hasPeriod = document.getElementById('firstPeriodDate').value !== '';
+            }
+            
+            // Calculate age
+            const decimalAge = calculateAge(dob);
+            const roundedAge = roundAge(decimalAge);
+            
+            // 1. Calculate genetic height
+            let geneticHeight;
+            if (gender === 'male') {
+                geneticHeight = ((fatherHeight + motherHeight) / 2) + 6.5;
+            } else {
+                geneticHeight = ((fatherHeight + motherHeight) / 2) - 6.5;
+            }
+            
+            // 2. Calculate bone age height
+            const tableData = getTableData(decimalAge, gender, hasPeriod);
+            const boneAgeHeight = (tableData.CoC * currentHeight) + 
+                                 (tableData.CoT * decimalAge) + 
+                                 (tableData.CoTX * boneAge) + 
+                                 tableData.Hs;
+            
+            // 3. Calculate BMI
+            const heightInMeters = currentHeight / 100;
+            const bmi = currentWeight / (heightInMeters * heightInMeters);
+            
+            // Classifications
+            const heightCategory = classifyHeight(currentHeight, decimalAge, gender);
+            const heightPercentile = calculateHeightPercentile(currentHeight, decimalAge, gender);
+            const bmiCategory = classifyBMI(bmi, decimalAge, gender);
+            const bmiZScore = calculateBmiZScore(bmi, decimalAge, gender).toFixed(2);
+            
+            // For adult height, we'll use the bone age prediction
+            const adultHeight = boneAgeHeight;
+            const adultHeightCategory = classifyHeight(adultHeight, 18, gender);
+            const adultHeightPercentile = calculateHeightPercentile(adultHeight, 18, gender);
+            
+            // Display results
+            document.getElementById('resultName').textContent = name;
+            document.getElementById('resultAge').textContent = decimalAge.toFixed(1) + ' tuổi';
+            document.getElementById('resultGender').textContent = gender === 'male' ? 'Bé trai' : 'Bé gái';
+            document.getElementById('resultCurrentHeight').textContent = currentHeight.toFixed(1);
+            document.getElementById('resultHeightCategory').textContent = heightCategory;
+            document.getElementById('heightPercentileInfo').innerHTML = 
+                `<strong>Phân vị chiều cao:</strong> ${heightPercentile.description}`;
+            document.getElementById('resultBMI').textContent = bmi.toFixed(1);
+            document.getElementById('resultBMICategory').textContent = bmiCategory;
+            document.getElementById('bmiPercentileInfo').innerHTML = 
+                `<strong>Z-score BMI:</strong> ${bmiZScore}`;
+            document.getElementById('resultGeneticHeight').textContent = geneticHeight.toFixed(1);
+            document.getElementById('resultBoneAgeHeight').textContent = boneAgeHeight.toFixed(1);
+            document.getElementById('resultAdultHeight').textContent = adultHeight.toFixed(1);
+            document.getElementById('resultAdultHeightCategory').textContent = adultHeightCategory;
+            document.getElementById('adultHeightPercentileInfo').innerHTML = 
+                `<strong>Phân vị chiều cao trưởng thành:</strong> ${adultHeightPercentile.description}`;
+            
+            // Show results section and hide input form
+            document.getElementById('results').style.display = 'block';
+            document.getElementById('inputForm').style.display = 'none';
+            
+            // Generate charts
+            generateCharts(currentHeight, adultHeight, bmi, decimalAge, gender);
+        }
+        
+        // Generate charts
+        function generateCharts(currentHeight, adultHeight, bmi, age, gender) {
+            const roundedAge = roundAge(age);
+            const heightStandard = whoReferences.heightBoys[roundedAge] || whoReferences.heightBoys[19];
+            const bmiStandard = whoReferences.bmiBoys[roundedAge] || whoReferences.bmiBoys[19];
+            const adultHeightStandard = whoReferences.heightBoys[18] || whoReferences.heightBoys[19];
+            
+            // Height growth chart
+            const heightGrowthData = getGrowthChartData(gender, 'height');
+            const heightGrowthCtx = document.getElementById('heightGrowthChart').getContext('2d');
+            if (window.heightGrowthChart) {
+                window.heightGrowthChart.destroy();
+            }
+            window.heightGrowthChart = new Chart(heightGrowthCtx, {
+                type: 'line',
+                data: {
+                    labels: heightGrowthData.map(d => d.age),
+                    datasets: [
+                        {
+                            label: 'P3',
+                            data: heightGrowthData.map(d => d.P3),
+                            borderColor: 'rgba(255, 99, 132, 0.5)',
+                            backgroundColor: 'rgba(255, 99, 132, 0.1)',
+                            borderWidth: 1,
+                            fill: false
+                        },
+                        {
+                            label: 'P15',
+                            data: heightGrowthData.map(d => d.P15),
+                            borderColor: 'rgba(54, 162, 235, 0.5)',
+                            backgroundColor: 'rgba(54, 162, 235, 0.1)',
+                            borderWidth: 1,
+                            fill: false
+                        },
+                        {
+                            label: 'P50',
+                            data: heightGrowthData.map(d => d.P50),
+                            borderColor: 'rgba(75, 192, 192, 1)',
+                            backgroundColor: 'rgba(75, 192, 192, 0.1)',
+                            borderWidth: 2,
+                            fill: false
+                        },
+                        {
+                            label: 'P85',
+                            data: heightGrowthData.map(d => d.P85),
+                            borderColor: 'rgba(54, 162, 235, 0.5)',
+                            backgroundColor: 'rgba(54, 162, 235, 0.1)',
+                            borderWidth: 1,
+                            fill: false
+                        },
+                        {
+                            label: 'P97',
+                            data: heightGrowthData.map(d => d.P97),
+                            borderColor: 'rgba(255, 99, 132, 0.5)',
+                            backgroundColor: 'rgba(255, 99, 132, 0.1)',
+                            borderWidth: 1,
+                            fill: false
+                        },
+                        {
+                            label: 'Bệnh nhân',
+                            data: heightGrowthData.map(d => d.age === roundedAge ? currentHeight : null),
+                            borderColor: 'rgba(153, 102, 255, 1)',
+                            backgroundColor: 'rgba(153, 102, 255, 1)',
+                            borderWidth: 2,
+                            pointRadius: 6,
+                            pointHoverRadius: 8,
+                            fill: false
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        y: {
+                            title: {
+                                display: true,
+                                text: 'Chiều cao (cm)'
+                            }
+                        },
+                        x: {
+                            title: {
+                                display: true,
+                                text: 'Tuổi (năm)'
+                            }
+                        }
+                    },
+                    plugins: {
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return context.dataset.label + ': ' + (context.raw ? context.raw.toFixed(1) : '') + ' cm';
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+            
+            // BMI growth chart
+            const bmiGrowthData = getGrowthChartData(gender, 'bmi');
+            const bmiGrowthCtx = document.getElementById('bmiGrowthChart').getContext('2d');
+            if (window.bmiGrowthChart) {
+                window.bmiGrowthChart.destroy();
+            }
+            window.bmiGrowthChart = new Chart(bmiGrowthCtx, {
+                type: 'line',
+                data: {
+                    labels: bmiGrowthData.map(d => d.age),
+                    datasets: [
+                        {
+                            label: 'P3',
+                            data: bmiGrowthData.map(d => d.P3),
+                            borderColor: 'rgba(255, 99, 132, 0.5)',
+                            backgroundColor: 'rgba(255, 99, 132, 0.1)',
+                            borderWidth: 1,
+                            fill: false
+                        },
+                        {
+                            label: 'P15',
+                            data: bmiGrowthData.map(d => d.P15),
+                            borderColor: 'rgba(54, 162, 235, 0.5)',
+                            backgroundColor: 'rgba(54, 162, 235, 0.1)',
+                            borderWidth: 1,
+                            fill: false
+                        },
+                        {
+                            label: 'P50',
+                            data: bmiGrowthData.map(d => d.P50),
+                            borderColor: 'rgba(75, 192, 192, 1)',
+                            backgroundColor: 'rgba(75, 192, 192, 0.1)',
+                            borderWidth: 2,
+                            fill: false
+                        },
+                        {
+                            label: 'P85',
+                            data: bmiGrowthData.map(d => d.P85),
+                            borderColor: 'rgba(54, 162, 235, 0.5)',
+                            backgroundColor: 'rgba(54, 162, 235, 0.1)',
+                            borderWidth: 1,
+                            fill: false
+                        },
+                        {
+                            label: 'P97',
+                            data: bmiGrowthData.map(d => d.P97),
+                            borderColor: 'rgba(255, 99, 132, 0.5)',
+                            backgroundColor: 'rgba(255, 99, 132, 0.1)',
+                            borderWidth: 1,
+                            fill: false
+                        },
+                        {
+                            label: 'Bệnh nhân',
+                            data: bmiGrowthData.map(d => d.age === roundedAge ? bmi : null),
+                            borderColor: 'rgba(153, 102, 255, 1)',
+                            backgroundColor: 'rgba(153, 102, 255, 1)',
+                            borderWidth: 2,
+                            pointRadius: 6,
+                            pointHoverRadius: 8,
+                            fill: false
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        y: {
+                            title: {
+                                display: true,
+                                text: 'Chỉ số BMI'
+                            }
+                        },
+                        x: {
+                            title: {
+                                display: true,
+                                text: 'Tuổi (năm)'
+                            }
+                        }
+                    },
+                    plugins: {
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return context.dataset.label + ': ' + (context.raw ? context.raw.toFixed(1) : '');
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+            
+            // Height comparison chart
+            const heightCtx = document.getElementById('heightComparisonChart').getContext('2d');
+            if (window.heightComparisonChart) {
+                window.heightComparisonChart.destroy();
+            }
+            window.heightComparisonChart = new Chart(heightCtx, {
+                type: 'bar',
+                data: {
+                    labels: ['Chiều cao hiện tại', 'Trung bình (WHO)', '-1SD', '+1SD'],
+                    datasets: [{
+                                                label: 'Chiều cao (cm)',
+                        data: [adultHeight, adultHeightStandard.P50, adultHeightStandard.P15, adultHeightStandard.P85],
+                        backgroundColor: [
+                            'rgba(153, 102, 255, 0.7)',
+                            'rgba(75, 192, 192, 0.7)',
+                            'rgba(255, 206, 86, 0.7)',
+                            'rgba(255, 206, 86, 0.7)'
+                        ],
+                        borderColor: [
+                            'rgba(153, 102, 255, 1)',
+                            'rgba(75, 192, 192, 1)',
+                            'rgba(255, 206, 86, 1)',
+                            'rgba(255, 206, 86, 1)'
+                        ],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        y: {
+                            beginAtZero: false,
+                            suggestedMin: adultHeightStandard.P3 - 5
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            display: false
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return context.dataset.label + ': ' + context.raw + ' cm';
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+        
+        // Print results
+        function printResults() {
+            // Populate print content
+            document.getElementById('printName').textContent = document.getElementById('name').value;
+            document.getElementById('printDOB').textContent = document.getElementById('dob').value;
+            document.getElementById('printAddress').textContent = document.getElementById('address').value;
+            document.getElementById('printPhone').textContent = document.getElementById('phone').value;
+            document.getElementById('printEmail').textContent = document.getElementById('email').value;
+            document.getElementById('printGender').textContent = document.getElementById('gender').value === 'male' ? 'Bé trai' : 'Bé gái';
+            document.getElementById('printAge').textContent = document.getElementById('resultAge').textContent;
+            document.getElementById('printCurrentHeight').textContent = document.getElementById('resultCurrentHeight').textContent;
+            document.getElementById('printHeightCategory').textContent = document.getElementById('resultHeightCategory').textContent;
+            document.getElementById('printHeightPercentileInfo').textContent = document.getElementById('heightPercentileInfo').textContent;
+            document.getElementById('printCurrentWeight').textContent = document.getElementById('currentWeight').value;
+            document.getElementById('printBMI').textContent = document.getElementById('resultBMI').textContent;
+            document.getElementById('printBMICategory').textContent = document.getElementById('resultBMICategory').textContent;
+            document.getElementById('printBMIPercentileInfo').textContent = document.getElementById('bmiPercentileInfo').textContent;
+            document.getElementById('printGeneticHeight').textContent = document.getElementById('resultGeneticHeight').textContent;
+            document.getElementById('printBoneAgeHeight').textContent = document.getElementById('resultBoneAgeHeight').textContent;
+            document.getElementById('printAdultHeight').textContent = document.getElementById('resultAdultHeight').textContent;
+            document.getElementById('printAdultHeightCategory').textContent = document.getElementById('resultAdultHeightCategory').textContent;
+            document.getElementById('printAdultHeightPercentileInfo').textContent = document.getElementById('adultHeightPercentileInfo').textContent;
+            
+            // Generate comments
+            const comments = `Dựa trên các chỉ số hiện tại và phân tích, chiều cao dự báo khi trưởng thành của bệnh nhân là ${document.getElementById('resultAdultHeight').textContent} cm, được phân loại là ${document.getElementById('resultAdultHeightCategory').textContent}. Chỉ số BMI hiện tại là ${document.getElementById('resultBMI').textContent}, được phân loại là ${document.getElementById('resultBMICategory').textContent}.`;
+            document.getElementById('printComments').textContent = comments;
+            
+            // Generate code and date
+            const now = new Date();
+            const code = `KH-${now.getFullYear()}${(now.getMonth()+1).toString().padStart(2, '0')}${now.getDate().toString().padStart(2, '0')}-${Math.floor(Math.random() * 1000).toString().padStart(3, '0')}`;
+            document.getElementById('printCode').textContent = code;
+            document.getElementById('printDate').textContent = now.toLocaleDateString('vi-VN');
+            
+            // Print
+            window.print();
+        }
+        
+        // Send results via email as PDF
+        function sendResults() {
+            const loading = document.getElementById('loading');
+            loading.style.display = 'flex';
+            
+            // Populate print content first
+            printResults();
+            
+            // Use html2canvas to capture the print content
+            html2canvas(document.getElementById('printContent'), {
+                scale: 2,
+                logging: false,
+                useCORS: true,
+                allowTaint: true
+            }).then(canvas => {
+                // Create PDF
+                const { jsPDF } = window.jspdf;
+                const pdf = new jsPDF('p', 'mm', 'a4');
+                const imgData = canvas.toDataURL('image/png');
+                const imgWidth = 210; // A4 width in mm
+                const pageHeight = 295; // A4 height in mm
+                const imgHeight = canvas.height * imgWidth / canvas.width;
+                let heightLeft = imgHeight;
+                let position = 0;
+                
+                pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
+                heightLeft -= pageHeight;
+                
+                // Add additional pages if needed
+                while (heightLeft >= 0) {
+                    position = heightLeft - imgHeight;
+                    pdf.addPage();
+                    pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
+                    heightLeft -= pageHeight;
+                }
+                
+                // Simulate sending email (in a real app, you would send this to your server)
+                const patientEmail = document.getElementById('email').value;
+                const doctorEmail = 'votuongkhabvtt@gmail.com';
+                const pdfBlob = pdf.output('blob');
+                
+                // In a real implementation, you would send the PDF to your server
+                // which would then send the emails with attachments
+                // This is just a simulation
+                setTimeout(() => {
+                    loading.style.display = 'none';
+                    alert(`Kết quả đã được gửi đến:\n- Email của bạn: ${patientEmail}\n- Email bác sĩ: ${doctorEmail}\n\n(Lưu ý: Đây là mô phỏng, trong ứng dụng thực tế sẽ gửi file PDF thật)`);
+                    
+                    // Reset form for next customer
+                    resetForm();
+                }, 2000);
+                
+            }).catch(error => {
+                console.error('Error generating PDF:', error);
+                loading.style.display = 'none';
+                alert('Có lỗi xảy ra khi tạo PDF. Vui lòng thử lại.');
+            });
+        }
+        
+        // Reset form for next customer
+        function resetForm() {
+            document.getElementById('patientForm').reset();
+            document.getElementById('girlFields').style.display = 'none';
+            document.getElementById('results').style.display = 'none';
+            document.getElementById('inputForm').style.display = 'block';
+            
+            // Destroy all charts to free memory
+            const chartIds = [
+                'heightGrowthChart', 'bmiGrowthChart', 
+                'heightComparisonChart', 'bmiComparisonChart', 
+                'adultHeightChart'
+            ];
+            
+            chartIds.forEach(id => {
+                if (window[id]) {
+                    window[id].destroy();
+                    window[id] = null;
+                }
+            });
+            
+            // Scroll to top
+            window.scrollTo(0, 0);
+        }
+        
+        // Initialize
+        window.onload = function() {
+            generateFooterInfo();
+        };
+    </script>
+</body>
+</html>
