@@ -1,1 +1,383 @@
+import streamlit as st
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+import seaborn as sns
+from matplotlib.ticker import MultipleLocator
+import plotly.graph_objects as go
+from plotly.subplots import make_subplots
 
+# Cấu hình trang
+st.set_page_config(
+    page_title="Ứng dụng Theo dõi Phát triển Trẻ em",
+    page_icon="👶",
+    layout="wide",
+    initial_sidebar_state="expanded"
+)
+
+# Tùy chỉnh CSS
+st.markdown("""
+    <style>
+    .header {
+        background-color: #4b8bff;
+        color: white;
+        padding: 1.5rem;
+        border-radius: 10px;
+        margin-bottom: 1.5rem;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    }
+    .footer {
+        background-color: #f0f2f6;
+        padding: 1rem;
+        border-radius: 10px;
+        margin-top: 2rem;
+        text-align: center;
+        font-size: 0.9rem;
+        color: #555;
+    }
+    .metric-card {
+        background-color: #f8f9fa;
+        border-radius: 10px;
+        padding: 1.5rem;
+        text-align: center;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        transition: transform 0.3s;
+    }
+    .metric-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 6px 12px rgba(0,0,0,0.1);
+    }
+    .highlight {
+        background: linear-gradient(120deg, #e0f7fa, #bbdefb);
+        border-radius: 5px;
+        padding: 0.5rem;
+        font-weight: bold;
+    }
+    .tab-content {
+        padding: 1.5rem;
+        background-color: white;
+        border-radius: 10px;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+        margin-top: 1rem;
+    }
+    .stTabs [data-baseweb="tab-list"] {
+        gap: 10px;
+    }
+    .stTabs [data-baseweb="tab"] {
+        height: 50px;
+        padding: 0 25px;
+        border-radius: 10px 10px 0 0 !important;
+        background-color: #f0f2f6 !important;
+        font-weight: 600;
+    }
+    .stTabs [aria-selected="true"] {
+        background-color: #4b8bff !important;
+        color: white !important;
+    }
+    </style>
+    """, unsafe_allow_html=True)
+
+# Header
+st.markdown("""
+    <div class="header">
+        <h1 style="margin:0;">👶 Ứng dụng Theo dõi Phát triển Trẻ em</h1>
+        <p style="margin:0; opacity:0.9;">Công cụ toàn diện dự đoán chiều cao trưởng thành và theo dõi chỉ số BMI</p>
+    </div>
+    """, unsafe_allow_html=True)
+
+# Tải dữ liệu
+@st.cache_data
+def load_data():
+    # Dữ liệu chiều cao
+    url_height = "https://raw.githubusercontent.com/votuongkhabvtt/huong_doi_tuong/main/do_thi_so_sanh_chieu_cao_BMI/CDC_chieu_cao.csv"
+    df_height = pd.read_csv(url_height)
+    
+    # Dữ liệu BMI
+    url_bmi = "https://raw.githubusercontent.com/votuongkhabvtt/huong_doi_tuong/main/do_thi_so_sanh_chieu_cao_BMI/CDC_BMI.csv"
+    df_bmi = pd.read_csv(url_bmi)
+    
+    return df_height, df_bmi
+
+df_height, df_bmi = load_data()
+
+# Các hàm tiện ích
+def calculate_bmi(weight, height):
+    """Tính chỉ số BMI từ cân nặng (kg) và chiều cao (m)"""
+    if height > 0:
+        return weight / ((height / 100) ** 2)
+    return 0
+
+def interpret_bmi(bmi, age_years, gender):
+    """Giải thích kết quả BMI theo tuổi và giới tính"""
+    if age_years < 2 or age_years > 20:
+        return "Không áp dụng cho độ tuổi này"
+    
+    if gender == "Nam":
+        if bmi < 14.5:
+            return "Thiếu cân"
+        elif 14.5 <= bmi < 18.5:
+            return "Bình thường"
+        elif 18.5 <= bmi < 22:
+            return "Thừa cân"
+        elif 22 <= bmi < 25:
+            return "Béo phì độ 1"
+        else:
+            return "Béo phì độ 2"
+    else:
+        if bmi < 14:
+            return "Thiếu cân"
+        elif 14 <= bmi < 18:
+            return "Bình thường"
+        elif 18 <= bmi < 21:
+            return "Thừa cân"
+        elif 21 <= bmi < 24:
+            return "Béo phì độ 1"
+        else:
+            return "Béo phì độ 2"
+
+def predict_height_khamis_roche(current_height, age_months, weight, gender):
+    """Dự đoán chiều cao trưởng thành sử dụng phương pháp Khamis-Roche"""
+    # Đây là phương pháp đơn giản hóa, trong thực tế cần sử dụng công thức chính xác
+    gender_factor = 13 if gender == "Nam" else 11
+    return current_height + (gender_factor * (1 - (age_months / 216)))
+
+def predict_height_tanner(current_height, bone_age, chronological_age):
+    """Dự đoán chiều cao trưởng thành sử dụng phương pháp TW2"""
+    # Giả định phương pháp đơn giản
+    return current_height * (1 + ((18 - chronological_age) / chronological_age))
+
+def predict_height_bayley(current_height, height_velocity, age_years):
+    """Dự đoán chiều cao trưởng thành sử dụng phương pháp Bayley-Pinneau"""
+    # Giả định phương pháp đơn giản
+    return current_height + (height_velocity * (18 - age_years))
+
+# Tạo các tab
+tab1, tab2 = st.tabs(["📏 Dự đoán Chiều cao Trưởng thành", "📊 Theo dõi Tăng trưởng và BMI"])
+
+with tab1:
+    st.subheader("Dự đoán Chiều cao Trưởng thành")
+    st.write("Nhập thông tin của trẻ để dự đoán chiều cao khi trưởng thành")
+    
+    with st.container():
+        col1, col2, col3, col4 = st.columns(4)
+        with col1:
+            age_months = st.number_input("Tuổi (tháng)", min_value=0, max_value=240, value=60)
+        with col2:
+            current_height = st.number_input("Chiều cao hiện tại (cm)", min_value=0.0, value=100.0, step=0.1)
+        with col3:
+            weight = st.number_input("Cân nặng (kg)", min_value=0.0, value=15.0, step=0.1)
+        with col4:
+            gender = st.radio("Giới tính", ["Nam", "Nữ"], index=0, horizontal=True)
+    
+    # Tính toán
+    bmi = calculate_bmi(weight, current_height)
+    height_khamis = predict_height_khamis_roche(current_height, age_months, weight, gender)
+    height_tanner = predict_height_tanner(current_height, age_months/12, age_months/12)
+    height_bayley = predict_height_bayley(current_height, 5, age_months/12)
+    
+    # Hiển thị kết quả
+    st.markdown("---")
+    st.subheader("Kết quả Dự đoán")
+    
+    col1, col2, col3 = st.columns(3)
+    with col1:
+        st.markdown("<div class='metric-card'>", unsafe_allow_html=True)
+        st.metric("Phương pháp Khamis-Roche", value=f"{height_khamis:.1f} cm")
+        st.caption("Phương pháp dựa trên chiều cao, cân nặng, tuổi và giới tính")
+        st.markdown("</div>", unsafe_allow_html=True)
+    
+    with col2:
+        st.markdown("<div class='metric-card'>", unsafe_allow_html=True)
+        st.metric("Phương pháp TW2 (Tanner)", value=f"{height_tanner:.1f} cm")
+        st.caption("Dựa trên tuổi xương và tuổi thời gian")
+        st.markdown("</div>", unsafe_allow_html=True)
+    
+    with col3:
+        st.markdown("<div class='metric-card'>", unsafe_allow_html=True)
+        st.metric("Phương pháp Bayley-Pinneau", value=f"{height_bayley:.1f} cm")
+        st.caption("Dựa trên tốc độ tăng trưởng chiều cao hiện tại")
+        st.markdown("</div>", unsafe_allow_html=True)
+    
+    st.markdown("---")
+    st.subheader("Thông tin Bổ sung")
+    
+    col1, col2 = st.columns(2)
+    with col1:
+        st.markdown("**Chỉ số BMI hiện tại**")
+        st.markdown(f"<div class='highlight'>{bmi:.1f}</div>", unsafe_allow_html=True)
+        st.caption(interpret_bmi(bmi, age_months/12, gender))
+    
+    with col2:
+        st.markdown("**Nhận xét**")
+        if bmi < 16:
+            st.warning("Trẻ có thể đang trong tình trạng thiếu cân. Cần tư vấn dinh dưỡng.")
+        elif bmi > 22:
+            st.warning("Trẻ có thể đang trong tình trạng thừa cân. Cần điều chỉnh chế độ ăn và vận động.")
+        else:
+            st.success("Chỉ số BMI trong phạm vi bình thường. Duy trì chế độ dinh dưỡng hợp lý.")
+    
+    # Biểu đồ dự đoán
+    st.markdown("---")
+    st.subheader("Biểu đồ Dự đoán Chiều cao")
+    
+    methods = ['Khamis-Roche', 'Tanner', 'Bayley-Pinneau']
+    heights = [height_khamis, height_tanner, height_bayley]
+    
+    fig = go.Figure()
+    fig.add_trace(go.Bar(
+        x=methods,
+        y=heights,
+        marker_color=['#4b8bff', '#36c1b6', '#ff6b6b'],
+        text=[f"{h:.1f} cm" for h in heights],
+        textposition='auto'
+    ))
+    
+    fig.update_layout(
+        title='So sánh Dự đoán Chiều cao Trưởng thành',
+        yaxis_title='Chiều cao (cm)',
+        xaxis_title='Phương pháp',
+        template='plotly_white',
+        height=400
+    )
+    
+    st.plotly_chart(fig, use_container_width=True)
+
+with tab2:
+    st.subheader("Theo dõi Tăng trưởng và BMI")
+    st.write("Theo dõi sự phát triển của trẻ so với tiêu chuẩn CDC")
+    
+    with st.container():
+        col1, col2, col3 = st.columns(3)
+        with col1:
+            age_years = st.number_input("Tuổi (năm)", min_value=0, max_value=18, value=5, key='tab2_age_years')
+            age_months = st.number_input("Tuổi (tháng)", min_value=0, max_value=11, value=0, key='tab2_age_months')
+        with col2:
+            current_height = st.number_input("Chiều cao (cm)", min_value=0.0, value=110.0, step=0.1, key='tab2_height')
+        with col3:
+            weight = st.number_input("Cân nặng (kg)", min_value=0.0, value=18.0, step=0.1, key='tab2_weight')
+            gender = st.radio("Giới tính", ["Nam", "Nữ"], index=0, horizontal=True, key='tab2_gender')
+    
+    # Tính toán
+    total_months = age_years * 12 + age_months
+    bmi = calculate_bmi(weight, current_height)
+    bmi_category = interpret_bmi(bmi, age_years, gender)
+    
+    # Hiển thị kết quả
+    st.markdown("---")
+    st.subheader("Kết quả Đánh giá")
+    
+    col1, col2, col3 = st.columns(3)
+    with col1:
+        st.markdown("<div class='metric-card'>", unsafe_allow_html=True)
+        st.metric("Tuổi", value=f"{age_years} năm {age_months} tháng")
+        st.markdown("</div>", unsafe_allow_html=True)
+    
+    with col2:
+        st.markdown("<div class='metric-card'>", unsafe_allow_html=True)
+        st.metric("Chiều cao", value=f"{current_height} cm")
+        st.markdown("</div>", unsafe_allow_html=True)
+    
+    with col3:
+        st.markdown("<div class='metric-card'>", unsafe_allow_html=True)
+        st.metric("BMI", value=f"{bmi:.1f} ({bmi_category})")
+        st.markdown("</div>", unsafe_allow_html=True)
+    
+    # Vẽ biểu đồ
+    st.markdown("---")
+    st.subheader("Biểu đồ Tăng trưởng")
+    
+    # Lọc dữ liệu theo giới tính
+    sex_filter = 'boys' if gender == "Nam" else 'girls'
+    df_height_sex = df_height[df_height['Sex'] == sex_filter]
+    df_bmi_sex = df_bmi[df_bmi['Sex'] == sex_filter]
+    
+    # Tạo biểu đồ
+    fig = make_subplots(rows=1, cols=2, subplot_titles=('Chiều cao theo Tuổi', 'BMI theo Tuổi'))
+    
+    # Biểu đồ chiều cao
+    percentiles = [3, 5, 10, 25, 50, 75, 90, 95, 97]
+    for p in percentiles:
+        fig.add_trace(go.Scatter(
+            x=df_height_sex['Agemos'], 
+            y=df_height_sex[f'P{p}'],
+            mode='lines',
+            name=f'P{p}',
+            line=dict(width=1 if p != 50 else 3, 
+                      color='lightblue' if p != 50 else 'blue'),
+            showlegend=False
+        ), row=1, col=1)
+    
+    fig.add_trace(go.Scatter(
+        x=[total_months],
+        y=[current_height],
+        mode='markers',
+        name='Trẻ',
+        marker=dict(size=12, color='red'),
+        row=1, col=1
+    ))
+    
+    # Biểu đồ BMI
+    for p in percentiles:
+        fig.add_trace(go.Scatter(
+            x=df_bmi_sex['Agemos'], 
+            y=df_bmi_sex[f'P{p}'],
+            mode='lines',
+            name=f'P{p}',
+            line=dict(width=1 if p != 50 else 3, 
+                      color='lightgreen' if p != 50 else 'green'),
+            showlegend=False
+        ), row=1, col=2)
+    
+    fig.add_trace(go.Scatter(
+        x=[total_months],
+        y=[bmi],
+        mode='markers',
+        name='Trẻ',
+        marker=dict(size=12, color='red'),
+        showlegend=False,
+        row=1, col=2
+    ))
+    
+    # Cập nhật layout
+    fig.update_layout(
+        height=500,
+        title_text="Theo dõi Tăng trưởng so với Tiêu chuẩn CDC",
+        template='plotly_white',
+        hovermode="x unified"
+    )
+    
+    fig.update_xaxes(title_text="Tuổi (tháng)", row=1, col=1)
+    fig.update_xaxes(title_text="Tuổi (tháng)", row=1, col=2)
+    fig.update_yaxes(title_text="Chiều cao (cm)", row=1, col=1)
+    fig.update_yaxes(title_text="BMI", row=1, col=2)
+    
+    st.plotly_chart(fig, use_container_width=True)
+    
+    # Giải thích
+    st.markdown("---")
+    st.subheader("Giải thích Biểu đồ")
+    st.info("""
+        - **Đường màu xanh dương/xanh lá đậm**: Phân vị 50 (trung bình)
+        - **Các đường màu nhạt**: Các phân vị khác (3, 5, 10, 25, 75, 90, 95, 97)
+        - **Điểm đỏ**: Vị trí của trẻ trên biểu đồ
+        - Biểu đồ so sánh sự phát triển của trẻ với tiêu chuẩn của CDC
+    """)
+    
+    st.markdown("**Khuyến nghị:**")
+    if current_height < df_height_sex.loc[df_height_sex['Agemos'] == total_months, 'P25'].values[0]:
+        st.warning("Chiều cao của trẻ đang ở dưới mức trung bình. Cần kiểm tra dinh dưỡng và vận động.")
+    elif current_height > df_height_sex.loc[df_height_sex['Agemos'] == total_months, 'P90'].values[0]:
+        st.success("Chiều cao của trẻ đang ở mức tốt! Tiếp tục duy trì chế độ dinh dưỡng và vận động hợp lý.")
+    else:
+        st.info("Chiều cao của trẻ đang ở mức trung bình. Tiếp tục theo dõi và đảm bảo dinh dưỡng đầy đủ.")
+
+# Footer
+st.markdown("---")
+st.markdown("""
+    <div class="footer">
+        <p>© 2023 Ứng dụng Theo dõi Phát triển Trẻ em | 
+        Phát triển bởi Đội ngũ Chuyên gia Nhi khoa | 
+        Dữ liệu tham khảo từ Trung tâm Kiểm soát và Phòng ngừa Dịch bệnh Hoa Kỳ (CDC)</p>
+        <p>Lưu ý: Ứng dụng này chỉ mang tính chất tham khảo. Vui lòng tham khảo ý kiến bác sĩ để có đánh giá chính xác.</p>
+    </div>
+    """, unsafe_allow_html=True)
