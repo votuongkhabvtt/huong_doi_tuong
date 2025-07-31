@@ -3,12 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Đánh giá Tăng trưởng theo Tiêu chuẩn WHO</title>
+    <title>Đánh giá Tăng trưởng theo WHO & Chuẩn Việt Nam 2035</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root {
             --primary: #3498db;
             --secondary: #2ecc71;
+            --vietnam: #f39c12;
+            --who: #e74c3c;
+            --client: #3498db;
             --danger: #e74c3c;
             --warning: #f39c12;
             --light: #f8f9fa;
@@ -32,7 +36,7 @@
         }
         
         .container {
-            max-width: 1200px;
+            max-width: 1400px;
             width: 100%;
             background-color: white;
             border-radius: 15px;
@@ -41,18 +45,56 @@
         }
         
         header {
-            background: linear-gradient(90deg, var(--primary), var(--secondary));
+            background: linear-gradient(90deg, #2c3e50, #4a6491);
             color: white;
             padding: 20px;
             text-align: center;
+            position: relative;
         }
         
-        header h1 {
-            font-size: 2.2rem;
+        .clinic-header {
+            padding: 15px 0;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+        
+        .clinic-header h1 {
+            font-size: 1.8rem;
+            margin-bottom: 10px;
+            color: #fff;
+        }
+        
+        .clinic-header p {
+            font-size: 1rem;
+            margin: 5px 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+        
+        .clinic-header a {
+            color: #f1c40f;
+            text-decoration: none;
+        }
+        
+        .clinic-header a:hover {
+            text-decoration: underline;
+        }
+        
+        .app-title {
+            padding: 10px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+        }
+        
+        .app-title h2 {
+            font-size: 1.8rem;
             margin-bottom: 10px;
         }
         
-        header p {
+        .app-title p {
             font-size: 1.1rem;
             max-width: 800px;
             margin: 0 auto;
@@ -91,6 +133,13 @@
             padding-bottom: 10px;
             border-bottom: 2px solid var(--primary);
             font-size: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .section-title i {
+            font-size: 1.8rem;
         }
         
         .form-group {
@@ -189,6 +238,18 @@
             color: var(--danger);
         }
         
+        .vietnam-color {
+            color: var(--vietnam);
+        }
+        
+        .who-color {
+            color: var(--who);
+        }
+        
+        .client-color {
+            color: var(--client);
+        }
+        
         .charts-container {
             display: grid;
             grid-template-columns: 1fr;
@@ -208,6 +269,10 @@
             color: var(--dark);
             margin-bottom: 15px;
             text-align: center;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
         }
         
         .chart-container {
@@ -239,26 +304,125 @@
             margin-top: 20px;
         }
         
+        .comparison-box {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+        }
+        
+        .comparison-item {
+            flex: 1;
+            text-align: center;
+            padding: 15px;
+            border-radius: 10px;
+            background: white;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
+            margin: 0 10px;
+        }
+        
+        .comparison-value {
+            font-size: 1.8rem;
+            font-weight: bold;
+            margin: 10px 0;
+        }
+        
+        .vietnam-bg {
+            background: linear-gradient(to bottom, rgba(243, 156, 18, 0.1), white);
+            border-top: 4px solid var(--vietnam);
+        }
+        
+        .who-bg {
+            background: linear-gradient(to bottom, rgba(231, 76, 60, 0.1), white);
+            border-top: 4px solid var(--who);
+        }
+        
         footer {
             text-align: center;
             padding: 20px;
             color: #777;
             font-size: 0.9rem;
             border-top: 1px solid #eee;
+            background: #f8f9fa;
+        }
+        
+        .legend {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 10px;
+            flex-wrap: wrap;
+        }
+        
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 0.9rem;
+        }
+        
+        .legend-color {
+            width: 15px;
+            height: 15px;
+            border-radius: 3px;
+        }
+        
+        .client-info {
+            background: linear-gradient(135deg, #3498db, #2c3e50);
+            color: white;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+        
+        .client-info p {
+            margin: 8px 0;
+            display: flex;
+            align-items: center;
+            gap: 10px;
         }
     </style>
 </head>
 <body>
     <div class="container">
         <header>
-            <h1>ĐÁNH GIÁ TĂNG TRƯỞNG THEO TIÊU CHUẨN WHO</h1>
-            <p>Chương trình đánh giá chiều cao và BMI dựa trên tiêu chuẩn tăng trưởng của Tổ chức Y tế Thế giới (WHO)</p>
+            <div class="clinic-header">
+                <h1>PHÒNG KHÁM YHTT VÀ YHCT PGs.Ts.Bs.VÕ TƯỜNG KHA</h1>
+                <p><i class="fas fa-globe"></i> Website: <a href="http://votuongkha.net" target="_blank">votuongkha.net</a></p>
+                <p><i class="fas fa-envelope"></i> Email: <a href="mailto:votuongkhabvtt@gmail.com">votuongkhabvtt@gmail.com</a></p>
+                <p><i class="fas fa-phone"></i> Điện thoại: 0913504755</p>
+            </div>
+            
+            <div class="app-title">
+                <h2><i class="fas fa-chart-line"></i> ĐÁNH GIÁ TĂNG TRƯỞNG THEO WHO & VIỆT NAM 2035</h2>
+                <p>Chương trình đánh giá chiều cao và BMI dựa trên tiêu chuẩn WHO và chuẩn trung bình Việt Nam 2035</p>
+            </div>
         </header>
         
         <div class="content">
             <div class="input-section">
-                <h2 class="section-title">THÔNG TIN CÁ NHÂN</h2>
+                <h2 class="section-title"><i class="fas fa-user"></i> THÔNG TIN CÁ NHÂN</h2>
+                
                 <form id="growthForm">
+                    <div class="form-group">
+                        <label for="fullname"><i class="fas fa-signature"></i> Họ và tên:</label>
+                        <input type="text" id="fullname" placeholder="Nhập họ tên đầy đủ" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="address"><i class="fas fa-home"></i> Địa chỉ:</label>
+                        <input type="text" id="address" placeholder="Nhập địa chỉ">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="phone"><i class="fas fa-phone"></i> Điện thoại:</label>
+                        <input type="tel" id="phone" placeholder="Nhập số điện thoại">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="email"><i class="fas fa-envelope"></i> Email:</label>
+                        <input type="email" id="email" placeholder="Nhập email">
+                    </div>
+                    
                     <div class="form-group">
                         <label for="gender">Giới tính:</label>
                         <div class="radio-group">
@@ -274,55 +438,66 @@
                     </div>
                     
                     <div class="form-group">
-                        <label for="birthdate">Ngày sinh:</label>
+                        <label for="birthdate"><i class="fas fa-birthday-cake"></i> Ngày sinh:</label>
                         <input type="date" id="birthdate" required>
                     </div>
                     
                     <div class="form-group">
-                        <label for="height">Chiều cao hiện tại (cm):</label>
-                        <input type="number" id="height" min="50" max="250" step="0.1" required>
+                        <label for="height"><i class="fas fa-ruler-vertical"></i> Chiều cao hiện tại (cm):</label>
+                        <input type="number" id="height" min="50" max="250" step="0.1" placeholder="Nhập chiều cao" required>
                     </div>
                     
                     <div class="form-group">
-                        <label for="weight">Cân nặng hiện tại (kg):</label>
-                        <input type="number" id="weight" min="5" max="150" step="0.1" required>
+                        <label for="weight"><i class="fas fa-weight"></i> Cân nặng hiện tại (kg):</label>
+                        <input type="number" id="weight" min="5" max="150" step="0.1" placeholder="Nhập cân nặng" required>
                     </div>
                     
                     <div class="form-group">
-                        <label for="predictedHeight">Chiều cao dự báo trưởng thành (cm):</label>
-                        <input type="number" id="predictedHeight" min="100" max="250" step="0.1" required>
+                        <label for="predictedHeight"><i class="fas fa-project-diagram"></i> Chiều cao dự báo trưởng thành (cm):</label>
+                        <input type="number" id="predictedHeight" min="100" max="250" step="0.1" placeholder="Nhập chiều cao dự báo" required>
                     </div>
                     
-                    <button type="submit">ĐÁNH GIÁ CHỈ SỐ</button>
+                    <button type="submit"><i class="fas fa-calculator"></i> ĐÁNH GIÁ CHỈ SỐ</button>
                 </form>
+                
+                <div class="comparison-box">
+                    <div class="comparison-item vietnam-bg">
+                        <h3>Chuẩn Việt Nam 2035</h3>
+                        <div class="comparison-value vietnam-color" id="vietnamRef">-</div>
+                        <p>Chiều cao trung bình dự kiến</p>
+                    </div>
+                    
+                    <div class="comparison-item who-bg">
+                        <h3>Chuẩn WHO</h3>
+                        <div class="comparison-value who-color" id="whoRef">-</div>
+                        <p>Chiều cao trung bình (p50)</p>
+                    </div>
+                </div>
             </div>
             
             <div class="result-section">
-                <h2 class="section-title">KẾT QUẢ ĐÁNH GIÁ</h2>
+                <h2 class="section-title"><i class="fas fa-chart-pie"></i> KẾT QUẢ ĐÁNH GIÁ</h2>
                 <div id="results">
-                    <div class="result-box">
-                        <h3 class="result-title">Thông tin cá nhân</h3>
-                        <div class="result-content">
-                            <p>Vui lòng nhập thông tin và nhấn "Đánh giá chỉ số" để xem kết quả</p>
-                        </div>
+                    <div class="client-info" id="clientInfo">
+                        <p>Vui lòng nhập thông tin và nhấn "Đánh giá chỉ số" để xem kết quả</p>
                     </div>
                     
                     <div class="result-box">
-                        <h3 class="result-title">Đánh giá Chiều cao hiện tại</h3>
+                        <h3 class="result-title"><i class="fas fa-ruler-combined"></i> Đánh giá Chiều cao hiện tại</h3>
                         <div class="result-content">
                             <p>Kết quả sẽ hiển thị sau khi đánh giá</p>
                         </div>
                     </div>
                     
                     <div class="result-box">
-                        <h3 class="result-title">Đánh giá Chỉ số BMI</h3>
+                        <h3 class="result-title"><i class="fas fa-weight-scale"></i> Đánh giá Chỉ số BMI</h3>
                         <div class="result-content">
                             <p>Kết quả sẽ hiển thị sau khi đánh giá</p>
                         </div>
                     </div>
                     
                     <div class="result-box">
-                        <h3 class="result-title">Đánh giá Chiều cao dự báo</h3>
+                        <h3 class="result-title"><i class="fas fa-project-diagram"></i> Đánh giá Chiều cao dự báo</h3>
                         <div class="result-content">
                             <p>Kết quả sẽ hiển thị sau khi đánh giá</p>
                         </div>
@@ -338,27 +513,84 @@
                 
                 <div class="charts-container">
                     <div class="chart-box">
-                        <h3 class="chart-title">BIỂU ĐỒ CHIỀU CAO THEO TUỔI</h3>
+                        <h3 class="chart-title"><i class="fas fa-chart-line"></i> BIỂU ĐỒ CHIỀU CAO THEO TUỔI</h3>
                         <div class="chart-container">
                             <canvas id="heightChart"></canvas>
+                        </div>
+                        <div class="legend">
+                            <div class="legend-item">
+                                <div class="legend-color" style="background-color: #e74c3c;"></div>
+                                <span>Phân vị 3% (WHO)</span>
+                            </div>
+                            <div class="legend-item">
+                                <div class="legend-color" style="background-color: #2ecc71;"></div>
+                                <span>Phân vị 50% (WHO)</span>
+                            </div>
+                            <div class="legend-item">
+                                <div class="legend-color" style="background-color: #3498db;"></div>
+                                <span>Phân vị 97% (WHO)</span>
+                            </div>
+                            <div class="legend-item">
+                                <div class="legend-color" style="background-color: #9b59b6;"></div>
+                                <span>Chiều cao của bạn</span>
+                            </div>
                         </div>
                     </div>
                     
                     <div class="chart-box">
-                        <h3 class="chart-title">BIỂU ĐỒ BMI THEO TUỔI</h3>
+                        <h3 class="chart-title"><i class="fas fa-chart-area"></i> BIỂU ĐỒ BMI THEO TUỔI</h3>
                         <div class="chart-container">
                             <canvas id="bmiChart"></canvas>
+                        </div>
+                        <div class="legend">
+                            <div class="legend-item">
+                                <div class="legend-color" style="background-color: #e74c3c;"></div>
+                                <span>-1SD (Thiếu cân)</span>
+                            </div>
+                            <div class="legend-item">
+                                <div class="legend-color" style="background-color: #2ecc71;"></div>
+                                <span>Trung vị (WHO)</span>
+                            </div>
+                            <div class="legend-item">
+                                <div class="legend-color" style="background-color: #3498db;"></div>
+                                <span>+1SD (Thừa cân)</span>
+                            </div>
+                            <div class="legend-item">
+                                <div class="legend-color" style="background-color: #9b59b6;"></div>
+                                <span>BMI của bạn</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="chart-box">
+                        <h3 class="chart-title"><i class="fas fa-chart-bar"></i> SO SÁNH CHIỀU CAO TRƯỞNG THÀNH</h3>
+                        <div class="chart-container">
+                            <canvas id="predictedHeightChart"></canvas>
+                        </div>
+                        <div class="legend">
+                            <div class="legend-item">
+                                <div class="legend-color" style="background-color: #3498db;"></div>
+                                <span>Chiều cao dự báo của bạn</span>
+                            </div>
+                            <div class="legend-item">
+                                <div class="legend-color" style="background-color: #f39c12;"></div>
+                                <span>Chuẩn Việt Nam 2035</span>
+                            </div>
+                            <div class="legend-item">
+                                <div class="legend-color" style="background-color: #e74c3c;"></div>
+                                <span>Chuẩn WHO (p50)</span>
+                            </div>
                         </div>
                     </div>
                 </div>
                 
-                <button class="reset-btn" id="resetBtn">NHẬP THÔNG TIN MỚI</button>
+                <button class="reset-btn" id="resetBtn"><i class="fas fa-redo"></i> NHẬP THÔNG TIN MỚI</button>
             </div>
         </div>
         
         <footer>
-            <p>Dữ liệu tham chiếu dựa trên Tiêu chuẩn Tăng trưởng WHO 2007 dành cho trẻ em 5-19 tuổi</p>
-            <p>© 2023 - Chương trình Đánh giá Tăng trưởng Trẻ em</p>
+            <p>Dữ liệu tham chiếu dựa trên Tiêu chuẩn Tăng trưởng WHO 2007 và chuẩn Việt Nam dự báo 2035</p>
+            <p>© 2023 - PHÒNG KHÁM YHTT VÀ YHCT PGs.Ts.Bs.VÕ TƯỜNG KHA - votuongkha.net</p>
         </footer>
     </div>
 
@@ -395,19 +627,27 @@
             }
         };
 
-        // Tham chiếu chiều cao trưởng thành
+        // Tham chiếu chiều cao trưởng thành WHO
         const adultHeightRef = {
             male: { p3: 163, p50: 176, p97: 188 },
             female: { p3: 151, p50: 163, p97: 175 }
         };
 
+        // Chuẩn chiều cao trung bình Việt Nam 2035
+        const vietnamHeightRef = {
+            male: { min: 170, max: 172, avg: 171 },
+            female: { min: 158, max: 160, avg: 159 }
+        };
+
         // Khởi tạo biểu đồ
         const heightCtx = document.getElementById('heightChart').getContext('2d');
         const bmiCtx = document.getElementById('bmiChart').getContext('2d');
+        const predictedHeightCtx = document.getElementById('predictedHeightChart').getContext('2d');
         
         // Biến lưu trữ đối tượng biểu đồ
         let heightChart = null;
         let bmiChart = null;
+        let predictedHeightChart = null;
         
         // Hàm tính tuổi
         function calculateAge(birthdate) {
@@ -548,44 +788,67 @@
         
         // Hàm đánh giá chiều cao dự báo
         function evaluatePredictedHeight(gender, height) {
-            const ref = adultHeightRef[gender];
+            const whoRef = adultHeightRef[gender];
+            const vnRef = vietnamHeightRef[gender];
             
-            // Xác định phân vị
-            let percentile = null;
+            // So sánh với chuẩn WHO
+            let whoPercentile = null;
+            let whoEvaluation = "";
+            let whoEvaluationClass = "";
             
-            if (height < ref.p3) {
-                percentile = 3;
-            } else if (height < ref.p50) {
-                percentile = 15; // Giả định
-            } else if (height < ref.p97) {
-                percentile = 50; // Giả định
+            if (height < whoRef.p3) {
+                whoPercentile = 3;
+            } else if (height < whoRef.p50) {
+                whoPercentile = 15; // Giả định
+            } else if (height < whoRef.p97) {
+                whoPercentile = 50; // Giả định
             } else {
-                percentile = 97;
+                whoPercentile = 97;
             }
             
-            // Đánh giá
-            let evaluation = "";
-            let evaluationClass = "";
-            
-            if (height < ref.p3) {
-                evaluation = "Thấp hơn đáng kể so với chiều cao trung bình dự kiến";
-                evaluationClass = "negative";
-            } else if (height < ref.p50) {
-                evaluation = "Ở mức trung bình thấp so với chiều cao dự kiến";
-                evaluationClass = "";
-            } else if (height < ref.p97) {
-                evaluation = "Ở mức trung bình đến cao so với chiều cao dự kiến";
-                evaluationClass = "positive";
+            if (height < whoRef.p3) {
+                whoEvaluation = "Thấp hơn đáng kể so với chuẩn WHO";
+                whoEvaluationClass = "negative";
+            } else if (height < whoRef.p50) {
+                whoEvaluation = "Ở mức trung bình thấp so với chuẩn WHO";
+                whoEvaluationClass = "";
+            } else if (height < whoRef.p97) {
+                whoEvaluation = "Ở mức trung bình đến cao so với chuẩn WHO";
+                whoEvaluationClass = "positive";
             } else {
-                evaluation = "Cao hơn đáng kể so với chiều cao dự kiến";
-                evaluationClass = "positive";
+                whoEvaluation = "Cao hơn đáng kể so với chuẩn WHO";
+                whoEvaluationClass = "positive";
+            }
+            
+            // So sánh với chuẩn Việt Nam 2035
+            let vnEvaluation = "";
+            let vnEvaluationClass = "";
+            const diff = height - vnRef.avg;
+            
+            if (diff < -5) {
+                vnEvaluation = `Thấp hơn đáng kể so với chuẩn Việt Nam 2035 (${diff.toFixed(1)} cm)`;
+                vnEvaluationClass = "negative";
+            } else if (diff < 0) {
+                vnEvaluation = `Thấp hơn một chút so với chuẩn Việt Nam 2035 (${diff.toFixed(1)} cm)`;
+                vnEvaluationClass = "";
+            } else if (diff < 5) {
+                vnEvaluation = `Cao hơn một chút so với chuẩn Việt Nam 2035 (+${diff.toFixed(1)} cm)`;
+                vnEvaluationClass = "positive";
+            } else {
+                vnEvaluation = `Cao hơn đáng kể so với chuẩn Việt Nam 2035 (+${diff.toFixed(1)} cm)`;
+                vnEvaluationClass = "positive";
             }
             
             return {
-                percentile: percentile,
-                evaluation: evaluation,
-                evaluationClass: evaluationClass,
-                ref: ref
+                whoPercentile: whoPercentile,
+                whoEvaluation: whoEvaluation,
+                whoEvaluationClass: whoEvaluationClass,
+                vnEvaluation: vnEvaluation,
+                vnEvaluationClass: vnEvaluationClass,
+                ref: {
+                    who: whoRef,
+                    vn: vnRef
+                }
             };
         }
         
@@ -602,7 +865,7 @@
             // Tạo dữ liệu cho biểu đồ
             const datasets = [
                 {
-                    label: 'Phân vị 3%',
+                    label: 'Phân vị 3% (WHO)',
                     data: data.p3,
                     borderColor: '#e74c3c',
                     backgroundColor: 'rgba(231, 76, 60, 0.1)',
@@ -611,7 +874,7 @@
                     pointRadius: 0
                 },
                 {
-                    label: 'Phân vị 50%',
+                    label: 'Phân vị 50% (WHO)',
                     data: data.p50,
                     borderColor: '#2ecc71',
                     backgroundColor: 'rgba(46, 204, 113, 0.1)',
@@ -620,7 +883,7 @@
                     pointRadius: 0
                 },
                 {
-                    label: 'Phân vị 97%',
+                    label: 'Phân vị 97% (WHO)',
                     data: data.p97,
                     borderColor: '#3498db',
                     backgroundColor: 'rgba(52, 152, 219, 0.1)',
@@ -723,7 +986,7 @@
                     pointRadius: 0
                 },
                 {
-                    label: 'Trung vị',
+                    label: 'Trung vị (WHO)',
                     data: data.median,
                     borderColor: '#2ecc71',
                     backgroundColor: 'rgba(46, 204, 113, 0.1)',
@@ -813,11 +1076,72 @@
             });
         }
         
+        // Hàm vẽ biểu đồ so sánh chiều cao dự báo
+        function drawPredictedHeightChart(gender, predictedHeight, predictedHeightEval) {
+            if (predictedHeightChart) {
+                predictedHeightChart.destroy();
+            }
+            
+            const whoRef = predictedHeightEval.ref.who.p50;
+            const vnRef = predictedHeightEval.ref.vn.avg;
+            
+            predictedHeightChart = new Chart(predictedHeightCtx, {
+                type: 'bar',
+                data: {
+                    labels: ['Chiều cao dự báo của bạn', 'Chuẩn Việt Nam 2035', 'Chuẩn WHO (p50)'],
+                    datasets: [{
+                        label: 'Chiều cao (cm)',
+                        data: [predictedHeight, vnRef, whoRef],
+                        backgroundColor: [
+                            '#3498db',   // Xanh dương cho khách hàng
+                            '#f39c12',   // Vàng cho Việt Nam
+                            '#e74c3c'    // Đỏ cho WHO
+                        ],
+                        borderColor: [
+                            '#2980b9',
+                            '#d35400',
+                            '#c0392b'
+                        ],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            beginAtZero: false,
+                            title: {
+                                display: true,
+                                text: 'Chiều cao (cm)'
+                            }
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            display: false
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return `Chiều cao: ${context.parsed.y} cm`;
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+        
         // Hàm xử lý khi form được submit
         function handleFormSubmit(event) {
             event.preventDefault();
             
             // Lấy dữ liệu từ form
+            const fullname = document.getElementById('fullname').value;
+            const address = document.getElementById('address').value;
+            const phone = document.getElementById('phone').value;
+            const email = document.getElementById('email').value;
             const gender = document.querySelector('input[name="gender"]:checked').value;
             const birthdate = document.getElementById('birthdate').value;
             const height = parseFloat(document.getElementById('height').value);
@@ -832,34 +1156,37 @@
             const predictedHeightEval = evaluatePredictedHeight(gender, predictedHeight);
             
             // Hiển thị kết quả
-            displayResults(gender, age, height, weight, bmi, predictedHeight, heightEval, bmiEval, predictedHeightEval);
+            displayResults(fullname, address, phone, email, gender, age, height, weight, bmi, predictedHeight, heightEval, bmiEval, predictedHeightEval);
             
             // Vẽ biểu đồ
             drawHeightChart(gender, age.decimal, height, heightEval);
             drawBMIChart(gender, age.decimal, bmi, bmiEval);
+            drawPredictedHeightChart(gender, predictedHeight, predictedHeightEval);
         }
         
         // Hàm hiển thị kết quả
-        function displayResults(gender, age, height, weight, bmi, predictedHeight, heightEval, bmiEval, predictedHeightEval) {
+        function displayResults(fullname, address, phone, email, gender, age, height, weight, bmi, predictedHeight, heightEval, bmiEval, predictedHeightEval) {
             const genderText = gender === 'male' ? 'Bé trai' : 'Bé gái';
             const ageText = `${age.years} tuổi ${age.months} tháng`;
+            const vnRef = vietnamHeightRef[gender].avg;
+            const whoRef = adultHeightRef[gender].p50;
             
-            // Hiển thị thông tin cá nhân
-            document.querySelectorAll('.result-box')[0].innerHTML = `
-                <h3 class="result-title">Thông tin cá nhân</h3>
-                <div class="result-content">
-                    <p><span class="highlight">Giới tính:</span> ${genderText}</p>
-                    <p><span class="highlight">Tuổi:</span> ${ageText}</p>
-                    <p><span class="highlight">Chiều cao hiện tại:</span> ${height} cm</p>
-                    <p><span class="highlight">Cân nặng hiện tại:</span> ${weight} kg</p>
-                    <p><span class="highlight">Chỉ số BMI:</span> ${bmi.toFixed(1)}</p>
-                    <p><span class="highlight">Chiều cao dự báo trưởng thành:</span> ${predictedHeight} cm</p>
-                </div>
+            // Cập nhật thông tin chuẩn
+            document.getElementById('vietnamRef').textContent = `${vnRef} cm`;
+            document.getElementById('whoRef').textContent = `${whoRef} cm`;
+            
+            // Hiển thị thông tin khách hàng
+            document.getElementById('clientInfo').innerHTML = `
+                <h3><i class="fas fa-user"></i> THÔNG TIN KHÁCH HÀNG</h3>
+                <p><i class="fas fa-signature"></i> Họ tên: ${fullname}</p>
+                ${address ? `<p><i class="fas fa-home"></i> Địa chỉ: ${address}</p>` : ''}
+                ${phone ? `<p><i class="fas fa-phone"></i> Điện thoại: ${phone}</p>` : ''}
+                ${email ? `<p><i class="fas fa-envelope"></i> Email: ${email}</p>` : ''}
             `;
             
             // Hiển thị đánh giá chiều cao
-            document.querySelectorAll('.result-box')[1].innerHTML = `
-                <h3 class="result-title">Đánh giá Chiều cao hiện tại</h3>
+            document.querySelectorAll('.result-box')[0].innerHTML = `
+                <h3 class="result-title"><i class="fas fa-ruler-combined"></i> Đánh giá Chiều cao hiện tại</h3>
                 <div class="result-content">
                     <p>Chiều cao hiện tại của bạn đạt <span class="highlight">${heightEval.percentile}%</span> phân vị</p>
                     <p>So sánh với tiêu chuẩn WHO:</p>
@@ -871,8 +1198,8 @@
             `;
             
             // Hiển thị đánh giá BMI
-            document.querySelectorAll('.result-box')[2].innerHTML = `
-                <h3 class="result-title">Đánh giá Chỉ số BMI</h3>
+            document.querySelectorAll('.result-box')[1].innerHTML = `
+                <h3 class="result-title"><i class="fas fa-weight-scale"></i> Đánh giá Chỉ số BMI</h3>
                 <div class="result-content">
                     <p>Chỉ số BMI của bạn: <span class="highlight">${bmi.toFixed(1)}</span></p>
                     <p>So sánh với tiêu chuẩn WHO:</p>
@@ -884,15 +1211,20 @@
             `;
             
             // Hiển thị đánh giá chiều cao dự báo
-            document.querySelectorAll('.result-box')[3].innerHTML = `
-                <h3 class="result-title">Đánh giá Chiều cao dự báo</h3>
+            document.querySelectorAll('.result-box')[2].innerHTML = `
+                <h3 class="result-title"><i class="fas fa-project-diagram"></i> Đánh giá Chiều cao dự báo</h3>
                 <div class="result-content">
-                    <p>Chiều cao dự báo của bạn đạt <span class="highlight">${predictedHeightEval.percentile}%</span> phân vị</p>
+                    <p>Chiều cao dự báo của bạn đạt <span class="highlight">${predictedHeightEval.whoPercentile}%</span> phân vị WHO</p>
                     <p>So sánh với tiêu chuẩn WHO:</p>
-                    <p>• Phân vị 3%: ${predictedHeightEval.ref.p3} cm</p>
-                    <p>• Phân vị 50%: ${predictedHeightEval.ref.p50} cm</p>
-                    <p>• Phân vị 97%: ${predictedHeightEval.ref.p97} cm</p>
-                    <p class="${predictedHeightEval.evaluationClass}">${predictedHeightEval.evaluation}</p>
+                    <p>• Phân vị 3%: ${predictedHeightEval.ref.who.p3} cm</p>
+                    <p>• Phân vị 50%: ${predictedHeightEval.ref.who.p50} cm</p>
+                    <p>• Phân vị 97%: ${predictedHeightEval.ref.who.p97} cm</p>
+                    <p class="${predictedHeightEval.whoEvaluationClass}">${predictedHeightEval.whoEvaluation}</p>
+                    
+                    <p>So sánh với chuẩn Việt Nam 2035:</p>
+                    <p>• Chiều cao trung bình: ${predictedHeightEval.ref.vn.avg} cm</p>
+                    <p>• Khoảng dự báo: ${predictedHeightEval.ref.vn.min} cm - ${predictedHeightEval.ref.vn.max} cm</p>
+                    <p class="${predictedHeightEval.vnEvaluationClass} vietnam-color">${predictedHeightEval.vnEvaluation}</p>
                 </div>
             `;
             
@@ -902,9 +1234,12 @@
                 <ul>
                     <li>Chiều cao hiện tại: ${heightEval.evaluation}</li>
                     <li>Chỉ số BMI: ${bmiEval.evaluation}</li>
-                    <li>Chiều cao dự báo trưởng thành: ${predictedHeightEval.evaluation}</li>
+                    <li>Chiều cao dự báo trưởng thành: 
+                        <span class="${predictedHeightEval.whoEvaluationClass}">${predictedHeightEval.whoEvaluation}</span> (so với WHO)
+                        <br><span class="${predictedHeightEval.vnEvaluationClass} vietnam-color">${predictedHeightEval.vnEvaluation}</span> (so với chuẩn Việt Nam 2035)
+                    </li>
                 </ul>
-                <p>Kết quả này dựa trên so sánh với tiêu chuẩn tăng trưởng của Tổ chức Y tế Thế giới (WHO).</p>
+                <p>Kết quả này dựa trên so sánh với tiêu chuẩn tăng trưởng của Tổ chức Y tế Thế giới (WHO) và chuẩn trung bình Việt Nam dự báo đến năm 2035.</p>
                 <p>Lưu ý: Đây chỉ là đánh giá tham khảo, để có kết luận chính xác, vui lòng tham khảo ý kiến chuyên gia y tế.</p>
             `;
         }
@@ -913,29 +1248,26 @@
         function resetForm() {
             document.getElementById('growthForm').reset();
             document.getElementById('results').innerHTML = `
-                <div class="result-box">
-                    <h3 class="result-title">Thông tin cá nhân</h3>
-                    <div class="result-content">
-                        <p>Vui lòng nhập thông tin và nhấn "Đánh giá chỉ số" để xem kết quả</p>
-                    </div>
+                <div class="client-info" id="clientInfo">
+                    <p>Vui lòng nhập thông tin và nhấn "Đánh giá chỉ số" để xem kết quả</p>
                 </div>
                 
                 <div class="result-box">
-                    <h3 class="result-title">Đánh giá Chiều cao hiện tại</h3>
+                    <h3 class="result-title"><i class="fas fa-ruler-combined"></i> Đánh giá Chiều cao hiện tại</h3>
                     <div class="result-content">
                         <p>Kết quả sẽ hiển thị sau khi đánh giá</p>
                     </div>
                 </div>
                 
                 <div class="result-box">
-                    <h3 class="result-title">Đánh giá Chỉ số BMI</h3>
+                    <h3 class="result-title"><i class="fas fa-weight-scale"></i> Đánh giá Chỉ số BMI</h3>
                     <div class="result-content">
                         <p>Kết quả sẽ hiển thị sau khi đánh giá</p>
                     </div>
                 </div>
                 
                 <div class="result-box">
-                    <h3 class="result-title">Đánh giá Chiều cao dự báo</h3>
+                    <h3 class="result-title"><i class="fas fa-project-diagram"></i> Đánh giá Chiều cao dự báo</h3>
                     <div class="result-content">
                         <p>Kết quả sẽ hiển thị sau khi đánh giá</p>
                     </div>
@@ -949,6 +1281,11 @@
                 </div>
             `;
             
+            // Reset thông tin chuẩn
+            document.getElementById('vietnamRef').textContent = '-';
+            document.getElementById('whoRef').textContent = '-';
+            
+            // Hủy biểu đồ
             if (heightChart) {
                 heightChart.destroy();
                 heightChart = null;
@@ -959,9 +1296,15 @@
                 bmiChart = null;
             }
             
-            // Reset biểu đồ
+            if (predictedHeightChart) {
+                predictedHeightChart.destroy();
+                predictedHeightChart = null;
+            }
+            
+            // Reset canvas
             heightCtx.clearRect(0, 0, heightCtx.canvas.width, heightCtx.canvas.height);
             bmiCtx.clearRect(0, 0, bmiCtx.canvas.width, bmiCtx.canvas.height);
+            predictedHeightCtx.clearRect(0, 0, predictedHeightCtx.canvas.width, predictedHeightCtx.canvas.height);
         }
         
         // Thiết lập ngày mặc định (trẻ 10 tuổi)
@@ -971,6 +1314,7 @@
             document.getElementById('birthdate').valueAsDate = defaultBirthdate;
             
             // Thiết lập giá trị mẫu
+            document.getElementById('fullname').value = 'Nguyễn Văn A';
             document.getElementById('height').value = 140;
             document.getElementById('weight').value = 35;
             document.getElementById('predictedHeight').value = 175;
