@@ -1,1 +1,984 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Đánh giá Tăng trưởng theo Tiêu chuẩn WHO</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        :root {
+            --primary: #3498db;
+            --secondary: #2ecc71;
+            --danger: #e74c3c;
+            --warning: #f39c12;
+            --light: #f8f9fa;
+            --dark: #343a40;
+        }
+        
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .container {
+            max-width: 1200px;
+            width: 100%;
+            background-color: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+        
+        header {
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+        
+        header h1 {
+            font-size: 2.2rem;
+            margin-bottom: 10px;
+        }
+        
+        header p {
+            font-size: 1.1rem;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .content {
+            padding: 30px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+        }
+        
+        @media (max-width: 900px) {
+            .content {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        .input-section {
+            background-color: var(--light);
+            border-radius: 10px;
+            padding: 25px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+        }
+        
+        .result-section {
+            background-color: var(--light);
+            border-radius: 10px;
+            padding: 25px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+        }
+        
+        .section-title {
+            color: var(--primary);
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid var(--primary);
+            font-size: 1.5rem;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: var(--dark);
+        }
+        
+        input, select {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: border-color 0.3s;
+        }
+        
+        input:focus, select:focus {
+            border-color: var(--primary);
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2);
+        }
+        
+        .radio-group {
+            display: flex;
+            gap: 20px;
+            margin-top: 5px;
+        }
+        
+        .radio-option {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        button {
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+            color: white;
+            border: none;
+            padding: 14px 20px;
+            font-size: 1.1rem;
+            border-radius: 8px;
+            cursor: pointer;
+            width: 100%;
+            font-weight: 600;
+            transition: transform 0.3s, box-shadow 0.3s;
+            margin-top: 10px;
+        }
+        
+        button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        .result-box {
+            background-color: white;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 25px;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.05);
+        }
+        
+        .result-title {
+            font-size: 1.2rem;
+            color: var(--dark);
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .result-title i {
+            font-size: 1.5rem;
+        }
+        
+        .result-content {
+            padding: 10px;
+            line-height: 1.6;
+        }
+        
+        .highlight {
+            font-weight: 700;
+            color: var(--primary);
+        }
+        
+        .positive {
+            color: var(--secondary);
+        }
+        
+        .negative {
+            color: var(--danger);
+        }
+        
+        .charts-container {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 25px;
+            margin-top: 20px;
+        }
+        
+        .chart-box {
+            background-color: white;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.05);
+        }
+        
+        .chart-title {
+            font-size: 1.2rem;
+            color: var(--dark);
+            margin-bottom: 15px;
+            text-align: center;
+        }
+        
+        .chart-container {
+            height: 300px;
+            position: relative;
+        }
+        
+        .summary {
+            background: linear-gradient(90deg, #4b6cb7, #182848);
+            color: white;
+            padding: 25px;
+            border-radius: 10px;
+            margin-top: 20px;
+        }
+        
+        .summary-title {
+            font-size: 1.4rem;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+        
+        .summary-content {
+            line-height: 1.7;
+            font-size: 1.1rem;
+        }
+        
+        .reset-btn {
+            background: linear-gradient(90deg, #ff9a9e, #fad0c4);
+            margin-top: 20px;
+        }
+        
+        footer {
+            text-align: center;
+            padding: 20px;
+            color: #777;
+            font-size: 0.9rem;
+            border-top: 1px solid #eee;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>ĐÁNH GIÁ TĂNG TRƯỞNG THEO TIÊU CHUẨN WHO</h1>
+            <p>Chương trình đánh giá chiều cao và BMI dựa trên tiêu chuẩn tăng trưởng của Tổ chức Y tế Thế giới (WHO)</p>
+        </header>
+        
+        <div class="content">
+            <div class="input-section">
+                <h2 class="section-title">THÔNG TIN CÁ NHÂN</h2>
+                <form id="growthForm">
+                    <div class="form-group">
+                        <label for="gender">Giới tính:</label>
+                        <div class="radio-group">
+                            <div class="radio-option">
+                                <input type="radio" id="male" name="gender" value="male" checked>
+                                <label for="male">Bé trai</label>
+                            </div>
+                            <div class="radio-option">
+                                <input type="radio" id="female" name="gender" value="female">
+                                <label for="female">Bé gái</label>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="birthdate">Ngày sinh:</label>
+                        <input type="date" id="birthdate" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="height">Chiều cao hiện tại (cm):</label>
+                        <input type="number" id="height" min="50" max="250" step="0.1" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="weight">Cân nặng hiện tại (kg):</label>
+                        <input type="number" id="weight" min="5" max="150" step="0.1" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="predictedHeight">Chiều cao dự báo trưởng thành (cm):</label>
+                        <input type="number" id="predictedHeight" min="100" max="250" step="0.1" required>
+                    </div>
+                    
+                    <button type="submit">ĐÁNH GIÁ CHỈ SỐ</button>
+                </form>
+            </div>
+            
+            <div class="result-section">
+                <h2 class="section-title">KẾT QUẢ ĐÁNH GIÁ</h2>
+                <div id="results">
+                    <div class="result-box">
+                        <h3 class="result-title">Thông tin cá nhân</h3>
+                        <div class="result-content">
+                            <p>Vui lòng nhập thông tin và nhấn "Đánh giá chỉ số" để xem kết quả</p>
+                        </div>
+                    </div>
+                    
+                    <div class="result-box">
+                        <h3 class="result-title">Đánh giá Chiều cao hiện tại</h3>
+                        <div class="result-content">
+                            <p>Kết quả sẽ hiển thị sau khi đánh giá</p>
+                        </div>
+                    </div>
+                    
+                    <div class="result-box">
+                        <h3 class="result-title">Đánh giá Chỉ số BMI</h3>
+                        <div class="result-content">
+                            <p>Kết quả sẽ hiển thị sau khi đánh giá</p>
+                        </div>
+                    </div>
+                    
+                    <div class="result-box">
+                        <h3 class="result-title">Đánh giá Chiều cao dự báo</h3>
+                        <div class="result-content">
+                            <p>Kết quả sẽ hiển thị sau khi đánh giá</p>
+                        </div>
+                    </div>
+                    
+                    <div class="summary">
+                        <h3 class="summary-title">TÓM TẮT ĐÁNH GIÁ</h3>
+                        <div class="summary-content" id="summary">
+                            <p>Chương trình sẽ cung cấp đánh giá tổng thể sau khi phân tích các chỉ số của bạn</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="charts-container">
+                    <div class="chart-box">
+                        <h3 class="chart-title">BIỂU ĐỒ CHIỀU CAO THEO TUỔI</h3>
+                        <div class="chart-container">
+                            <canvas id="heightChart"></canvas>
+                        </div>
+                    </div>
+                    
+                    <div class="chart-box">
+                        <h3 class="chart-title">BIỂU ĐỒ BMI THEO TUỔI</h3>
+                        <div class="chart-container">
+                            <canvas id="bmiChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+                
+                <button class="reset-btn" id="resetBtn">NHẬP THÔNG TIN MỚI</button>
+            </div>
+        </div>
+        
+        <footer>
+            <p>Dữ liệu tham chiếu dựa trên Tiêu chuẩn Tăng trưởng WHO 2007 dành cho trẻ em 5-19 tuổi</p>
+            <p>© 2023 - Chương trình Đánh giá Tăng trưởng Trẻ em</p>
+        </footer>
+    </div>
 
+    <script>
+        // Dữ liệu mẫu dựa trên tiêu chuẩn WHO (giả lập)
+        const growthData = {
+            male: {
+                height: {
+                    ages: [5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18],
+                    p3: [102, 107, 112, 117, 122, 126, 130, 134, 139, 144, 151, 158, 164, 168],
+                    p50: [110, 116, 122, 127, 132, 137, 142, 147, 154, 161, 168, 173, 176, 178],
+                    p97: [118, 125, 132, 139, 145, 151, 157, 163, 170, 176, 181, 185, 187, 188]
+                },
+                bmi: {
+                    ages: [5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18],
+                    median: [15.5, 15.6, 15.8, 16.1, 16.4, 16.8, 17.3, 17.9, 18.6, 19.3, 19.9, 20.5, 21.0, 21.4],
+                    sd1neg: [14.0, 14.1, 14.3, 14.5, 14.7, 15.0, 15.4, 15.9, 16.5, 17.1, 17.6, 18.1, 18.5, 18.8],
+                    sd1: [17.0, 17.1, 17.3, 17.7, 18.1, 18.6, 19.2, 19.9, 20.7, 21.5, 22.2, 22.9, 23.5, 24.0]
+                }
+            },
+            female: {
+                height: {
+                    ages: [5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18],
+                    p3: [101, 106, 111, 116, 121, 126, 132, 138, 144, 149, 153, 155, 156, 157],
+                    p50: [109, 115, 121, 126, 132, 138, 145, 152, 157, 160, 162, 163, 163, 163],
+                    p97: [117, 124, 131, 138, 145, 152, 159, 165, 169, 171, 172, 172, 172, 172]
+                },
+                bmi: {
+                    ages: [5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18],
+                    median: [15.2, 15.3, 15.6, 16.0, 16.5, 17.1, 17.8, 18.6, 19.3, 19.8, 20.2, 20.5, 20.7, 20.9],
+                    sd1neg: [13.7, 13.8, 14.0, 14.4, 14.8, 15.3, 16.0, 16.7, 17.4, 17.9, 18.2, 18.5, 18.7, 18.8],
+                    sd1: [16.7, 16.8, 17.2, 17.6, 18.2, 18.9, 19.6, 20.5, 21.2, 21.7, 22.2, 22.5, 22.7, 23.0]
+                }
+            }
+        };
+
+        // Tham chiếu chiều cao trưởng thành
+        const adultHeightRef = {
+            male: { p3: 163, p50: 176, p97: 188 },
+            female: { p3: 151, p50: 163, p97: 175 }
+        };
+
+        // Khởi tạo biểu đồ
+        const heightCtx = document.getElementById('heightChart').getContext('2d');
+        const bmiCtx = document.getElementById('bmiChart').getContext('2d');
+        
+        // Biến lưu trữ đối tượng biểu đồ
+        let heightChart = null;
+        let bmiChart = null;
+        
+        // Hàm tính tuổi
+        function calculateAge(birthdate) {
+            const today = new Date();
+            const birthDate = new Date(birthdate);
+            
+            let years = today.getFullYear() - birthDate.getFullYear();
+            let months = today.getMonth() - birthDate.getMonth();
+            
+            if (months < 0 || (months === 0 && today.getDate() < birthDate.getDate())) {
+                years--;
+                months += 12;
+            }
+            
+            return {
+                years: years,
+                months: months,
+                decimal: years + (months / 12)
+            };
+        }
+        
+        // Hàm tính BMI
+        function calculateBMI(height, weight) {
+            const heightM = height / 100;
+            return weight / (heightM * heightM);
+        }
+        
+        // Hàm đánh giá chiều cao
+        function evaluateHeight(gender, age, height) {
+            const data = growthData[gender].height;
+            let percentile = null;
+            
+            // Tìm tuổi gần nhất trong dữ liệu
+            let closestAgeIndex = 0;
+            let minDiff = Math.abs(age - data.ages[0]);
+            
+            for (let i = 1; i < data.ages.length; i++) {
+                const diff = Math.abs(age - data.ages[i]);
+                if (diff < minDiff) {
+                    minDiff = diff;
+                    closestAgeIndex = i;
+                }
+            }
+            
+            const p3 = data.p3[closestAgeIndex];
+            const p50 = data.p50[closestAgeIndex];
+            const p97 = data.p97[closestAgeIndex];
+            
+            // Xác định phân vị
+            if (height < p3) {
+                percentile = 3;
+            } else if (height < p50) {
+                percentile = 15; // Giả định
+            } else if (height < p97) {
+                percentile = 50; // Giả định
+            } else {
+                percentile = 97;
+            }
+            
+            // Đánh giá
+            let evaluation = "";
+            let evaluationClass = "";
+            
+            if (height < p3) {
+                evaluation = "Chiều cao thấp hơn đáng kể so với chuẩn";
+                evaluationClass = "negative";
+            } else if (height < p50) {
+                evaluation = "Chiều cao ở mức trung bình thấp";
+                evaluationClass = "";
+            } else if (height < p97) {
+                evaluation = "Chiều cao ở mức trung bình đến cao";
+                evaluationClass = "positive";
+            } else {
+                evaluation = "Chiều cao rất tốt, cao hơn hầu hết trẻ cùng tuổi";
+                evaluationClass = "positive";
+            }
+            
+            return {
+                percentile: percentile,
+                evaluation: evaluation,
+                evaluationClass: evaluationClass,
+                ref: {
+                    p3: p3,
+                    p50: p50,
+                    p97: p97
+                }
+            };
+        }
+        
+        // Hàm đánh giá BMI
+        function evaluateBMI(gender, age, bmi) {
+            const data = growthData[gender].bmi;
+            
+            // Tìm tuổi gần nhất trong dữ liệu
+            let closestAgeIndex = 0;
+            let minDiff = Math.abs(age - data.ages[0]);
+            
+            for (let i = 1; i < data.ages.length; i++) {
+                const diff = Math.abs(age - data.ages[i]);
+                if (diff < minDiff) {
+                    minDiff = diff;
+                    closestAgeIndex = i;
+                }
+            }
+            
+            const median = data.median[closestAgeIndex];
+            const sd1neg = data.sd1neg[closestAgeIndex];
+            const sd1 = data.sd1[closestAgeIndex];
+            
+            // Đánh giá
+            let evaluation = "";
+            let evaluationClass = "";
+            
+            if (bmi < sd1neg) {
+                evaluation = "Thiếu cân (BMI thấp hơn chuẩn)";
+                evaluationClass = "negative";
+            } else if (bmi < median) {
+                evaluation = "BMI ở mức bình thường thấp";
+                evaluationClass = "";
+            } else if (bmi < sd1) {
+                evaluation = "BMI ở mức bình thường";
+                evaluationClass = "positive";
+            } else {
+                evaluation = "Thừa cân (BMI cao hơn chuẩn)";
+                evaluationClass = "negative";
+            }
+            
+            return {
+                evaluation: evaluation,
+                evaluationClass: evaluationClass,
+                ref: {
+                    median: median,
+                    sd1neg: sd1neg,
+                    sd1: sd1
+                }
+            };
+        }
+        
+        // Hàm đánh giá chiều cao dự báo
+        function evaluatePredictedHeight(gender, height) {
+            const ref = adultHeightRef[gender];
+            
+            // Xác định phân vị
+            let percentile = null;
+            
+            if (height < ref.p3) {
+                percentile = 3;
+            } else if (height < ref.p50) {
+                percentile = 15; // Giả định
+            } else if (height < ref.p97) {
+                percentile = 50; // Giả định
+            } else {
+                percentile = 97;
+            }
+            
+            // Đánh giá
+            let evaluation = "";
+            let evaluationClass = "";
+            
+            if (height < ref.p3) {
+                evaluation = "Thấp hơn đáng kể so với chiều cao trung bình dự kiến";
+                evaluationClass = "negative";
+            } else if (height < ref.p50) {
+                evaluation = "Ở mức trung bình thấp so với chiều cao dự kiến";
+                evaluationClass = "";
+            } else if (height < ref.p97) {
+                evaluation = "Ở mức trung bình đến cao so với chiều cao dự kiến";
+                evaluationClass = "positive";
+            } else {
+                evaluation = "Cao hơn đáng kể so với chiều cao dự kiến";
+                evaluationClass = "positive";
+            }
+            
+            return {
+                percentile: percentile,
+                evaluation: evaluation,
+                evaluationClass: evaluationClass,
+                ref: ref
+            };
+        }
+        
+        // Hàm vẽ biểu đồ chiều cao
+        function drawHeightChart(gender, age, height, heightEval) {
+            if (heightChart) {
+                heightChart.destroy();
+            }
+            
+            const data = growthData[gender].height;
+            const userAge = age;
+            const userHeight = height;
+            
+            // Tạo dữ liệu cho biểu đồ
+            const datasets = [
+                {
+                    label: 'Phân vị 3%',
+                    data: data.p3,
+                    borderColor: '#e74c3c',
+                    backgroundColor: 'rgba(231, 76, 60, 0.1)',
+                    borderWidth: 2,
+                    fill: false,
+                    pointRadius: 0
+                },
+                {
+                    label: 'Phân vị 50%',
+                    data: data.p50,
+                    borderColor: '#2ecc71',
+                    backgroundColor: 'rgba(46, 204, 113, 0.1)',
+                    borderWidth: 3,
+                    fill: false,
+                    pointRadius: 0
+                },
+                {
+                    label: 'Phân vị 97%',
+                    data: data.p97,
+                    borderColor: '#3498db',
+                    backgroundColor: 'rgba(52, 152, 219, 0.1)',
+                    borderWidth: 2,
+                    fill: false,
+                    pointRadius: 0
+                },
+                {
+                    label: 'Chiều cao của bạn',
+                    data: Array(data.ages.length).fill(null),
+                    borderColor: '#9b59b6',
+                    backgroundColor: '#9b59b6',
+                    borderWidth: 0,
+                    pointRadius: 6,
+                    pointHoverRadius: 8,
+                    pointBackgroundColor: '#9b59b6',
+                    showLine: false
+                }
+            ];
+            
+            // Tìm vị trí tuổi gần nhất để đặt điểm
+            let closestIndex = 0;
+            let minDiff = Math.abs(userAge - data.ages[0]);
+            
+            for (let i = 1; i < data.ages.length; i++) {
+                const diff = Math.abs(userAge - data.ages[i]);
+                if (diff < minDiff) {
+                    minDiff = diff;
+                    closestIndex = i;
+                }
+            }
+            
+            datasets[3].data[closestIndex] = userHeight;
+            
+            heightChart = new Chart(heightCtx, {
+                type: 'line',
+                data: {
+                    labels: data.ages,
+                    datasets: datasets
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            title: {
+                                display: true,
+                                text: 'Chiều cao (cm)'
+                            }
+                        },
+                        x: {
+                            title: {
+                                display: true,
+                                text: 'Tuổi (năm)'
+                            }
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            position: 'top',
+                        },
+                        tooltip: {
+                            mode: 'index',
+                            intersect: false
+                        },
+                        annotation: {
+                            annotations: {
+                                userPoint: {
+                                    type: 'point',
+                                    xValue: data.ages[closestIndex],
+                                    yValue: userHeight,
+                                    backgroundColor: 'rgba(155, 89, 182, 0.8)'
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+        
+        // Hàm vẽ biểu đồ BMI
+        function drawBMIChart(gender, age, bmi, bmiEval) {
+            if (bmiChart) {
+                bmiChart.destroy();
+            }
+            
+            const data = growthData[gender].bmi;
+            const userAge = age;
+            const userBMI = bmi;
+            
+            // Tạo dữ liệu cho biểu đồ
+            const datasets = [
+                {
+                    label: '-1SD (Thiếu cân)',
+                    data: data.sd1neg,
+                    borderColor: '#e74c3c',
+                    backgroundColor: 'rgba(231, 76, 60, 0.1)',
+                    borderWidth: 2,
+                    fill: false,
+                    pointRadius: 0
+                },
+                {
+                    label: 'Trung vị',
+                    data: data.median,
+                    borderColor: '#2ecc71',
+                    backgroundColor: 'rgba(46, 204, 113, 0.1)',
+                    borderWidth: 3,
+                    fill: false,
+                    pointRadius: 0
+                },
+                {
+                    label: '+1SD (Thừa cân)',
+                    data: data.sd1,
+                    borderColor: '#3498db',
+                    backgroundColor: 'rgba(52, 152, 219, 0.1)',
+                    borderWidth: 2,
+                    fill: false,
+                    pointRadius: 0
+                },
+                {
+                    label: 'BMI của bạn',
+                    data: Array(data.ages.length).fill(null),
+                    borderColor: '#9b59b6',
+                    backgroundColor: '#9b59b6',
+                    borderWidth: 0,
+                    pointRadius: 6,
+                    pointHoverRadius: 8,
+                    pointBackgroundColor: '#9b59b6',
+                    showLine: false
+                }
+            ];
+            
+            // Tìm vị trí tuổi gần nhất để đặt điểm
+            let closestIndex = 0;
+            let minDiff = Math.abs(userAge - data.ages[0]);
+            
+            for (let i = 1; i < data.ages.length; i++) {
+                const diff = Math.abs(userAge - data.ages[i]);
+                if (diff < minDiff) {
+                    minDiff = diff;
+                    closestIndex = i;
+                }
+            }
+            
+            datasets[3].data[closestIndex] = userBMI;
+            
+            bmiChart = new Chart(bmiCtx, {
+                type: 'line',
+                data: {
+                    labels: data.ages,
+                    datasets: datasets
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            title: {
+                                display: true,
+                                text: 'Chỉ số BMI'
+                            }
+                        },
+                        x: {
+                            title: {
+                                display: true,
+                                text: 'Tuổi (năm)'
+                            }
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            position: 'top',
+                        },
+                        tooltip: {
+                            mode: 'index',
+                            intersect: false
+                        },
+                        annotation: {
+                            annotations: {
+                                userPoint: {
+                                    type: 'point',
+                                    xValue: data.ages[closestIndex],
+                                    yValue: userBMI,
+                                    backgroundColor: 'rgba(155, 89, 182, 0.8)'
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+        
+        // Hàm xử lý khi form được submit
+        function handleFormSubmit(event) {
+            event.preventDefault();
+            
+            // Lấy dữ liệu từ form
+            const gender = document.querySelector('input[name="gender"]:checked').value;
+            const birthdate = document.getElementById('birthdate').value;
+            const height = parseFloat(document.getElementById('height').value);
+            const weight = parseFloat(document.getElementById('weight').value);
+            const predictedHeight = parseFloat(document.getElementById('predictedHeight').value);
+            
+            // Tính toán
+            const age = calculateAge(birthdate);
+            const bmi = calculateBMI(height, weight);
+            const heightEval = evaluateHeight(gender, age.decimal, height);
+            const bmiEval = evaluateBMI(gender, age.decimal, bmi);
+            const predictedHeightEval = evaluatePredictedHeight(gender, predictedHeight);
+            
+            // Hiển thị kết quả
+            displayResults(gender, age, height, weight, bmi, predictedHeight, heightEval, bmiEval, predictedHeightEval);
+            
+            // Vẽ biểu đồ
+            drawHeightChart(gender, age.decimal, height, heightEval);
+            drawBMIChart(gender, age.decimal, bmi, bmiEval);
+        }
+        
+        // Hàm hiển thị kết quả
+        function displayResults(gender, age, height, weight, bmi, predictedHeight, heightEval, bmiEval, predictedHeightEval) {
+            const genderText = gender === 'male' ? 'Bé trai' : 'Bé gái';
+            const ageText = `${age.years} tuổi ${age.months} tháng`;
+            
+            // Hiển thị thông tin cá nhân
+            document.querySelectorAll('.result-box')[0].innerHTML = `
+                <h3 class="result-title">Thông tin cá nhân</h3>
+                <div class="result-content">
+                    <p><span class="highlight">Giới tính:</span> ${genderText}</p>
+                    <p><span class="highlight">Tuổi:</span> ${ageText}</p>
+                    <p><span class="highlight">Chiều cao hiện tại:</span> ${height} cm</p>
+                    <p><span class="highlight">Cân nặng hiện tại:</span> ${weight} kg</p>
+                    <p><span class="highlight">Chỉ số BMI:</span> ${bmi.toFixed(1)}</p>
+                    <p><span class="highlight">Chiều cao dự báo trưởng thành:</span> ${predictedHeight} cm</p>
+                </div>
+            `;
+            
+            // Hiển thị đánh giá chiều cao
+            document.querySelectorAll('.result-box')[1].innerHTML = `
+                <h3 class="result-title">Đánh giá Chiều cao hiện tại</h3>
+                <div class="result-content">
+                    <p>Chiều cao hiện tại của bạn đạt <span class="highlight">${heightEval.percentile}%</span> phân vị</p>
+                    <p>So sánh với tiêu chuẩn WHO:</p>
+                    <p>• Phân vị 3%: ${heightEval.ref.p3} cm</p>
+                    <p>• Phân vị 50%: ${heightEval.ref.p50} cm</p>
+                    <p>• Phân vị 97%: ${heightEval.ref.p97} cm</p>
+                    <p class="${heightEval.evaluationClass}">${heightEval.evaluation}</p>
+                </div>
+            `;
+            
+            // Hiển thị đánh giá BMI
+            document.querySelectorAll('.result-box')[2].innerHTML = `
+                <h3 class="result-title">Đánh giá Chỉ số BMI</h3>
+                <div class="result-content">
+                    <p>Chỉ số BMI của bạn: <span class="highlight">${bmi.toFixed(1)}</span></p>
+                    <p>So sánh với tiêu chuẩn WHO:</p>
+                    <p>• -1SD (dưới mức này là thiếu cân): ${bmiEval.ref.sd1neg.toFixed(1)}</p>
+                    <p>• Trung vị: ${bmiEval.ref.median.toFixed(1)}</p>
+                    <p>• +1SD (trên mức này là thừa cân): ${bmiEval.ref.sd1.toFixed(1)}</p>
+                    <p class="${bmiEval.evaluationClass}">${bmiEval.evaluation}</p>
+                </div>
+            `;
+            
+            // Hiển thị đánh giá chiều cao dự báo
+            document.querySelectorAll('.result-box')[3].innerHTML = `
+                <h3 class="result-title">Đánh giá Chiều cao dự báo</h3>
+                <div class="result-content">
+                    <p>Chiều cao dự báo của bạn đạt <span class="highlight">${predictedHeightEval.percentile}%</span> phân vị</p>
+                    <p>So sánh với tiêu chuẩn WHO:</p>
+                    <p>• Phân vị 3%: ${predictedHeightEval.ref.p3} cm</p>
+                    <p>• Phân vị 50%: ${predictedHeightEval.ref.p50} cm</p>
+                    <p>• Phân vị 97%: ${predictedHeightEval.ref.p97} cm</p>
+                    <p class="${predictedHeightEval.evaluationClass}">${predictedHeightEval.evaluation}</p>
+                </div>
+            `;
+            
+            // Tóm tắt đánh giá
+            document.getElementById('summary').innerHTML = `
+                <p>Dựa trên các chỉ số của bạn:</p>
+                <ul>
+                    <li>Chiều cao hiện tại: ${heightEval.evaluation}</li>
+                    <li>Chỉ số BMI: ${bmiEval.evaluation}</li>
+                    <li>Chiều cao dự báo trưởng thành: ${predictedHeightEval.evaluation}</li>
+                </ul>
+                <p>Kết quả này dựa trên so sánh với tiêu chuẩn tăng trưởng của Tổ chức Y tế Thế giới (WHO).</p>
+                <p>Lưu ý: Đây chỉ là đánh giá tham khảo, để có kết luận chính xác, vui lòng tham khảo ý kiến chuyên gia y tế.</p>
+            `;
+        }
+        
+        // Hàm reset form
+        function resetForm() {
+            document.getElementById('growthForm').reset();
+            document.getElementById('results').innerHTML = `
+                <div class="result-box">
+                    <h3 class="result-title">Thông tin cá nhân</h3>
+                    <div class="result-content">
+                        <p>Vui lòng nhập thông tin và nhấn "Đánh giá chỉ số" để xem kết quả</p>
+                    </div>
+                </div>
+                
+                <div class="result-box">
+                    <h3 class="result-title">Đánh giá Chiều cao hiện tại</h3>
+                    <div class="result-content">
+                        <p>Kết quả sẽ hiển thị sau khi đánh giá</p>
+                    </div>
+                </div>
+                
+                <div class="result-box">
+                    <h3 class="result-title">Đánh giá Chỉ số BMI</h3>
+                    <div class="result-content">
+                        <p>Kết quả sẽ hiển thị sau khi đánh giá</p>
+                    </div>
+                </div>
+                
+                <div class="result-box">
+                    <h3 class="result-title">Đánh giá Chiều cao dự báo</h3>
+                    <div class="result-content">
+                        <p>Kết quả sẽ hiển thị sau khi đánh giá</p>
+                    </div>
+                </div>
+                
+                <div class="summary">
+                    <h3 class="summary-title">TÓM TẮT ĐÁNH GIÁ</h3>
+                    <div class="summary-content">
+                        <p>Chương trình sẽ cung cấp đánh giá tổng thể sau khi phân tích các chỉ số của bạn</p>
+                    </div>
+                </div>
+            `;
+            
+            if (heightChart) {
+                heightChart.destroy();
+                heightChart = null;
+            }
+            
+            if (bmiChart) {
+                bmiChart.destroy();
+                bmiChart = null;
+            }
+            
+            // Reset biểu đồ
+            heightCtx.clearRect(0, 0, heightCtx.canvas.width, heightCtx.canvas.height);
+            bmiCtx.clearRect(0, 0, bmiCtx.canvas.width, bmiCtx.canvas.height);
+        }
+        
+        // Thiết lập ngày mặc định (trẻ 10 tuổi)
+        window.onload = function() {
+            const today = new Date();
+            const defaultBirthdate = new Date(today.getFullYear() - 10, today.getMonth(), today.getDate());
+            document.getElementById('birthdate').valueAsDate = defaultBirthdate;
+            
+            // Thiết lập giá trị mẫu
+            document.getElementById('height').value = 140;
+            document.getElementById('weight').value = 35;
+            document.getElementById('predictedHeight').value = 175;
+            
+            // Gán sự kiện
+            document.getElementById('growthForm').addEventListener('submit', handleFormSubmit);
+            document.getElementById('resetBtn').addEventListener('click', resetForm);
+        };
+    </script>
+</body>
+</html>
