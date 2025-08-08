@@ -3,164 +3,375 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Developer Team Website</title>
+    <title>Developer Team - Build Great Products</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        /* Reset CSS */
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
-        
-        /* Navbar Styles */
+
+        body {
+            background-color: #1d2130;
+            color: #ffffff;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* Navigation Bar */
         nav {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 1.2rem 2cm;
-            background-color: #fff;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            padding: 24px 50px;
+            background-color: #1d2130;
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
-            z-index: 1000;
+            z-index: 100;
+            box-shadow: 0 2px 20px rgba(0, 0, 0, 0.2);
         }
-        
+
         .logo {
-            font-size: 1.5rem;
+            font-size: 22px;
             font-weight: 700;
             letter-spacing: 0.5px;
-            color: #333;
+            color: #ffffff;
         }
-        
+
         .nav-links {
             display: flex;
             list-style: none;
+            gap: 35px;
         }
-        
-        .nav-links li {
-            margin-left: 1.8rem;
-        }
-        
+
         .nav-links a {
             text-decoration: none;
-            color: #333;
+            color: #ffffff;
+            font-size: 14px;
             font-weight: 500;
-            font-size: 0.95rem;
-            transition: color 0.3s ease;
+            transition: all 0.3s ease;
+            position: relative;
+            padding-bottom: 5px;
         }
-        
+
         .nav-links a:hover {
             color: #4a6cf7;
         }
-        
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background-color: #4a6cf7;
+            transition: width 0.3s ease;
+        }
+
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+
         .hire-button {
             background-color: #4a6cf7;
-            color: white !important;
-            padding: 0.5rem 1.2rem;
+            color: white;
+            padding: 10px 22px;
             border-radius: 4px;
             font-weight: 600;
+            font-size: 14px;
+            transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
+            margin-left: 10px;
         }
-        
+
         .hire-button:hover {
             background-color: #3a5ae7;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(74, 108, 247, 0.3);
         }
-        
-        /* Main Content Styles */
-        main {
+
+        /* Main Content */
+        .container {
             display: flex;
-            justify-content: space-between;
-            padding: 2cm;
-            margin-top: 70px; /* Space for fixed navbar */
-            min-height: calc(100vh - 70px - 4cm); /* Account for navbar and bottom margin */
+            min-height: 100vh;
+            padding: 140px 50px 80px;
+            align-items: center;
         }
-        
+
         .content-left {
             flex: 1;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            margin-right: 1cm;
-            padding-bottom: 2cm;
+            padding-right: 40px;
+            padding-bottom: 80px;
         }
-        
+
         .content-left h1 {
-            font-size: 3.5rem;
+            font-size: 56px;
             font-weight: 800;
             line-height: 1.2;
-            color: #1d2130;
-            margin-bottom: 1.5rem;
+            margin-bottom: 28px;
+            letter-spacing: -0.5px;
+            max-width: 600px;
         }
-        
+
         .content-left p {
-            font-size: 1.2rem;
-            color: #5d657b;
+            font-size: 18px;
             line-height: 1.6;
-            margin-bottom: 2rem;
-            max-width: 85%;
+            margin-bottom: 40px;
+            color: #a0a5ba;
+            max-width: 500px;
         }
-        
+
         .cta-button {
             background-color: #4a6cf7;
             color: white;
             border: none;
-            padding: 1rem 2.5rem;
-            font-size: 1rem;
+            padding: 16px 40px;
+            font-size: 16px;
             font-weight: 600;
             border-radius: 4px;
             cursor: pointer;
-            transition: background-color 0.3s ease;
-            align-self: flex-start;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
         }
-        
+
         .cta-button:hover {
             background-color: #3a5ae7;
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(74, 108, 247, 0.4);
         }
-        
+
         .content-right {
             flex: 1;
             display: flex;
-            align-items: center;
-            justify-content: center;
-            padding-bottom: 2cm;
+            justify-content: flex-end;
+            padding-bottom: 80px;
         }
-        
+
+        .hero-image-container {
+            position: relative;
+            width: 100%;
+            max-width: 600px;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.3);
+        }
+
         .hero-image {
             width: 100%;
             height: auto;
-            max-width: 100%;
-            border-radius: 12px;
-            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.15);
+            display: block;
+            transition: transform 0.5s ease;
+        }
+
+        .hero-image-container:hover .hero-image {
+            transform: scale(1.05);
+        }
+
+        /* Stats Section */
+        .stats {
+            display: flex;
+            justify-content: space-between;
+            max-width: 1000px;
+            margin-top: 50px;
+            padding: 20px 0;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-item h3 {
+            font-size: 40px;
+            font-weight: 700;
+            color: #4a6cf7;
+            margin-bottom: 10px;
+        }
+
+        .stat-item p {
+            font-size: 16px;
+            color: #a0a5ba;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 992px) {
+            .container {
+                flex-direction: column;
+                padding-top: 120px;
+            }
+            
+            .content-left {
+                padding-right: 0;
+                padding-bottom: 40px;
+                text-align: center;
+            }
+            
+            .content-left h1,
+            .content-left p {
+                max-width: 100%;
+            }
+            
+            .cta-button {
+                margin: 0 auto;
+            }
+            
+            .content-right {
+                justify-content: center;
+                padding-bottom: 40px;
+            }
+            
+            .stats {
+                flex-wrap: wrap;
+                gap: 30px;
+            }
+            
+            .stat-item {
+                flex: 1 0 40%;
+            }
+        }
+
+        @media (max-width: 768px) {
+            nav {
+                padding: 20px;
+            }
+            
+            .nav-links {
+                display: none;
+            }
+            
+            .mobile-menu-btn {
+                display: block;
+                background: none;
+                border: none;
+                color: white;
+                font-size: 24px;
+                cursor: pointer;
+            }
+            
+            .content-left h1 {
+                font-size: 40px;
+            }
+            
+            .stats {
+                flex-direction: column;
+                gap: 30px;
+            }
         }
     </style>
 </head>
 <body>
     <!-- Navigation Bar -->
     <nav>
-        <div class="logo">PW iV. derelbvers</div>
+        <div class="logo">DevTeamPro</div>
         <ul class="nav-links">
             <li><a href="#">About us</a></li>
             <li><a href="#">Services</a></li>
             <li><a href="#">Case Studies</a></li>
             <li><a href="#">Blog</a></li>
             <li><a href="#">How it Works</a></li>
-            <li><a href="#" class="hire-button">Hire</a></li>
+            <li><a href="#">Hire</a></li>
+            <li><a href="#">Contact us</a></li>
         </ul>
+        <button class="hire-button">Hire Developers</button>
     </nav>
-    
+
     <!-- Main Content -->
-    <main>
+    <div class="container">
         <div class="content-left">
-            <h1>Great Product is<br>built by great teams.</h1>
-            <p>We help build and manage a team of world-class developers<br>to bring your vision to life</p>
-            <button class="cta-button">Let's get started!</button>
+            <h1>Great Product is built by great teams.</h1>
+            <p>We help build and manage a team of world-class developers to bring your vision to life</p>
+            <button class="cta-button">
+                Let's get started!
+                <i class="fas fa-arrow-right"></i>
+            </button>
+            
+            <div class="stats">
+                <div class="stat-item">
+                    <h3>250+</h3>
+                    <p>Projects Completed</p>
+                </div>
+                <div class="stat-item">
+                    <h3>98%</h3>
+                    <p>Client Satisfaction</p>
+                </div>
+                <div class="stat-item">
+                    <h3>120+</h3>
+                    <p>Expert Developers</p>
+                </div>
+            </div>
         </div>
         
         <div class="content-right">
-            <img src="https://images.unsplash.com/photo-1552664730-d307ca884978?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80" alt="Team of developers collaborating" class="hero-image">
+            <div class="hero-image-container">
+                <img src="https://images.unsplash.com/photo-1552664730-d307ca884978?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80" alt="Team of developers collaborating" class="hero-image">
+            </div>
         </div>
-    </main>
+    </div>
+
+    <script>
+        // Simple animation for the page elements
+        document.addEventListener('DOMContentLoaded', function() {
+            const heading = document.querySelector('.content-left h1');
+            const paragraph = document.querySelector('.content-left p');
+            const button = document.querySelector('.cta-button');
+            const image = document.querySelector('.hero-image');
+            const stats = document.querySelectorAll('.stat-item');
+            
+            // Set initial state for animations
+            heading.style.opacity = '0';
+            heading.style.transform = 'translateY(20px)';
+            paragraph.style.opacity = '0';
+            paragraph.style.transform = 'translateY(20px)';
+            button.style.opacity = '0';
+            button.style.transform = 'translateY(20px)';
+            image.style.opacity = '0';
+            image.style.transform = 'scale(0.9)';
+            
+            // Animate elements on page load
+            setTimeout(() => {
+                heading.style.transition = 'opacity 0.8s ease, transform 0.8s ease';
+                heading.style.opacity = '1';
+                heading.style.transform = 'translateY(0)';
+            }, 300);
+            
+            setTimeout(() => {
+                paragraph.style.transition = 'opacity 0.8s ease, transform 0.8s ease';
+                paragraph.style.opacity = '1';
+                paragraph.style.transform = 'translateY(0)';
+            }, 500);
+            
+            setTimeout(() => {
+                button.style.transition = 'opacity 0.8s ease, transform 0.8s ease';
+                button.style.opacity = '1';
+                button.style.transform = 'translateY(0)';
+            }, 700);
+            
+            setTimeout(() => {
+                image.style.transition = 'opacity 1s ease, transform 1s ease';
+                image.style.opacity = '1';
+                image.style.transform = 'scale(1)';
+            }, 900);
+            
+            // Animate stats
+            stats.forEach((stat, index) => {
+                stat.style.opacity = '0';
+                stat.style.transform = 'translateY(20px)';
+                
+                setTimeout(() => {
+                    stat.style.transition = `opacity 0.8s ease ${index * 0.2}s, transform 0.8s ease ${index * 0.2}s`;
+                    stat.style.opacity = '1';
+                    stat.style.transform = 'translateY(0)';
+                }, 1200);
+            });
+        });
+    </script>
 </body>
 </html>
