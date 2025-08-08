@@ -1,100 +1,167 @@
 <!DOCTYPE html>
-<html lang="vi">
+<html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Giao diện trang web</title>
-  <style>
-    /* Reset margin/padding mặc định */
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-
-    body {
-      font-family: Arial, sans-serif;
-      padding: 2cm;
-    }
-
-    /* Thanh menu ngang */
-    .menu {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      background-color: #004080;
-      color: white;
-      padding: 15px 0;
-      text-align: center;
-      font-size: 20px;
-      font-weight: bold;
-      z-index: 1000;
-    }
-
-    /* Container chính chứa khối chữ và ảnh */
-    .main-content {
-      display: flex;
-      flex-direction: row;
-      justify-content: space-between;
-      margin-top: calc(2cm + 50px); /* cách menu 2cm + chiều cao menu */
-    }
-
-    /* Khối chữ */
-    .text-box {
-      width: 45%;
-      margin-right: 1cm;
-      background-color: #f0f0f0;
-      padding: 20px;
-      border: 1px solid #ccc;
-    }
-
-    /* Hình ảnh */
-    .image-box {
-      width: 45%;
-      text-align: right;
-    }
-
-    .image-box img {
-      max-width: 100%;
-      height: auto;
-      border: 1px solid #999;
-    }
-
-    /* Đảm bảo cách lề dưới 2cm */
-    body::after {
-      content: "";
-      display: block;
-      height: 2cm;
-    }
-
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Developer Team Website</title>
+    <style>
+        /* Reset CSS */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        /* Navbar Styles */
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1.2rem 2cm;
+            background-color: #fff;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: 1000;
+        }
+        
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            color: #333;
+        }
+        
+        .nav-links {
+            display: flex;
+            list-style: none;
+        }
+        
+        .nav-links li {
+            margin-left: 1.8rem;
+        }
+        
+        .nav-links a {
+            text-decoration: none;
+            color: #333;
+            font-weight: 500;
+            font-size: 0.95rem;
+            transition: color 0.3s ease;
+        }
+        
+        .nav-links a:hover {
+            color: #4a6cf7;
+        }
+        
+        .hire-button {
+            background-color: #4a6cf7;
+            color: white !important;
+            padding: 0.5rem 1.2rem;
+            border-radius: 4px;
+            font-weight: 600;
+        }
+        
+        .hire-button:hover {
+            background-color: #3a5ae7;
+        }
+        
+        /* Main Content Styles */
+        main {
+            display: flex;
+            justify-content: space-between;
+            padding: 2cm;
+            margin-top: 70px; /* Space for fixed navbar */
+            min-height: calc(100vh - 70px - 4cm); /* Account for navbar and bottom margin */
+        }
+        
+        .content-left {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            margin-right: 1cm;
+            padding-bottom: 2cm;
+        }
+        
+        .content-left h1 {
+            font-size: 3.5rem;
+            font-weight: 800;
+            line-height: 1.2;
+            color: #1d2130;
+            margin-bottom: 1.5rem;
+        }
+        
+        .content-left p {
+            font-size: 1.2rem;
+            color: #5d657b;
+            line-height: 1.6;
+            margin-bottom: 2rem;
+            max-width: 85%;
+        }
+        
+        .cta-button {
+            background-color: #4a6cf7;
+            color: white;
+            border: none;
+            padding: 1rem 2.5rem;
+            font-size: 1rem;
+            font-weight: 600;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            align-self: flex-start;
+        }
+        
+        .cta-button:hover {
+            background-color: #3a5ae7;
+        }
+        
+        .content-right {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding-bottom: 2cm;
+        }
+        
+        .hero-image {
+            width: 100%;
+            height: auto;
+            max-width: 100%;
+            border-radius: 12px;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.15);
+        }
+    </style>
 </head>
 <body>
-
-  <!-- Thanh menu -->
-  <div class="menu">
-    TRANG CHỦ | GIỚI THIỆU | DỊCH VỤ | LIÊN HỆ
-  </div>
-
-  <!-- Nội dung chính -->
-  <div class="main-content">
-    <!-- Khối chữ bên trái -->
-    <div class="text-box">
-      <h2>Giới thiệu nội dung</h2>
-      <p>
-        Đây là phần mô tả văn bản được trình bày ở khối bên trái. Bạn có thể điền thông tin theo nội dung từ “Ảnh 1”.
-      </p>
-      <p>
-        Nội dung có thể bao gồm thông tin giới thiệu, đoạn văn mô tả hoặc bất kỳ văn bản nào khác phù hợp.
-      </p>
-    </div>
-
-    <!-- Hình ảnh bên phải -->
-    <div class="image-box">
-      <img src="https://drive.google.com/uc?export=view&id=1FwXDg634epw92dv-Iq5lCs54FC8JN-H8" alt="Hình ảnh mô tả">
-    </div>
-  </div>
-
+    <!-- Navigation Bar -->
+    <nav>
+        <div class="logo">PW iV. derelbvers</div>
+        <ul class="nav-links">
+            <li><a href="#">About us</a></li>
+            <li><a href="#">Services</a></li>
+            <li><a href="#">Case Studies</a></li>
+            <li><a href="#">Blog</a></li>
+            <li><a href="#">How it Works</a></li>
+            <li><a href="#" class="hire-button">Hire</a></li>
+        </ul>
+    </nav>
+    
+    <!-- Main Content -->
+    <main>
+        <div class="content-left">
+            <h1>Great Product is<br>built by great teams.</h1>
+            <p>We help build and manage a team of world-class developers<br>to bring your vision to life</p>
+            <button class="cta-button">Let's get started!</button>
+        </div>
+        
+        <div class="content-right">
+            <img src="https://images.unsplash.com/photo-1552664730-d307ca884978?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80" alt="Team of developers collaborating" class="hero-image">
+        </div>
+    </main>
 </body>
 </html>
 
