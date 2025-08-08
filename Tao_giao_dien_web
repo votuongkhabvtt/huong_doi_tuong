@@ -1,1 +1,100 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <title>Giao diện trang web</title>
+  <style>
+    /* Reset margin/padding mặc định */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: Arial, sans-serif;
+      padding: 2cm;
+    }
+
+    /* Thanh menu ngang */
+    .menu {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      background-color: #004080;
+      color: white;
+      padding: 15px 0;
+      text-align: center;
+      font-size: 20px;
+      font-weight: bold;
+      z-index: 1000;
+    }
+
+    /* Container chính chứa khối chữ và ảnh */
+    .main-content {
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
+      margin-top: calc(2cm + 50px); /* cách menu 2cm + chiều cao menu */
+    }
+
+    /* Khối chữ */
+    .text-box {
+      width: 45%;
+      margin-right: 1cm;
+      background-color: #f0f0f0;
+      padding: 20px;
+      border: 1px solid #ccc;
+    }
+
+    /* Hình ảnh */
+    .image-box {
+      width: 45%;
+      text-align: right;
+    }
+
+    .image-box img {
+      max-width: 100%;
+      height: auto;
+      border: 1px solid #999;
+    }
+
+    /* Đảm bảo cách lề dưới 2cm */
+    body::after {
+      content: "";
+      display: block;
+      height: 2cm;
+    }
+
+  </style>
+</head>
+<body>
+
+  <!-- Thanh menu -->
+  <div class="menu">
+    TRANG CHỦ | GIỚI THIỆU | DỊCH VỤ | LIÊN HỆ
+  </div>
+
+  <!-- Nội dung chính -->
+  <div class="main-content">
+    <!-- Khối chữ bên trái -->
+    <div class="text-box">
+      <h2>Giới thiệu nội dung</h2>
+      <p>
+        Đây là phần mô tả văn bản được trình bày ở khối bên trái. Bạn có thể điền thông tin theo nội dung từ “Ảnh 1”.
+      </p>
+      <p>
+        Nội dung có thể bao gồm thông tin giới thiệu, đoạn văn mô tả hoặc bất kỳ văn bản nào khác phù hợp.
+      </p>
+    </div>
+
+    <!-- Hình ảnh bên phải -->
+    <div class="image-box">
+      <img src="https://drive.google.com/uc?export=view&id=1FwXDg634epw92dv-Iq5lCs54FC8JN-H8" alt="Hình ảnh mô tả">
+    </div>
+  </div>
+
+</body>
+</html>
 
