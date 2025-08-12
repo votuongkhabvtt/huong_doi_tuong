@@ -1,1 +1,621 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Menu Header Đa Màu Sắc</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
 
+        body {
+            background: linear-gradient(135deg, #1a2a6c, #b21f1f, #1a2a6c);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+            color: #333;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        /* Header Styles */
+        .main-header {
+            width: 100%;
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+            margin-bottom: 40px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 15px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            color: white;
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 1.8rem;
+        }
+
+        .logo i {
+            margin-right: 10px;
+            color: #FFD700;
+            font-size: 2rem;
+        }
+
+        /* Navigation Bar */
+        .navbar {
+            display: flex;
+            justify-content: center;
+            list-style: none;
+            position: relative;
+        }
+
+        .menu-item {
+            position: relative;
+            margin: 0 10px;
+        }
+
+        .menu-item-header {
+            padding: 15px 25px;
+            display: block;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 1.2rem;
+            color: white;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            position: relative;
+            z-index: 10;
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        .menu-item-header i {
+            margin-right: 8px;
+            font-size: 1.2rem;
+        }
+
+        .dropdown-content {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            width: 220px;
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.1);
+            z-index: 5;
+            border-radius: 0 0 10px 10px;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        .dropdown-content a {
+            display: block;
+            padding: 14px 20px;
+            text-decoration: none;
+            font-size: 1rem;
+            transition: all 0.25s;
+            font-weight: 500;
+            text-align: left;
+            position: relative;
+        }
+
+        .dropdown-content a i {
+            width: 22px;
+            text-align: center;
+            margin-right: 10px;
+        }
+
+        /* Mũi tên */
+        .menu-item-header::after {
+            content: '';
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            border-right: 2px solid white;
+            border-bottom: 2px solid white;
+            transform: rotate(45deg);
+            margin-left: 10px;
+            transition: transform 0.3s ease;
+            vertical-align: middle;
+        }
+
+        .menu-item.active .menu-item-header::after {
+            transform: rotate(-135deg);
+        }
+
+        /* Màu sắc cho từng menu cấp 1 */
+        .menu-item:nth-child(1) .menu-item-header {
+            background-color: #FF6B6B;
+        }
+        
+        .menu-item:nth-child(2) .menu-item-header {
+            background-color: #4ECDC4;
+        }
+        
+        .menu-item:nth-child(3) .menu-item-header {
+            background-color: #45B7D1;
+        }
+        
+        .menu-item:nth-child(4) .menu-item-header {
+            background-color: #FFBE0B;
+        }
+        
+        .menu-item:nth-child(5) .menu-item-header {
+            background-color: #FF9F1C;
+        }
+
+        /* Màu sắc cho menu cấp 2 - phân cấp màu */
+        /* Home */
+        .menu-item:nth-child(1) .dropdown-content a:nth-child(1) {
+            background-color: #FF8E8E;
+            color: #7a0000;
+        }
+        .menu-item:nth-child(1) .dropdown-content a:nth-child(2) {
+            background-color: #FFB5B5;
+            color: #7a0000;
+        }
+        .menu-item:nth-child(1) .dropdown-content a:nth-child(3) {
+            background-color: #FFD8D8;
+            color: #7a0000;
+        }
+        .menu-item:nth-child(1) .dropdown-content a:nth-child(4) {
+            background-color: #FFE9E9;
+            color: #7a0000;
+        }
+        
+        /* Categories */
+        .menu-item:nth-child(2) .dropdown-content a:nth-child(1) {
+            background-color: #72D8D1;
+            color: #005a54;
+        }
+        .menu-item:nth-child(2) .dropdown-content a:nth-child(2) {
+            background-color: #96E2DD;
+            color: #005a54;
+        }
+        .menu-item:nth-child(2) .dropdown-content a:nth-child(3) {
+            background-color: #BAEDEA;
+            color: #005a54;
+        }
+        .menu-item:nth-child(2) .dropdown-content a:nth-child(4) {
+            background-color: #DCF7F6;
+            color: #005a54;
+        }
+        
+        /* Shop */
+        .menu-item:nth-child(3) .dropdown-content a:nth-child(1) {
+            background-color: #67C5DA;
+            color: #003d4d;
+        }
+        .menu-item:nth-child(3) .dropdown-content a:nth-child(2) {
+            background-color: #89D3E3;
+            color: #003d4d;
+        }
+        .menu-item:nth-child(3) .dropdown-content a:nth-child(3) {
+            background-color: #ABE1EC;
+            color: #003d4d;
+        }
+        .menu-item:nth-child(3) .dropdown-content a:nth-child(4) {
+            background-color: #CDF0F6;
+            color: #003d4d;
+        }
+        
+        /* About */
+        .menu-item:nth-child(4) .dropdown-content a:nth-child(1) {
+            background-color: #FFCB3D;
+            color: #7a5b00;
+        }
+        .menu-item:nth-child(4) .dropdown-content a:nth-child(2) {
+            background-color: #FFD86F;
+            color: #7a5b00;
+        }
+        .menu-item:nth-child(4) .dropdown-content a:nth-child(3) {
+            background-color: #FFE5A1;
+            color: #7a5b00;
+        }
+        .menu-item:nth-child(4) .dropdown-content a:nth-child(4) {
+            background-color: #FFF2D3;
+            color: #7a5b00;
+        }
+        
+        /* Contact */
+        .menu-item:nth-child(5) .dropdown-content a:nth-child(1) {
+            background-color: #FFB249;
+            color: #7a3d00;
+        }
+        .menu-item:nth-child(5) .dropdown-content a:nth-child(2) {
+            background-color: #FFC576;
+            color: #7a3d00;
+        }
+        .menu-item:nth-child(5) .dropdown-content a:nth-child(3) {
+            background-color: #FFD9A3;
+            color: #7a3d00;
+        }
+        .menu-item:nth-child(5) .dropdown-content a:nth-child(4) {
+            background-color: #FFECD0;
+            color: #7a3d00;
+        }
+
+        /* Hiệu ứng hover chung */
+        .menu-item:nth-child(1) .dropdown-content a:hover {
+            background-color: #FF6B6B;
+            color: white !important;
+            padding-left: 25px;
+        }
+        
+        .menu-item:nth-child(2) .dropdown-content a:hover {
+            background-color: #4ECDC4;
+            color: white !important;
+            padding-left: 25px;
+        }
+        
+        .menu-item:nth-child(3) .dropdown-content a:hover {
+            background-color: #45B7D1;
+            color: white !important;
+            padding-left: 25px;
+        }
+        
+        .menu-item:nth-child(4) .dropdown-content a:hover {
+            background-color: #FFBE0B;
+            color: white !important;
+            padding-left: 25px;
+        }
+        
+        .menu-item:nth-child(5) .dropdown-content a:hover {
+            background-color: #FF9F1C;
+            color: white !important;
+            padding-left: 25px;
+        }
+
+        /* Content Section */
+        .content-section {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 40px;
+            width: 100%;
+            max-width: 900px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: white;
+        }
+
+        .content-section h1 {
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 2.8rem;
+            color: #FFD700;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .content-section h2 {
+            margin: 25px 0 15px;
+            color: #FF9F1C;
+            font-size: 1.8rem;
+            border-bottom: 2px solid rgba(255, 255, 255, 0.2);
+            padding-bottom: 10px;
+        }
+
+        .content-section p {
+            margin-bottom: 20px;
+            line-height: 1.8;
+            font-size: 1.1rem;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 25px;
+            margin: 30px 0;
+        }
+
+        .feature-card {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 25px;
+            text-align: center;
+            transition: transform 0.3s ease;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-8px);
+            background: rgba(255, 255, 255, 0.15);
+        }
+
+        .feature-card i {
+            font-size: 3rem;
+            margin-bottom: 20px;
+            display: block;
+        }
+
+        .feature-card h3 {
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+            color: #FFBE0B;
+        }
+
+        footer {
+            margin-top: 20px;
+            color: white;
+            text-align: center;
+            font-size: 1rem;
+            opacity: 0.8;
+            padding: 20px;
+            width: 100%;
+        }
+
+        /* Animation */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .main-header, .content-section {
+            animation: fadeIn 0.8s ease-out;
+        }
+
+        /* Responsive */
+        @media (max-width: 900px) {
+            .main-header {
+                flex-direction: column;
+                padding: 15px;
+            }
+            
+            .logo {
+                margin-bottom: 20px;
+            }
+            
+            .navbar {
+                width: 100%;
+            }
+            
+            .menu-item {
+                margin: 5px;
+            }
+            
+            .menu-item-header {
+                padding: 12px 15px;
+                font-size: 1.1rem;
+            }
+            
+            .content-section {
+                padding: 25px;
+            }
+            
+            .content-section h1 {
+                font-size: 2.3rem;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .navbar {
+                flex-direction: column;
+            }
+            
+            .menu-item {
+                width: 100%;
+                margin: 5px 0;
+            }
+            
+            .dropdown-content {
+                position: static;
+                width: 100%;
+                max-height: 0;
+                transition: max-height 0.5s ease;
+            }
+            
+            .menu-item.active .dropdown-content {
+                max-height: 500px;
+            }
+            
+            .menu-item-header::after {
+                float: right;
+                margin-top: 8px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .content-section {
+                padding: 20px;
+            }
+            
+            .content-section h1 {
+                font-size: 2rem;
+            }
+            
+            .content-section h2 {
+                font-size: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header class="main-header">
+            <a href="#" class="logo">
+                <i class="fas fa-palette"></i>
+                ColorMenu
+            </a>
+            
+            <ul class="navbar">
+                <!-- Home -->
+                <li class="menu-item">
+                    <a href="#" class="menu-item-header">
+                        <i class="fas fa-home"></i> Home
+                    </a>
+                    <div class="dropdown-content">
+                        <a href="#"><i class="fas fa-star"></i> Homepage Style 1</a>
+                        <a href="#"><i class="fas fa-star"></i> Homepage Style 2</a>
+                        <a href="#"><i class="fas fa-star"></i> Homepage Style 3</a>
+                        <a href="#"><i class="fas fa-star"></i> Homepage Style 4</a>
+                    </div>
+                </li>
+                
+                <!-- Categories -->
+                <li class="menu-item">
+                    <a href="#" class="menu-item-header">
+                        <i class="fas fa-th-large"></i> Categories
+                    </a>
+                    <div class="dropdown-content">
+                        <a href="#"><i class="fas fa-laptop"></i> Technology</a>
+                        <a href="#"><i class="fas fa-tshirt"></i> Fashion</a>
+                        <a href="#"><i class="fas fa-utensils"></i> Food & Drink</a>
+                        <a href="#"><i class="fas fa-book"></i> Education</a>
+                    </div>
+                </li>
+                
+                <!-- Shop -->
+                <li class="menu-item">
+                    <a href="#" class="menu-item-header">
+                        <i class="fas fa-shopping-cart"></i> Shop
+                    </a>
+                    <div class="dropdown-content">
+                        <a href="#"><i class="fas fa-box"></i> Products</a>
+                        <a href="#"><i class="fas fa-shopping-bag"></i> New Arrivals</a>
+                        <a href="#"><i class="fas fa-tags"></i> Special Offers</a>
+                        <a href="#"><i class="fas fa-gift"></i> Gift Cards</a>
+                    </div>
+                </li>
+                
+                <!-- About -->
+                <li class="menu-item">
+                    <a href="#" class="menu-item-header">
+                        <i class="fas fa-info-circle"></i> About
+                    </a>
+                    <div class="dropdown-content">
+                        <a href="#"><i class="fas fa-history"></i> Our Story</a>
+                        <a href="#"><i class="fas fa-users"></i> Our Team</a>
+                        <a href="#"><i class="fas fa-trophy"></i> Achievements</a>
+                        <a href="#"><i class="fas fa-building"></i> Our Offices</a>
+                    </div>
+                </li>
+                
+                <!-- Contact -->
+                <li class="menu-item">
+                    <a href="#" class="menu-item-header">
+                        <i class="fas fa-envelope"></i> Contact
+                    </a>
+                    <div class="dropdown-content">
+                        <a href="#"><i class="fas fa-map-marker-alt"></i> Locations</a>
+                        <a href="#"><i class="fas fa-phone"></i> Call Us</a>
+                        <a href="#"><i class="fas fa-comments"></i> Live Chat</a>
+                        <a href="#"><i class="fas fa-headset"></i> Support Center</a>
+                    </div>
+                </li>
+            </ul>
+        </header>
+        
+        <div class="content-section">
+            <h1>Thiết Kế Menu Header Đa Màu Sắc</h1>
+            
+            <p>Chào mừng bạn đến với thiết kế menu header hiện đại, nơi mỗi menu cấp 1 có một màu sắc riêng biệt và menu cấp 2 với hệ thống màu sắc phân cấp rõ ràng. Thiết kế này kết hợp tính thẩm mỹ cao với trải nghiệm người dùng tuyệt vời.</p>
+            
+            <h2>Tính Năng Nổi Bật</h2>
+            
+            <div class="features-grid">
+                <div class="feature-card">
+                    <i class="fas fa-paint-brush" style="color: #FF6B6B;"></i>
+                    <h3>Màu Sắc Phân Cấp</h3>
+                    <p>Mỗi menu cấp 1 có màu sắc riêng, menu cấp 2 có màu nhạt dần theo cấp bậc</p>
+                </div>
+                
+                <div class="feature-card">
+                    <i class="fas fa-mouse-pointer" style="color: #4ECDC4;"></i>
+                    <h3>Tương Tác Mượt Mà</h3>
+                    <p>Hiệu ứng hover và click được tối ưu cho trải nghiệm người dùng tốt nhất</p>
+                </div>
+                
+                <div class="feature-card">
+                    <i class="fas fa-mobile-alt" style="color: #45B7D1;"></i>
+                    <h3>Thiết Kế Responsive</h3>
+                    <p>Hoạt động hoàn hảo trên mọi thiết bị từ máy tính đến điện thoại</p>
+                </div>
+                
+                <div class="feature-card">
+                    <i class="fas fa-bolt" style="color: #FFBE0B;"></i>
+                    <h3>Hiệu Ứng Hiện Đại</h3>
+                    <p>Chuyển động mượt mà, bóng đổ tinh tế và hiệu ứng trong suốt</p>
+                </div>
+            </div>
+            
+            <h2>Hướng Dẫn Sử Dụng</h2>
+            
+            <p>1. <strong>Menu Home (Màu đỏ cam):</strong> Cung cấp các tùy chọn trang chủ khác nhau với màu sắc từ đậm đến nhạt.</p>
+            
+            <p>2. <strong>Menu Categories (Màu xanh ngọc):</strong> Phân loại nội dung thành các danh mục rõ ràng với màu sắc đồng bộ.</p>
+            
+            <p>3. <strong>Menu Shop (Màu xanh dương):</strong> Quản lý cửa hàng với các tùy chọn sản phẩm và khuyến mãi.</p>
+            
+            <p>4. <strong>Menu About (Màu vàng):</strong> Giới thiệu thông tin công ty và đội ngũ nhân viên.</p>
+            
+            <p>5. <strong>Menu Contact (Màu cam):</strong> Cung cấp nhiều phương thức liên hệ khác nhau.</p>
+            
+            <p>Hãy nhấp vào từng menu để khám phá các tùy chọn menu cấp 2 với màu sắc phân cấp đặc biệt!</p>
+        </div>
+        
+        <footer>
+            <p>Thiết kế bởi © 2023 - Menu Header Đa Màu Sắc | Mỗi menu cấp 2 có màu nhạt dần so với menu cấp 1</p>
+        </footer>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const menuItems = document.querySelectorAll('.menu-item-header');
+            
+            menuItems.forEach(item => {
+                item.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const parentItem = this.closest('.menu-item');
+                    
+                    // Nếu menu này đang mở thì đóng nó
+                    if (parentItem.classList.contains('active')) {
+                        parentItem.classList.remove('active');
+                        parentItem.querySelector('.dropdown-content').style.maxHeight = null;
+                    } else {
+                        // Đóng tất cả các menu khác
+                        document.querySelectorAll('.menu-item').forEach(otherItem => {
+                            otherItem.classList.remove('active');
+                            otherItem.querySelector('.dropdown-content').style.maxHeight = null;
+                        });
+                        
+                        // Mở menu hiện tại
+                        parentItem.classList.add('active');
+                        const content = parentItem.querySelector('.dropdown-content');
+                        content.style.maxHeight = content.scrollHeight + 'px';
+                    }
+                });
+            });
+            
+            // Đóng menu khi click ra ngoài
+            document.addEventListener('click', function(e) {
+                if (!e.target.closest('.menu-item')) {
+                    document.querySelectorAll('.menu-item').forEach(item => {
+                        item.classList.remove('active');
+                        item.querySelector('.dropdown-content').style.maxHeight = null;
+                    });
+                }
+            });
+        });
+    </script>
+</body>
+</html>
