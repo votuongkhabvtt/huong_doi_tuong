@@ -1,1 +1,291 @@
+from datetime import date
+from enum import Enum
 
+# ====================== LỚP ENUM CHO CÁC DANH MỤC CỐ ĐỊNH ======================
+class MedicineType(Enum):
+    REUMOKAM = "Reumokam"
+    MILGAMA = "Milgama"
+    RYZONAL = "Ryzonal"
+    THREE_B_MEDI = "3B-Medi"
+    PHONG_DAN = "Phong đan"
+    PHONG_THAP_HOAN_PH = "Phong thấp hoàn PH"
+    HOAT_HUYET_DUONG_NAO = "Hoạt huyết dưỡng não"
+    HOAN_THAP_TOAN_DAI_BO = "Hoàn thập toàn đại bổ"
+
+class SupplyType(Enum):
+    KIM_CHAM_5CM = "Kim châm cứu 5 cm"
+    KIM_CHAM_10CM = "Kim châm cứu 10 cm"
+    BOM_TIEM_5ML = "Bơm tiêm 5mL"
+    GANG_TAY = "Găng tay 1 đôi"
+    CON_90_DO = "Cồn 90 độ 0,05 mL"
+    BONG_Y_TE = "Bông y tế 0,01g"
+
+class ProcedureType(Enum):
+    DIEN_CHAM = "Điện châm"
+    GIAC_HOI = "Giác hơi"
+    XOA_BOP_BAM_HUYET = "Xoa bóp bấm huyệt"
+    THUY_CHAM = "Thủy châm"
+    KEO_GIAN_COT_SONG = "Kéo giãn cột sống"
+    CUU_HUYET = "Cứu huyệt"
+    CAY_CHI = "Cấy chỉ"
+    TIEM_GAN = "Tiêm gân"
+    TIEM_NOI_KHOP = "Tiêm nội khớp"
+    XUNG_DIEN = "Xung điện"
+    CHUOM_THUOC_BAC = "Chườm thuốc bắc"
+
+# ====================== CÁC LỚP ĐỐI TƯỢNG CHÍNH ======================
+class BacSy:
+    def __init__(self, ho_ten, trinh_do):
+        self.ho_ten = ho_ten
+        self.trinh_do = trinh_do
+    
+    def kham_benh(self, benh_nhan):
+        print(f"Bác sỹ {self.ho_ten} đang khám bệnh cho {benh_nhan.ho_ten}")
+    
+    def hoan_thien_ho_so(self, benh_an):
+        print(f"Bác sỹ {self.ho_ten} hoàn thiện hồ sơ bệnh án {benh_an}")
+    
+    def ra_chi_dinh(self, benh_nhan, y_lenh):
+        print(f"Bác sỹ {self.ho_ten} ra chỉ định y lệnh cho {benh_nhan.ho_ten}: {y_lenh}")
+    
+    def tong_ket_ra_vien(self, benh_nhan):
+        print(f"Bác sỹ {self.ho_ten} tổng kết bệnh án ra viện cho {benh_nhan.ho_ten}")
+
+class DieuDuong:
+    def __init__(self, ho_ten):
+        self.ho_ten = ho_ten
+    
+    def cap_phat_thuoc(self, benh_nhan, thuoc, so_luong):
+        print(f"Điều dưỡng {self.ho_ten} cấp phát {so_luong} {thuoc} cho {benh_nhan.ho_ten}")
+    
+    def thuc_hien_dieu_tri(self, benh_nhan, thu_thuat):
+        print(f"Điều dưỡng {self.ho_ten} thực hiện {thu_thuat} cho {benh_nhan.ho_ten}")
+    
+    def hoan_thien_ghi_chep(self, benh_an):
+        print(f"Điều dưỡng {self.ho_ten} hoàn thiện ghi chép hồ sơ {benh_an}")
+    
+    def tong_ket_ra_vien(self, benh_nhan):
+        print(f"Điều dưỡng {self.ho_ten} tổng kết hồ sơ ra viện cho {benh_nhan.ho_ten}")
+
+class BenhNhan:
+    def __init__(self, ho_ten, gioi_tinh, tuoi, dia_chi, dien_thoai, 
+                 van_dong_vien=False, nhan_dan=None, 
+                 dich_vu=False, bhyt_ngoai_tru=False, 
+                 bhyt_noi_tru_ngay=False, bhyt_noi_tru_24h=False, 
+                 goi_van_dong_vien=False):
+        self.ho_ten = ho_ten
+        self.gioi_tinh = gioi_tinh
+        self.tuoi = tuoi
+        self.dia_chi = dia_chi
+        self.dien_thoai = dien_thoai
+        self.van_dong_vien = van_dong_vien
+        self.nhan_dan = nhan_dan
+        self.dich_vu = dich_vu
+        self.bhyt_ngoai_tru = bhyt_ngoai_tru
+        self.bhyt_noi_tru_ngay = bhyt_noi_tru_ngay
+        self.bhyt_noi_tru_24h = bhyt_noi_tru_24h
+        self.goi_van_dong_vien = goi_van_dong_vien
+    
+    def den_dieu_tri(self):
+        print(f"Bệnh nhân {self.ho_ten} đã đến điều trị")
+        return True
+    
+    def khong_den(self):
+        print(f"Bệnh nhân {self.ho_ten} không đến điều trị")
+        return False
+
+class Thuoc:
+    def __init__(self, loai_thuoc):
+        self.loai_thuoc = loai_thuoc
+        self.duoc_ke_don = False
+        self.so_luong_ke = 0
+        self.duoc_tra_lai = False
+        self.so_luong_tra = 0
+    
+    def ke_don(self, so_luong):
+        if 0 <= so_luong <= 4:
+            self.duoc_ke_don = True
+            self.so_luong_ke = so_luong
+            print(f"Kê đơn {so_luong} đơn vị {self.loai_thuoc.value}")
+        else:
+            print("Số lượng không hợp lệ (0-4)")
+    
+    def khong_ke_don(self):
+        self.duoc_ke_don = False
+        self.so_luong_ke = 0
+        print(f"Không kê đơn {self.loai_thuoc.value}")
+    
+    def tra_lai(self, so_luong):
+        if 0 <= so_luong <= 4:
+            self.duoc_tra_lai = True
+            self.so_luong_tra = so_luong
+            print(f"Trả lại {so_luong} đơn vị {self.loai_thuoc.value}")
+        else:
+            print("Số lượng không hợp lệ (0-4)")
+
+class VatTu:
+    def __init__(self, loai_vat_tu):
+        self.loai_vat_tu = loai_vat_tu
+        self.duoc_ke_don = False
+        self.so_luong_ke = 0
+        self.duoc_tra_lai = False
+        self.so_luong_tra = 0
+    
+    def ke_don(self, so_luong):
+        if 0 <= so_luong <= 6:
+            self.duoc_ke_don = True
+            self.so_luong_ke = so_luong
+            print(f"Kê đơn {so_luong} đơn vị {self.loai_vat_tu.value}")
+        else:
+            print("Số lượng không hợp lệ (0-6)")
+    
+    def khong_ke_don(self):
+        self.duoc_ke_don = False
+        self.so_luong_ke = 0
+        print(f"Không kê đơn {self.loai_vat_tu.value}")
+    
+    def tra_lai(self, so_luong):
+        if 0 <= so_luong <= 6:
+            self.duoc_tra_lai = True
+            self.so_luong_tra = so_luong
+            print(f"Trả lại {so_luong} đơn vị {self.loai_vat_tu.value}")
+        else:
+            print("Số lượng không hợp lệ (0-6)")
+
+class ThuThuat:
+    def __init__(self, loai_thu_thuat):
+        self.loai_thu_thuat = loai_thu_thuat
+        self.duoc_chi_dinh = False
+        self.duoc_thuc_hien = False
+    
+    def chi_dinh(self):
+        self.duoc_chi_dinh = True
+        print(f"Chỉ định thủ thuật {self.loai_thu_thuat.value}")
+    
+    def khong_chi_dinh(self):
+        self.duoc_chi_dinh = False
+        print(f"Không chỉ định {self.loai_thu_thuat.value}")
+    
+    def thuc_hien(self):
+        self.duoc_thuc_hien = True
+        print(f"Đã thực hiện {self.loai_thu_thuat.value}")
+    
+    def khong_thuc_hien(self):
+        self.duoc_thuc_hien = False
+        print(f"Không thực hiện {self.loai_thu_thuat.value}")
+
+class ThoiGian:
+    def __init__(self, ngay, thang, nam):
+        self.ngay = ngay
+        self.thang = thang
+        self.nam = nam
+    
+    def co_thuc_hien(self):
+        return True
+    
+    def khong_thuc_hien(self):
+        return False
+
+# ====================== LỚP QUẢN LÝ ĐIỀU TRỊ ======================
+class QuanLyDieuTri:
+    def __init__(self):
+        self.danh_sach_dieu_tri = []
+    
+    def them_lan_dieu_tri(self, benh_nhan, bac_sy, dieu_duong, ngay_dieu_tri, thuoc_list, vat_tu_list, thu_thuat_list):
+        dieu_tri = {
+            'benh_nhan': benh_nhan,
+            'bac_sy': bac_sy,
+            'dieu_duong': dieu_duong,
+            'ngay': ngay_dieu_tri,
+            'thuoc': thuoc_list,
+            'vat_tu': vat_tu_list,
+            'thu_thuat': thu_thuat_list
+        }
+        self.danh_sach_dieu_tri.append(dieu_tri)
+        print(f"Đã thêm lần điều trị ngày {ngay_dieu_tri} cho {benh_nhan.ho_ten}")
+    
+    def in_lich_su_dieu_tri(self):
+        print("\nLỊCH SỬ ĐIỀU TRỊ")
+        print("=================")
+        for dieu_tri in self.danh_sach_dieu_tri:
+            bn = dieu_tri['benh_nhan']
+            print(f"\nNgày: {dieu_tri['ngay']}")
+            print(f"Bệnh nhân: {bn.ho_ten} - Điện thoại: {bn.dien_thoai}")
+            print(f"Bác sỹ: {dieu_tri['bac_sy'].ho_ten}")
+            print(f"Điều dưỡng: {dieu_tri['dieu_duong'].ho_ten}")
+            
+            print("\nThuốc sử dụng:")
+            for thuoc in dieu_tri['thuoc']:
+                if thuoc.duoc_ke_don:
+                    print(f"- {thuoc.loai_thuoc.value}: {thuoc.so_luong_ke} đơn vị")
+            
+            print("\nVật tư sử dụng:")
+            for vat_tu in dieu_tri['vat_tu']:
+                if vat_tu.duoc_ke_don:
+                    print(f"- {vat_tu.loai_vat_tu.value}: {vat_tu.so_luong_ke} đơn vị")
+            
+            print("\nThủ thuật:")
+            for tt in dieu_tri['thu_thuat']:
+                if tt.duoc_chi_dinh:
+                    status = "Đã thực hiện" if tt.duoc_thuc_hien else "Chưa thực hiện"
+                    print(f"- {tt.loai_thu_thuat.value}: {status}")
+            print("────────────────────")
+
+# ====================== HÀM CHẠY THỬ CHƯƠNG TRÌNH ======================
+def main():
+    # Khởi tạo nhân viên
+    bac_sy_A = BacSy("Nguyễn Văn A", "Tiến sỹ")
+    dieu_duong_B = DieuDuong("Trần Thị B")
+    
+    # Khởi tạo bệnh nhân
+    benh_nhan_C = BenhNhan(
+        ho_ten="Lê Văn C",
+        gioi_tinh="Nam",
+        tuoi=45,
+        dia_chi="123 Đường ABC",
+        dien_thoai="0901234567",
+        bhyt_noi_tru_24h=True
+    )
+    
+    # Tạo danh sách thuốc
+    thuoc1 = Thuoc(MedicineType.REUMOKAM)
+    thuoc1.ke_don(2)
+    
+    thuoc2 = Thuoc(MedicineType.HOAT_HUYET_DUONG_NAO)
+    thuoc2.ke_don(1)
+    
+    # Tạo danh sách vật tư
+    vat_tu1 = VatTu(SupplyType.BOM_TIEM_5ML)
+    vat_tu1.ke_don(3)
+    
+    vat_tu2 = VatTu(SupplyType.GANG_TAY)
+    vat_tu2.ke_don(2)
+    
+    # Tạo danh sách thủ thuật
+    tt1 = ThuThuat(ProcedureType.DIEN_CHAM)
+    tt1.chi_dinh()
+    tt1.thuc_hien()
+    
+    tt2 = ThuThuat(ProcedureType.XOA_BOP_BAM_HUYET)
+    tt2.chi_dinh()
+    tt2.khong_thuc_hien()
+    
+    # Quản lý điều trị
+    qldt = QuanLyDieuTri()
+    ngay_dieu_tri = date(2023, 10, 25)
+    
+    qldt.them_lan_dieu_tri(
+        benh_nhan=benh_nhan_C,
+        bac_sy=bac_sy_A,
+        dieu_duong=dieu_duong_B,
+        ngay_dieu_tri=ngay_dieu_tri,
+        thuoc_list=[thuoc1, thuoc2],
+        vat_tu_list=[vat_tu1, vat_tu2],
+        thu_thuat_list=[tt1, tt2]
+    )
+    
+    # In lịch sử điều trị
+    qldt.in_lich_su_dieu_tri()
+
+if __name__ == "__main__":
+    main()
