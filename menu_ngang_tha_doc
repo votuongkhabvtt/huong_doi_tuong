@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Menu Header với Dropdown Đa Màu Sắc</title>
+    <title>Menu Hệ Thống Giáo Dục</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         * {
@@ -12,650 +12,478 @@
             box-sizing: border-box;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
-
+        
         body {
-            background: linear-gradient(135deg, #1a2a6c, #b21f1f, #1a2a6c);
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
             min-height: 100vh;
             display: flex;
-            flex-direction: column;
+            justify-content: center;
             align-items: center;
             padding: 20px;
-            color: #fff;
         }
-
+        
         .container {
             width: 100%;
             max-width: 1200px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
-
-        /* Header Styles */
-        .main-header {
-            width: 100%;
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(10px);
+            background: white;
             border-radius: 15px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
             overflow: hidden;
-            margin-bottom: 40px;
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            padding: 0 30px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            position: relative;
         }
-
-        .logo {
-            display: flex;
-            align-items: center;
+        
+        header {
+            background: linear-gradient(90deg, #2c3e50, #4a6491);
             color: white;
-            text-decoration: none;
-            font-weight: 700;
-            font-size: 1.8rem;
-            padding: 20px 0;
+            text-align: center;
+            padding: 25px;
         }
-
-        .logo i {
-            margin-right: 12px;
-            color: #FFD700;
-            font-size: 2.2rem;
-            text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+        
+        header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            letter-spacing: 1px;
         }
-
-        .logo-text {
-            background: linear-gradient(to right, #ff9a9e, #fad0c4);
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: transparent;
-        }
-
-        /* Navigation Bar */
-        .navbar {
-            display: flex;
-            list-style: none;
-            position: relative;
-        }
-
-        .menu-item {
-            position: relative;
-            margin: 0 5px;
-        }
-
-        .menu-item-header {
-            padding: 20px 25px;
-            display: block;
-            cursor: pointer;
-            font-weight: 600;
+        
+        header p {
             font-size: 1.2rem;
+            opacity: 0.9;
+        }
+        
+        .navbar {
+            background: linear-gradient(90deg, #3498db, #2980b9);
+            display: flex;
+            justify-content: center;
+            position: relative;
+            z-index: 100;
+        }
+        
+        .nav-item {
+            position: relative;
+        }
+        
+        .nav-item > a {
             color: white;
             text-decoration: none;
+            padding: 18px 25px;
+            display: block;
+            font-size: 1.1rem;
+            font-weight: 500;
             transition: all 0.3s ease;
             position: relative;
-            z-index: 10;
-            text-align: center;
-            border-radius: 8px 8px 0 0;
-            min-width: 120px;
         }
-
-        .menu-item-header i {
-            margin-right: 8px;
-            font-size: 1.2rem;
-            transition: transform 0.3s ease;
+        
+        .nav-item > a:hover {
+            background: rgba(255, 255, 255, 0.2);
         }
-
-        .dropdown-content {
+        
+        .nav-item > a::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 0;
+            height: 3px;
+            background: #f1c40f;
+            transition: width 0.3s ease;
+        }
+        
+        .nav-item > a:hover::after {
+            width: 70%;
+        }
+        
+        .dropdown {
             position: absolute;
             top: 100%;
             left: 0;
-            width: 100%;
-            max-height: 0;
+            min-width: 220px;
+            background: white;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.15);
+            border-radius: 0 0 8px 8px;
             overflow: hidden;
-            transition: max-height 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.1);
-            z-index: 5;
-            border-radius: 0 0 10px 10px;
-            box-shadow: 0 15px 25px rgba(0, 0, 0, 0.3);
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(10px);
+            transition: all 0.4s ease;
+            z-index: 99;
         }
-
-        .dropdown-content a {
+        
+        .nav-item:hover .dropdown {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+        
+        .dropdown-item {
+            padding: 0;
+        }
+        
+        .dropdown-item a {
             display: block;
             padding: 15px 20px;
+            color: #2c3e50;
             text-decoration: none;
             font-size: 1rem;
-            transition: all 0.25s;
-            font-weight: 500;
-            text-align: left;
-            position: relative;
-        }
-
-        .dropdown-content a i {
-            width: 22px;
-            text-align: center;
-            margin-right: 10px;
-            transition: transform 0.3s ease;
-        }
-
-        .dropdown-content a:hover i {
-            transform: scale(1.2);
-        }
-
-        /* Mũi tên */
-        .menu-item-header::after {
-            content: '';
-            display: inline-block;
-            width: 8px;
-            height: 8px;
-            border-right: 2px solid white;
-            border-bottom: 2px solid white;
-            transform: rotate(45deg);
-            margin-left: 10px;
-            transition: transform 0.3s ease;
-            vertical-align: middle;
-        }
-
-        .menu-item.active .menu-item-header::after {
-            transform: rotate(-135deg);
-        }
-
-        /* Màu sắc cho từng menu cấp 1 */
-        .menu-item:nth-child(1) .menu-item-header {
-            background-color: #FF6B6B;
+            transition: all 0.3s ease;
+            border-left: 3px solid transparent;
         }
         
-        .menu-item:nth-child(2) .menu-item-header {
-            background-color: #4ECDC4;
-        }
-        
-        .menu-item:nth-child(3) .menu-item-header {
-            background-color: #45B7D1;
-        }
-        
-        .menu-item:nth-child(4) .menu-item-header {
-            background-color: #FFBE0B;
-        }
-        
-        .menu-item:nth-child(5) .menu-item-header {
-            background-color: #FF9F1C;
-        }
-
-        /* Màu sắc cho menu cấp 2 - phân cấp màu */
-        /* Home */
-        .menu-item:nth-child(1) .dropdown-content a:nth-child(1) {
-            background-color: #FF8E8E;
-            color: #7a0000;
-        }
-        .menu-item:nth-child(1) .dropdown-content a:nth-child(2) {
-            background-color: #FFB5B5;
-            color: #7a0000;
-        }
-        .menu-item:nth-child(1) .dropdown-content a:nth-child(3) {
-            background-color: #FFD8D8;
-            color: #7a0000;
-        }
-        .menu-item:nth-child(1) .dropdown-content a:nth-child(4) {
-            background-color: #FFE9E9;
-            color: #7a0000;
-        }
-        .menu-item:nth-child(1) .dropdown-content a:nth-child(5) {
-            background-color: #FFF5F5;
-            color: #7a0000;
-        }
-        
-        /* Categories */
-        .menu-item:nth-child(2) .dropdown-content a:nth-child(1) {
-            background-color: #72D8D1;
-            color: #005a54;
-        }
-        .menu-item:nth-child(2) .dropdown-content a:nth-child(2) {
-            background-color: #96E2DD;
-            color: #005a54;
-        }
-        .menu-item:nth-child(2) .dropdown-content a:nth-child(3) {
-            background-color: #BAEDEA;
-            color: #005a54;
-        }
-        .menu-item:nth-child(2) .dropdown-content a:nth-child(4) {
-            background-color: #DCF7F6;
-            color: #005a54;
-        }
-        .menu-item:nth-child(2) .dropdown-content a:nth-child(5) {
-            background-color: #F0FCFB;
-            color: #005a54;
-        }
-        
-        /* Shop */
-        .menu-item:nth-child(3) .dropdown-content a:nth-child(1) {
-            background-color: #67C5DA;
-            color: #003d4d;
-        }
-        .menu-item:nth-child(3) .dropdown-content a:nth-child(2) {
-            background-color: #89D3E3;
-            color: #003d4d;
-        }
-        .menu-item:nth-child(3) .dropdown-content a:nth-child(3) {
-            background-color: #ABE1EC;
-            color: #003d4d;
-        }
-        .menu-item:nth-child(3) .dropdown-content a:nth-child(4) {
-            background-color: #CDF0F6;
-            color: #003d4d;
-        }
-        .menu-item:nth-child(3) .dropdown-content a:nth-child(5) {
-            background-color: #E6F8FC;
-            color: #003d4d;
-        }
-        
-        /* About */
-        .menu-item:nth-child(4) .dropdown-content a:nth-child(1) {
-            background-color: #FFCB3D;
-            color: #7a5b00;
-        }
-        .menu-item:nth-child(4) .dropdown-content a:nth-child(2) {
-            background-color: #FFD86F;
-            color: #7a5b00;
-        }
-        .menu-item:nth-child(4) .dropdown-content a:nth-child(3) {
-            background-color: #FFE5A1;
-            color: #7a5b00;
-        }
-        .menu-item:nth-child(4) .dropdown-content a:nth-child(4) {
-            background-color: #FFF2D3;
-            color: #7a5b00;
-        }
-        .menu-item:nth-child(4) .dropdown-content a:nth-child(5) {
-            background-color: #FFF9E6;
-            color: #7a5b00;
-        }
-        
-        /* Contact */
-        .menu-item:nth-child(5) .dropdown-content a:nth-child(1) {
-            background-color: #FFB249;
-            color: #7a3d00;
-        }
-        .menu-item:nth-child(5) .dropdown-content a:nth-child(2) {
-            background-color: #FFC576;
-            color: #7a3d00;
-        }
-        .menu-item:nth-child(5) .dropdown-content a:nth-child(3) {
-            background-color: #FFD9A3;
-            color: #7a3d00;
-        }
-        .menu-item:nth-child(5) .dropdown-content a:nth-child(4) {
-            background-color: #FFECD0;
-            color: #7a3d00;
-        }
-        .menu-item:nth-child(5) .dropdown-content a:nth-child(5) {
-            background-color: #FFF5E6;
-            color: #7a3d00;
-        }
-
-        /* Hiệu ứng hover chung */
-        .menu-item:nth-child(1) .dropdown-content a:hover {
-            background-color: #FF6B6B;
-            color: white !important;
+        .dropdown-item a:hover {
+            background: #f8f9fa;
             padding-left: 25px;
+            border-left: 3px solid #3498db;
         }
         
-        .menu-item:nth-child(2) .dropdown-content a:hover {
-            background-color: #4ECDC4;
-            color: white !important;
-            padding-left: 25px;
-        }
+        /* Màu sắc riêng cho từng dropdown */
+        .dropdown-school { background: linear-gradient(to bottom, #e74c3c, #c0392b); }
+        .dropdown-class { background: linear-gradient(to bottom, #9b59b6, #8e44ad); }
+        .dropdown-group { background: linear-gradient(to bottom, #1abc9c, #16a085); }
+        .dropdown-subject { background: linear-gradient(to bottom, #f39c12, #d35400); }
+        .dropdown-teacher { background: linear-gradient(to bottom, #3498db, #2980b9); }
         
-        .menu-item:nth-child(3) .dropdown-content a:hover {
-            background-color: #45B7D1;
-            color: white !important;
-            padding-left: 25px;
-        }
-        
-        .menu-item:nth-child(4) .dropdown-content a:hover {
-            background-color: #FFBE0B;
-            color: white !important;
-            padding-left: 25px;
-        }
-        
-        .menu-item:nth-child(5) .dropdown-content a:hover {
-            background-color: #FF9F1C;
-            color: white !important;
-            padding-left: 25px;
-        }
-
-        /* Content Section */
-        .content-section {
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(10px);
-            border-radius: 20px;
+        .content {
             padding: 40px;
-            width: 100%;
-            max-width: 900px;
-            margin-bottom: 30px;
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
-            border: 1px solid rgba(255, 255, 255, 0.2);
             text-align: center;
         }
-
-        .content-section h1 {
-            margin-bottom: 30px;
-            font-size: 2.8rem;
-            color: #FFD700;
-            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
-        }
-
-        .content-section p {
+        
+        .content h2 {
+            color: #2c3e50;
+            font-size: 2rem;
             margin-bottom: 20px;
-            line-height: 1.8;
+        }
+        
+        .content p {
+            color: #34495e;
             font-size: 1.1rem;
+            line-height: 1.8;
+            max-width: 800px;
+            margin: 0 auto 25px;
+        }
+        
+        .school-icon { background: #e74c3c; }
+        .class-icon { background: #9b59b6; }
+        .group-icon { background: #1abc9c; }
+        .subject-icon { background: #f39c12; }
+        .teacher-icon { background: #3498db; }
+        
+        .info-boxes {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 30px;
+        }
+        
+        .info-box {
+            width: 180px;
+            background: white;
+            border-radius: 10px;
+            padding: 20px 15px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+            transition: transform 0.3s ease;
+        }
+        
+        .info-box:hover {
+            transform: translateY(-10px);
+        }
+        
+        .icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 15px;
+            color: white;
+            font-size: 24px;
+        }
+        
+        .info-box h3 {
+            color: #2c3e50;
+            margin-bottom: 10px;
+            font-size: 1.1rem;
+        }
+        
+        .info-box p {
+            color: #7f8c8d;
+            font-size: 0.9rem;
+            margin: 0;
+        }
+        
+        .selected-info {
+            background: #eaf6ff;
+            border-radius: 10px;
+            padding: 20px;
+            margin-top: 30px;
+            text-align: left;
             max-width: 800px;
             margin-left: auto;
             margin-right: auto;
         }
-
-        .instructions {
-            display: flex;
-            justify-content: center;
-            margin: 40px 0;
-            gap: 20px;
-            flex-wrap: wrap;
-        }
-
-        .instruction-card {
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 15px;
-            padding: 25px;
-            width: 250px;
-            transition: all 0.3s ease;
-            border: 1px solid rgba(255, 255, 255, 0.2);
-        }
-
-        .instruction-card:hover {
-            transform: translateY(-10px);
-            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3);
-            background: rgba(255, 255, 255, 0.15);
-        }
-
-        .instruction-card i {
-            font-size: 3rem;
-            margin-bottom: 20px;
-            display: block;
-        }
-
-        .instruction-card h3 {
-            font-size: 1.5rem;
+        
+        .selected-info h3 {
+            color: #2c3e50;
             margin-bottom: 15px;
-            color: #FFBE0B;
-        }
-
-        footer {
-            margin-top: 20px;
-            color: white;
             text-align: center;
-            font-size: 1rem;
-            opacity: 0.8;
+            font-size: 1.4rem;
+        }
+        
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+        }
+        
+        .info-item {
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.05);
+        }
+        
+        .info-item strong {
+            color: #3498db;
+        }
+        
+        footer {
+            background: #2c3e50;
+            color: #ecf0f1;
+            text-align: center;
             padding: 20px;
-            width: 100%;
+            font-size: 1rem;
         }
-
-        /* Animation */
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        .main-header, .content-section {
-            animation: fadeIn 0.8s ease-out;
-        }
-
-        /* Responsive */
+        
         @media (max-width: 900px) {
-            .main-header {
-                flex-direction: column;
-                padding: 15px;
-            }
-            
-            .logo {
-                margin-bottom: 20px;
-                padding: 15px 0;
-            }
-            
-            .navbar {
-                width: 100%;
-                flex-wrap: wrap;
-                justify-content: center;
-            }
-            
-            .menu-item {
-                margin: 5px;
-            }
-            
-            .menu-item-header {
-                padding: 15px 20px;
-                font-size: 1.1rem;
-                min-width: 110px;
-            }
-            
-            .content-section {
-                padding: 25px;
-            }
-            
-            .content-section h1 {
-                font-size: 2.3rem;
-            }
-        }
-
-        @media (max-width: 768px) {
             .navbar {
                 flex-direction: column;
             }
             
-            .menu-item {
-                width: 100%;
-                margin: 5px 0;
-            }
-            
-            .dropdown-content {
+            .dropdown {
                 position: static;
-                width: 100%;
+                opacity: 1;
+                visibility: visible;
+                transform: none;
                 max-height: 0;
-                transition: max-height 0.5s ease;
+                transition: max-height 0.4s ease;
             }
             
-            .menu-item.active .dropdown-content {
+            .nav-item:hover .dropdown {
                 max-height: 500px;
             }
             
-            .menu-item-header::after {
-                float: right;
-                margin-top: 8px;
+            .dropdown-item a:hover {
+                padding-left: 20px;
             }
             
-            .instructions {
+            .info-boxes {
                 flex-direction: column;
                 align-items: center;
             }
-        }
-
-        @media (max-width: 480px) {
-            .content-section {
-                padding: 20px;
-            }
             
-            .content-section h1 {
-                font-size: 2rem;
-            }
-            
-            .menu-item-header {
-                padding: 12px 15px;
-                font-size: 1rem;
+            .info-box {
+                width: 100%;
+                max-width: 300px;
             }
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <header class="main-header">
-            <a href="#" class="logo">
-                <i class="fas fa-palette"></i>
-                <span class="logo-text">ColorMenu</span>
-            </a>
-            
-            <ul class="navbar">
-                <!-- Home -->
-                <li class="menu-item">
-                    <a href="#" class="menu-item-header">
-                        <i class="fas fa-home"></i> Home
-                    </a>
-                    <div class="dropdown-content">
-                        <a href="#"><i class="fas fa-star"></i> Trang chính</a>
-                        <a href="#"><i class="fas fa-fire"></i> Nổi bật</a>
-                        <a href="#"><i class="fas fa-history"></i> Lịch sử</a>
-                        <a href="#"><i class="fas fa-bookmark"></i> Đã lưu</a>
-                        <a href="#"><i class="fas fa-cog"></i> Cài đặt</a>
-                    </div>
-                </li>
-                
-                <!-- Categories -->
-                <li class="menu-item">
-                    <a href="#" class="menu-item-header">
-                        <i class="fas fa-th-large"></i> Categories
-                    </a>
-                    <div class="dropdown-content">
-                        <a href="#"><i class="fas fa-laptop"></i> Công nghệ</a>
-                        <a href="#"><i class="fas fa-tshirt"></i> Thời trang</a>
-                        <a href="#"><i class="fas fa-utensils"></i> Ẩm thực</a>
-                        <a href="#"><i class="fas fa-book"></i> Giáo dục</a>
-                        <a href="#"><i class="fas fa-heart"></i> Sức khỏe</a>
-                    </div>
-                </li>
-                
-                <!-- Shop -->
-                <li class="menu-item">
-                    <a href="#" class="menu-item-header">
-                        <i class="fas fa-shopping-cart"></i> Shop
-                    </a>
-                    <div class="dropdown-content">
-                        <a href="#"><i class="fas fa-box"></i> Sản phẩm</a>
-                        <a href="#"><i class="fas fa-shopping-bag"></i> Mới về</a>
-                        <a href="#"><i class="fas fa-tags"></i> Khuyến mãi</a>
-                        <a href="#"><i class="fas fa-gift"></i> Quà tặng</a>
-                        <a href="#"><i class="fas fa-heart"></i> Yêu thích</a>
-                    </div>
-                </li>
-                
-                <!-- About -->
-                <li class="menu-item">
-                    <a href="#" class="menu-item-header">
-                        <i class="fas fa-info-circle"></i> About
-                    </a>
-                    <div class="dropdown-content">
-                        <a href="#"><i class="fas fa-history"></i> Lịch sử</a>
-                        <a href="#"><i class="fas fa-users"></i> Đội ngũ</a>
-                        <a href="#"><i class="fas fa-trophy"></i> Thành tựu</a>
-                        <a href="#"><i class="fas fa-building"></i> Văn phòng</a>
-                        <a href="#"><i class="fas fa-handshake"></i> Đối tác</a>
-                    </div>
-                </li>
-                
-                <!-- Contact -->
-                <li class="menu-item">
-                    <a href="#" class="menu-item-header">
-                        <i class="fas fa-envelope"></i> Contact
-                    </a>
-                    <div class="dropdown-content">
-                        <a href="#"><i class="fas fa-map-marker-alt"></i> Địa chỉ</a>
-                        <a href="#"><i class="fas fa-phone"></i> Điện thoại</a>
-                        <a href="#"><i class="fas fa-comments"></i> Trò chuyện</a>
-                        <a href="#"><i class="fas fa-headset"></i> Hỗ trợ</a>
-                        <a href="#"><i class="fas fa-question-circle"></i> FAQ</a>
-                    </div>
-                </li>
-            </ul>
+        <header>
+            <h1>HỆ THỐNG QUẢN LÝ GIÁO DỤC</h1>
+            <p>Menu ngang với dropdown thả dọc - Thiết kế phối màu hài hòa</p>
         </header>
         
-        <div class="content-section">
-            <h1>Menu Header với Dropdown Đa Màu Sắc</h1>
-            
-            <p>Thiết kế menu hiện đại với hệ thống màu sắc phân cấp độc đáo. Mỗi menu cấp 1 có màu riêng biệt, và menu cấp 2 có màu nhạt dần tạo nên hiệu ứng trực quan đẹp mắt.</p>
-            
-            <div class="instructions">
-                <div class="instruction-card">
-                    <i class="fas fa-mouse-pointer" style="color: #FF6B6B;"></i>
-                    <h3>Thao tác đơn giản</h3>
-                    <p>Nhấp vào bất kỳ menu cấp 1 để xem các lựa chọn cấp 2</p>
-                </div>
-                
-                <div class="instruction-card">
-                    <i class="fas fa-paint-brush" style="color: #4ECDC4;"></i>
-                    <h3>Màu sắc phân cấp</h3>
-                    <p>Mỗi menu có hệ thống màu sắc riêng, nhạt dần theo cấp bậc</p>
-                </div>
-                
-                <div class="instruction-card">
-                    <i class="fas fa-mobile-alt" style="color: #45B7D1;"></i>
-                    <h3>Thiết kế responsive</h3>
-                    <p>Hoạt động hoàn hảo trên mọi thiết bị từ máy tính đến điện thoại</p>
+        <nav class="navbar">
+            <!-- Menu Tên trường -->
+            <div class="nav-item">
+                <a href="#"><i class="fas fa-school"></i> Tên trường</a>
+                <div class="dropdown dropdown-school">
+                    <div class="dropdown-item"><a href="#" data-value="Trường A">Trường A</a></div>
+                    <div class="dropdown-item"><a href="#" data-value="Trường B">Trường B</a></div>
+                    <div class="dropdown-item"><a href="#" data-value="Trường C">Trường C</a></div>
+                    <div class="dropdown-item"><a href="#" data-value="Trường D">Trường D</a></div>
+                    <div class="dropdown-item"><a href="#" data-value="Trường E">Trường E</a></div>
                 </div>
             </div>
             
-            <p>Hãy thử nhấp vào các menu trên thanh header để trải nghiệm hiệu ứng dropdown với 5 lựa chọn cho mỗi menu!</p>
+            <!-- Menu Tên lớp -->
+            <div class="nav-item">
+                <a href="#"><i class="fas fa-users"></i> Tên lớp</a>
+                <div class="dropdown dropdown-class">
+                    <div class="dropdown-item"><a href="#" data-value="Lớp 1">Lớp 1</a></div>
+                    <div class="dropdown-item"><a href="#" data-value="Lớp 2">Lớp 2</a></div>
+                    <div class="dropdown-item"><a href="#" data-value="Lớp 3">Lớp 3</a></div>
+                    <div class="dropdown-item"><a href="#" data-value="Lớp 4">Lớp 4</a></div>
+                    <div class="dropdown-item"><a href="#" data-value="Lớp 5">Lớp 5</a></div>
+                </div>
+            </div>
+            
+            <!-- Menu Tên tổ -->
+            <div class="nav-item">
+                <a href="#"><i class="fas fa-layer-group"></i> Tên tổ</a>
+                <div class="dropdown dropdown-group">
+                    <div class="dropdown-item"><a href="#" data-value="Tổ a">Tổ a</a></div>
+                    <div class="dropdown-item"><a href="#" data-value="Tổ b">Tổ b</a></div>
+                    <div class="dropdown-item"><a href="#" data-value="Tổ c">Tổ c</a></div>
+                    <div class="dropdown-item"><a href="#" data-value="Tổ d">Tổ d</a></div>
+                    <div class="dropdown-item"><a href="#" data-value="Tổ e">Tổ e</a></div>
+                </div>
+            </div>
+            
+            <!-- Menu Tên môn học -->
+            <div class="nav-item">
+                <a href="#"><i class="fas fa-book"></i> Tên môn học</a>
+                <div class="dropdown dropdown-subject">
+                    <div class="dropdown-item"><a href="#" data-value="Môn Toán">Môn Toán</a></div>
+                    <div class="dropdown-item"><a href="#" data-value="Môn Lý">Môn Lý</a></div>
+                    <div class="dropdown-item"><a href="#" data-value="Môn Văn">Môn Văn</a></div>
+                    <div class="dropdown-item"><a href="#" data-value="Môn Hóa">Môn Hóa</a></div>
+                    <div class="dropdown-item"><a href="#" data-value="Môn Sinh">Môn Sinh</a></div>
+                </div>
+            </div>
+            
+            <!-- Menu Tên giáo viên -->
+            <div class="nav-item">
+                <a href="#"><i class="fas fa-chalkboard-teacher"></i> Giáo viên CN</a>
+                <div class="dropdown dropdown-teacher">
+                    <div class="dropdown-item"><a href="#" data-value="Cô Thơm">Cô Thơm</a></div>
+                    <div class="dropdown-item"><a href="#" data-value="Cô Dứa">Cô Dứa</a></div>
+                    <div class="dropdown-item"><a href="#" data-value="Thầy Mít">Thầy Mít</a></div>
+                    <div class="dropdown-item"><a href="#" data-value="Thầy Xoài">Thầy Xoài</a></div>
+                    <div class="dropdown-item"><a href="#" data-value="Cô Na">Cô Na</a></div>
+                </div>
+            </div>
+        </nav>
+        
+        <div class="content">
+            <h2>Hệ Thống Quản Lý Giáo Dục</h2>
+            <p>Chọn các tùy chọn từ menu ngang để xem thông tin chi tiết. Menu thả dọc sẽ hiển thị khi di chuột vào các mục chính.</p>
+            
+            <div class="selected-info">
+                <h3>Thông Tin Đã Chọn</h3>
+                <div class="info-grid">
+                    <div class="info-item"><strong>Tên trường:</strong> <span id="school-info">Chưa chọn</span></div>
+                    <div class="info-item"><strong>Tên lớp:</strong> <span id="class-info">Chưa chọn</span></div>
+                    <div class="info-item"><strong>Tên tổ:</strong> <span id="group-info">Chưa chọn</span></div>
+                    <div class="info-item"><strong>Môn học:</strong> <span id="subject-info">Chưa chọn</span></div>
+                    <div class="info-item"><strong>Giáo viên:</strong> <span id="teacher-info">Chưa chọn</span></div>
+                </div>
+            </div>
+            
+            <div class="info-boxes">
+                <div class="info-box">
+                    <div class="icon school-icon"><i class="fas fa-school"></i></div>
+                    <h3>Tên Trường</h3>
+                    <p>Quản lý thông tin các trường trong hệ thống</p>
+                </div>
+                
+                <div class="info-box">
+                    <div class="icon class-icon"><i class="fas fa-users"></i></div>
+                    <h3>Tên Lớp</h3>
+                    <p>Quản lý lớp học và học sinh</p>
+                </div>
+                
+                <div class="info-box">
+                    <div class="icon group-icon"><i class="fas fa-layer-group"></i></div>
+                    <h3>Tên Tổ</h3>
+                    <p>Quản lý các tổ chuyên môn</p>
+                </div>
+                
+                <div class="info-box">
+                    <div class="icon subject-icon"><i class="fas fa-book"></i></div>
+                    <h3>Môn Học</h3>
+                    <p>Quản lý chương trình giảng dạy</p>
+                </div>
+                
+                <div class="info-box">
+                    <div class="icon teacher-icon"><i class="fas fa-chalkboard-teacher"></i></div>
+                    <h3>Giáo Viên</h3>
+                    <p>Quản lý thông tin giáo viên</p>
+                </div>
+            </div>
         </div>
         
         <footer>
-            <p>Thiết kế bởi © 2023 - Menu Header Đa Màu Sắc | Mỗi menu cấp 2 có 5 lựa chọn với màu sắc nhạt dần</p>
+            <p>© 2023 Hệ Thống Quản Lý Giáo Dục | Thiết kế bởi Nhóm Phát Triển</p>
         </footer>
     </div>
 
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const menuItems = document.querySelectorAll('.menu-item-header');
-            
-            menuItems.forEach(item => {
-                item.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    const parentItem = this.closest('.menu-item');
+        // Thêm hiệu ứng cho menu khi cuộn trang
+        window.addEventListener('scroll', function() {
+            const navbar = document.querySelector('.navbar');
+            if (window.scrollY > 50) {
+                navbar.style.position = 'fixed';
+                navbar.style.top = '0';
+                navbar.style.width = '100%';
+                navbar.style.maxWidth = '1200px';
+                navbar.style.borderRadius = '0 0 15px 15px';
+            } else {
+                navbar.style.position = 'relative';
+                navbar.style.borderRadius = '0';
+            }
+        });
+        
+        // Xử lý chọn các mục trong dropdown
+        const dropdownItems = document.querySelectorAll('.dropdown-item a');
+        
+        // Lưu trữ thông tin đã chọn
+        const selectedValues = {
+            school: 'Chưa chọn',
+            class: 'Chưa chọn',
+            group: 'Chưa chọn',
+            subject: 'Chưa chọn',
+            teacher: 'Chưa chọn'
+        };
+        
+        // Cập nhật hiển thị thông tin đã chọn
+        function updateSelectedInfo() {
+            document.getElementById('school-info').textContent = selectedValues.school;
+            document.getElementById('class-info').textContent = selectedValues.class;
+            document.getElementById('group-info').textContent = selectedValues.group;
+            document.getElementById('subject-info').textContent = selectedValues.subject;
+            document.getElementById('teacher-info').textContent = selectedValues.teacher;
+        }
+        
+        // Thiết lập sự kiện click cho từng mục dropdown
+        dropdownItems.forEach(item => {
+            item.addEventListener('click', function(e) {
+                e.preventDefault();
+                
+                // Xác định loại menu
+                const dropdown = this.closest('.dropdown');
+                let type = '';
+                
+                if (dropdown.classList.contains('dropdown-school')) type = 'school';
+                else if (dropdown.classList.contains('dropdown-class')) type = 'class';
+                else if (dropdown.classList.contains('dropdown-group')) type = 'group';
+                else if (dropdown.classList.contains('dropdown-subject')) type = 'subject';
+                else if (dropdown.classList.contains('dropdown-teacher')) type = 'teacher';
+                
+                if (type) {
+                    // Cập nhật giá trị đã chọn
+                    selectedValues[type] = this.getAttribute('data-value');
                     
-                    // Nếu menu này đang mở thì đóng nó
-                    if (parentItem.classList.contains('active')) {
-                        parentItem.classList.remove('active');
-                        parentItem.querySelector('.dropdown-content').style.maxHeight = null;
-                    } else {
-                        // Đóng tất cả các menu khác
-                        document.querySelectorAll('.menu-item').forEach(otherItem => {
-                            otherItem.classList.remove('active');
-                            otherItem.querySelector('.dropdown-content').style.maxHeight = null;
-                        });
-                        
-                        // Mở menu hiện tại
-                        parentItem.classList.add('active');
-                        const content = parentItem.querySelector('.dropdown-content');
-                        content.style.maxHeight = content.scrollHeight + 'px';
-                    }
-                });
-            });
-            
-            // Đóng menu khi click ra ngoài
-            document.addEventListener('click', function(e) {
-                if (!e.target.closest('.menu-item')) {
-                    document.querySelectorAll('.menu-item').forEach(item => {
-                        item.classList.remove('active');
-                        item.querySelector('.dropdown-content').style.maxHeight = null;
-                    });
+                    // Cập nhật menu chính
+                    const parentNavItem = this.closest('.nav-item');
+                    const mainLink = parentNavItem.querySelector('a');
+                    const icon = mainLink.querySelector('i').outerHTML;
+                    mainLink.innerHTML = icon + ' ' + selectedValues[type];
+                    
+                    // Cập nhật hiển thị thông tin
+                    updateSelectedInfo();
+                    
+                    // Thêm hiệu ứng active
+                    dropdownItems.forEach(i => i.classList.remove('active'));
+                    this.classList.add('active');
                 }
             });
-            
-            // Hiệu ứng cho các thẻ hướng dẫn
-            const cards = document.querySelectorAll('.instruction-card');
-            cards.forEach(card => {
-                card.addEventListener('mouseenter', function() {
-                    this.style.transform = 'translateY(-10px)';
-                });
-                
-                card.addEventListener('mouseleave', function() {
-                    this.style.transform = 'translateY(0)';
-                });
-            });
         });
+        
+        // Khởi tạo hiển thị thông tin
+        updateSelectedInfo();
     </script>
 </body>
 </html>
