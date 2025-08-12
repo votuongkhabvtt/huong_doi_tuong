@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Menu Header Đa Màu Sắc</title>
+    <title>Menu Header với Dropdown Đa Màu Sắc</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         * {
@@ -20,7 +20,7 @@
             flex-direction: column;
             align-items: center;
             padding: 20px;
-            color: #333;
+            color: #fff;
         }
 
         .container {
@@ -34,17 +34,18 @@
         /* Header Styles */
         .main-header {
             width: 100%;
-            background: rgba(255, 255, 255, 0.15);
+            background: rgba(255, 255, 255, 0.1);
             backdrop-filter: blur(10px);
             border-radius: 15px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
             overflow: hidden;
             margin-bottom: 40px;
             border: 1px solid rgba(255, 255, 255, 0.2);
-            padding: 15px 30px;
+            padding: 0 30px;
             display: flex;
             justify-content: space-between;
             align-items: center;
+            position: relative;
         }
 
         .logo {
@@ -54,29 +55,37 @@
             text-decoration: none;
             font-weight: 700;
             font-size: 1.8rem;
+            padding: 20px 0;
         }
 
         .logo i {
-            margin-right: 10px;
+            margin-right: 12px;
             color: #FFD700;
-            font-size: 2rem;
+            font-size: 2.2rem;
+            text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+        }
+
+        .logo-text {
+            background: linear-gradient(to right, #ff9a9e, #fad0c4);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
         }
 
         /* Navigation Bar */
         .navbar {
             display: flex;
-            justify-content: center;
             list-style: none;
             position: relative;
         }
 
         .menu-item {
             position: relative;
-            margin: 0 10px;
+            margin: 0 5px;
         }
 
         .menu-item-header {
-            padding: 15px 25px;
+            padding: 20px 25px;
             display: block;
             cursor: pointer;
             font-weight: 600;
@@ -86,31 +95,33 @@
             transition: all 0.3s ease;
             position: relative;
             z-index: 10;
-            border-radius: 8px;
             text-align: center;
+            border-radius: 8px 8px 0 0;
+            min-width: 120px;
         }
 
         .menu-item-header i {
             margin-right: 8px;
             font-size: 1.2rem;
+            transition: transform 0.3s ease;
         }
 
         .dropdown-content {
             position: absolute;
             top: 100%;
             left: 0;
-            width: 220px;
+            width: 100%;
             max-height: 0;
             overflow: hidden;
             transition: max-height 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.1);
             z-index: 5;
             border-radius: 0 0 10px 10px;
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+            box-shadow: 0 15px 25px rgba(0, 0, 0, 0.3);
         }
 
         .dropdown-content a {
             display: block;
-            padding: 14px 20px;
+            padding: 15px 20px;
             text-decoration: none;
             font-size: 1rem;
             transition: all 0.25s;
@@ -123,6 +134,11 @@
             width: 22px;
             text-align: center;
             margin-right: 10px;
+            transition: transform 0.3s ease;
+        }
+
+        .dropdown-content a:hover i {
+            transform: scale(1.2);
         }
 
         /* Mũi tên */
@@ -182,6 +198,10 @@
             background-color: #FFE9E9;
             color: #7a0000;
         }
+        .menu-item:nth-child(1) .dropdown-content a:nth-child(5) {
+            background-color: #FFF5F5;
+            color: #7a0000;
+        }
         
         /* Categories */
         .menu-item:nth-child(2) .dropdown-content a:nth-child(1) {
@@ -198,6 +218,10 @@
         }
         .menu-item:nth-child(2) .dropdown-content a:nth-child(4) {
             background-color: #DCF7F6;
+            color: #005a54;
+        }
+        .menu-item:nth-child(2) .dropdown-content a:nth-child(5) {
+            background-color: #F0FCFB;
             color: #005a54;
         }
         
@@ -218,6 +242,10 @@
             background-color: #CDF0F6;
             color: #003d4d;
         }
+        .menu-item:nth-child(3) .dropdown-content a:nth-child(5) {
+            background-color: #E6F8FC;
+            color: #003d4d;
+        }
         
         /* About */
         .menu-item:nth-child(4) .dropdown-content a:nth-child(1) {
@@ -236,6 +264,10 @@
             background-color: #FFF2D3;
             color: #7a5b00;
         }
+        .menu-item:nth-child(4) .dropdown-content a:nth-child(5) {
+            background-color: #FFF9E6;
+            color: #7a5b00;
+        }
         
         /* Contact */
         .menu-item:nth-child(5) .dropdown-content a:nth-child(1) {
@@ -252,6 +284,10 @@
         }
         .menu-item:nth-child(5) .dropdown-content a:nth-child(4) {
             background-color: #FFECD0;
+            color: #7a3d00;
+        }
+        .menu-item:nth-child(5) .dropdown-content a:nth-child(5) {
+            background-color: #FFF5E6;
             color: #7a3d00;
         }
 
@@ -297,58 +333,55 @@
             margin-bottom: 30px;
             box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
             border: 1px solid rgba(255, 255, 255, 0.2);
-            color: white;
+            text-align: center;
         }
 
         .content-section h1 {
-            text-align: center;
             margin-bottom: 30px;
             font-size: 2.8rem;
             color: #FFD700;
             text-shadow: 0 2px 4px rgba(0,0,0,0.3);
         }
 
-        .content-section h2 {
-            margin: 25px 0 15px;
-            color: #FF9F1C;
-            font-size: 1.8rem;
-            border-bottom: 2px solid rgba(255, 255, 255, 0.2);
-            padding-bottom: 10px;
-        }
-
         .content-section p {
             margin-bottom: 20px;
             line-height: 1.8;
             font-size: 1.1rem;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
         }
 
-        .features-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 25px;
-            margin: 30px 0;
+        .instructions {
+            display: flex;
+            justify-content: center;
+            margin: 40px 0;
+            gap: 20px;
+            flex-wrap: wrap;
         }
 
-        .feature-card {
+        .instruction-card {
             background: rgba(255, 255, 255, 0.1);
-            border-radius: 12px;
+            border-radius: 15px;
             padding: 25px;
-            text-align: center;
-            transition: transform 0.3s ease;
+            width: 250px;
+            transition: all 0.3s ease;
+            border: 1px solid rgba(255, 255, 255, 0.2);
         }
 
-        .feature-card:hover {
-            transform: translateY(-8px);
+        .instruction-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3);
             background: rgba(255, 255, 255, 0.15);
         }
 
-        .feature-card i {
+        .instruction-card i {
             font-size: 3rem;
             margin-bottom: 20px;
             display: block;
         }
 
-        .feature-card h3 {
+        .instruction-card h3 {
             font-size: 1.5rem;
             margin-bottom: 15px;
             color: #FFBE0B;
@@ -383,10 +416,13 @@
             
             .logo {
                 margin-bottom: 20px;
+                padding: 15px 0;
             }
             
             .navbar {
                 width: 100%;
+                flex-wrap: wrap;
+                justify-content: center;
             }
             
             .menu-item {
@@ -394,8 +430,9 @@
             }
             
             .menu-item-header {
-                padding: 12px 15px;
+                padding: 15px 20px;
                 font-size: 1.1rem;
+                min-width: 110px;
             }
             
             .content-section {
@@ -432,6 +469,11 @@
                 float: right;
                 margin-top: 8px;
             }
+            
+            .instructions {
+                flex-direction: column;
+                align-items: center;
+            }
         }
 
         @media (max-width: 480px) {
@@ -443,8 +485,9 @@
                 font-size: 2rem;
             }
             
-            .content-section h2 {
-                font-size: 1.5rem;
+            .menu-item-header {
+                padding: 12px 15px;
+                font-size: 1rem;
             }
         }
     </style>
@@ -454,7 +497,7 @@
         <header class="main-header">
             <a href="#" class="logo">
                 <i class="fas fa-palette"></i>
-                ColorMenu
+                <span class="logo-text">ColorMenu</span>
             </a>
             
             <ul class="navbar">
@@ -464,10 +507,11 @@
                         <i class="fas fa-home"></i> Home
                     </a>
                     <div class="dropdown-content">
-                        <a href="#"><i class="fas fa-star"></i> Homepage Style 1</a>
-                        <a href="#"><i class="fas fa-star"></i> Homepage Style 2</a>
-                        <a href="#"><i class="fas fa-star"></i> Homepage Style 3</a>
-                        <a href="#"><i class="fas fa-star"></i> Homepage Style 4</a>
+                        <a href="#"><i class="fas fa-star"></i> Trang chính</a>
+                        <a href="#"><i class="fas fa-fire"></i> Nổi bật</a>
+                        <a href="#"><i class="fas fa-history"></i> Lịch sử</a>
+                        <a href="#"><i class="fas fa-bookmark"></i> Đã lưu</a>
+                        <a href="#"><i class="fas fa-cog"></i> Cài đặt</a>
                     </div>
                 </li>
                 
@@ -477,10 +521,11 @@
                         <i class="fas fa-th-large"></i> Categories
                     </a>
                     <div class="dropdown-content">
-                        <a href="#"><i class="fas fa-laptop"></i> Technology</a>
-                        <a href="#"><i class="fas fa-tshirt"></i> Fashion</a>
-                        <a href="#"><i class="fas fa-utensils"></i> Food & Drink</a>
-                        <a href="#"><i class="fas fa-book"></i> Education</a>
+                        <a href="#"><i class="fas fa-laptop"></i> Công nghệ</a>
+                        <a href="#"><i class="fas fa-tshirt"></i> Thời trang</a>
+                        <a href="#"><i class="fas fa-utensils"></i> Ẩm thực</a>
+                        <a href="#"><i class="fas fa-book"></i> Giáo dục</a>
+                        <a href="#"><i class="fas fa-heart"></i> Sức khỏe</a>
                     </div>
                 </li>
                 
@@ -490,10 +535,11 @@
                         <i class="fas fa-shopping-cart"></i> Shop
                     </a>
                     <div class="dropdown-content">
-                        <a href="#"><i class="fas fa-box"></i> Products</a>
-                        <a href="#"><i class="fas fa-shopping-bag"></i> New Arrivals</a>
-                        <a href="#"><i class="fas fa-tags"></i> Special Offers</a>
-                        <a href="#"><i class="fas fa-gift"></i> Gift Cards</a>
+                        <a href="#"><i class="fas fa-box"></i> Sản phẩm</a>
+                        <a href="#"><i class="fas fa-shopping-bag"></i> Mới về</a>
+                        <a href="#"><i class="fas fa-tags"></i> Khuyến mãi</a>
+                        <a href="#"><i class="fas fa-gift"></i> Quà tặng</a>
+                        <a href="#"><i class="fas fa-heart"></i> Yêu thích</a>
                     </div>
                 </li>
                 
@@ -503,10 +549,11 @@
                         <i class="fas fa-info-circle"></i> About
                     </a>
                     <div class="dropdown-content">
-                        <a href="#"><i class="fas fa-history"></i> Our Story</a>
-                        <a href="#"><i class="fas fa-users"></i> Our Team</a>
-                        <a href="#"><i class="fas fa-trophy"></i> Achievements</a>
-                        <a href="#"><i class="fas fa-building"></i> Our Offices</a>
+                        <a href="#"><i class="fas fa-history"></i> Lịch sử</a>
+                        <a href="#"><i class="fas fa-users"></i> Đội ngũ</a>
+                        <a href="#"><i class="fas fa-trophy"></i> Thành tựu</a>
+                        <a href="#"><i class="fas fa-building"></i> Văn phòng</a>
+                        <a href="#"><i class="fas fa-handshake"></i> Đối tác</a>
                     </div>
                 </li>
                 
@@ -516,65 +563,46 @@
                         <i class="fas fa-envelope"></i> Contact
                     </a>
                     <div class="dropdown-content">
-                        <a href="#"><i class="fas fa-map-marker-alt"></i> Locations</a>
-                        <a href="#"><i class="fas fa-phone"></i> Call Us</a>
-                        <a href="#"><i class="fas fa-comments"></i> Live Chat</a>
-                        <a href="#"><i class="fas fa-headset"></i> Support Center</a>
+                        <a href="#"><i class="fas fa-map-marker-alt"></i> Địa chỉ</a>
+                        <a href="#"><i class="fas fa-phone"></i> Điện thoại</a>
+                        <a href="#"><i class="fas fa-comments"></i> Trò chuyện</a>
+                        <a href="#"><i class="fas fa-headset"></i> Hỗ trợ</a>
+                        <a href="#"><i class="fas fa-question-circle"></i> FAQ</a>
                     </div>
                 </li>
             </ul>
         </header>
         
         <div class="content-section">
-            <h1>Thiết Kế Menu Header Đa Màu Sắc</h1>
+            <h1>Menu Header với Dropdown Đa Màu Sắc</h1>
             
-            <p>Chào mừng bạn đến với thiết kế menu header hiện đại, nơi mỗi menu cấp 1 có một màu sắc riêng biệt và menu cấp 2 với hệ thống màu sắc phân cấp rõ ràng. Thiết kế này kết hợp tính thẩm mỹ cao với trải nghiệm người dùng tuyệt vời.</p>
+            <p>Thiết kế menu hiện đại với hệ thống màu sắc phân cấp độc đáo. Mỗi menu cấp 1 có màu riêng biệt, và menu cấp 2 có màu nhạt dần tạo nên hiệu ứng trực quan đẹp mắt.</p>
             
-            <h2>Tính Năng Nổi Bật</h2>
-            
-            <div class="features-grid">
-                <div class="feature-card">
-                    <i class="fas fa-paint-brush" style="color: #FF6B6B;"></i>
-                    <h3>Màu Sắc Phân Cấp</h3>
-                    <p>Mỗi menu cấp 1 có màu sắc riêng, menu cấp 2 có màu nhạt dần theo cấp bậc</p>
+            <div class="instructions">
+                <div class="instruction-card">
+                    <i class="fas fa-mouse-pointer" style="color: #FF6B6B;"></i>
+                    <h3>Thao tác đơn giản</h3>
+                    <p>Nhấp vào bất kỳ menu cấp 1 để xem các lựa chọn cấp 2</p>
                 </div>
                 
-                <div class="feature-card">
-                    <i class="fas fa-mouse-pointer" style="color: #4ECDC4;"></i>
-                    <h3>Tương Tác Mượt Mà</h3>
-                    <p>Hiệu ứng hover và click được tối ưu cho trải nghiệm người dùng tốt nhất</p>
+                <div class="instruction-card">
+                    <i class="fas fa-paint-brush" style="color: #4ECDC4;"></i>
+                    <h3>Màu sắc phân cấp</h3>
+                    <p>Mỗi menu có hệ thống màu sắc riêng, nhạt dần theo cấp bậc</p>
                 </div>
                 
-                <div class="feature-card">
+                <div class="instruction-card">
                     <i class="fas fa-mobile-alt" style="color: #45B7D1;"></i>
-                    <h3>Thiết Kế Responsive</h3>
+                    <h3>Thiết kế responsive</h3>
                     <p>Hoạt động hoàn hảo trên mọi thiết bị từ máy tính đến điện thoại</p>
-                </div>
-                
-                <div class="feature-card">
-                    <i class="fas fa-bolt" style="color: #FFBE0B;"></i>
-                    <h3>Hiệu Ứng Hiện Đại</h3>
-                    <p>Chuyển động mượt mà, bóng đổ tinh tế và hiệu ứng trong suốt</p>
                 </div>
             </div>
             
-            <h2>Hướng Dẫn Sử Dụng</h2>
-            
-            <p>1. <strong>Menu Home (Màu đỏ cam):</strong> Cung cấp các tùy chọn trang chủ khác nhau với màu sắc từ đậm đến nhạt.</p>
-            
-            <p>2. <strong>Menu Categories (Màu xanh ngọc):</strong> Phân loại nội dung thành các danh mục rõ ràng với màu sắc đồng bộ.</p>
-            
-            <p>3. <strong>Menu Shop (Màu xanh dương):</strong> Quản lý cửa hàng với các tùy chọn sản phẩm và khuyến mãi.</p>
-            
-            <p>4. <strong>Menu About (Màu vàng):</strong> Giới thiệu thông tin công ty và đội ngũ nhân viên.</p>
-            
-            <p>5. <strong>Menu Contact (Màu cam):</strong> Cung cấp nhiều phương thức liên hệ khác nhau.</p>
-            
-            <p>Hãy nhấp vào từng menu để khám phá các tùy chọn menu cấp 2 với màu sắc phân cấp đặc biệt!</p>
+            <p>Hãy thử nhấp vào các menu trên thanh header để trải nghiệm hiệu ứng dropdown với 5 lựa chọn cho mỗi menu!</p>
         </div>
         
         <footer>
-            <p>Thiết kế bởi © 2023 - Menu Header Đa Màu Sắc | Mỗi menu cấp 2 có màu nhạt dần so với menu cấp 1</p>
+            <p>Thiết kế bởi © 2023 - Menu Header Đa Màu Sắc | Mỗi menu cấp 2 có 5 lựa chọn với màu sắc nhạt dần</p>
         </footer>
     </div>
 
@@ -614,6 +642,18 @@
                         item.querySelector('.dropdown-content').style.maxHeight = null;
                     });
                 }
+            });
+            
+            // Hiệu ứng cho các thẻ hướng dẫn
+            const cards = document.querySelectorAll('.instruction-card');
+            cards.forEach(card => {
+                card.addEventListener('mouseenter', function() {
+                    this.style.transform = 'translateY(-10px)';
+                });
+                
+                card.addEventListener('mouseleave', function() {
+                    this.style.transform = 'translateY(0)';
+                });
             });
         });
     </script>
