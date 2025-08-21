@@ -253,7 +253,7 @@
     <nav class="navbar navbar-expand-lg navbar-dark sticky-top">
         <div class="container">
             <a class="navbar-brand" href="#">
-                <img src="https://bcassetcdn.com/social/oz21rz1d2b/preview.png" alt="Logo" class="header-logo">
+                <img src="https://api.logo.com/api/v2/images?design=lg_jbuSeuz5s66vblTfQe&u=474fdd943310a576420722d4f5d60ed69224b3d7cb8f42001cd8832dd3575fe6&width=1600&height=900&margins=300&fit=contain&format=webp&quality=60&tightBounds=true" alt="Logo" class="header-logo">
                 PHÒNG KHÁM KCB PGS.TS.BS. VÕ TƯỜNG KHA
             </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
