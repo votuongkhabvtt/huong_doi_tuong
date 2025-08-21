@@ -3,102 +3,921 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dự Báo Chiều Cao Trưởng Thành</title>
+    <title>Trung tâm Chẩn đoán và Dự báo Phát triển Trẻ em</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <style>
+        :root {
+            --primary: #2c3e50;
+            --secondary: #3498db;
+            --accent: #e74c3c;
+            --light: #ecf0f1;
+            --dark: #2c3e50;
+            --success: #27ae60;
+            --warning: #f39c12;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            color: var(--dark);
+            min-height: 100vh;
+        }
+        
+        .navbar {
+            background: var(--primary);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        .navbar-brand {
+            font-weight: 700;
+            color: white !important;
+        }
+        
+        .nav-link {
+            color: rgba(255, 255, 255, 0.85) !important;
+            font-weight: 500;
+            transition: all 0.3s;
+        }
+        
+        .nav-link:hover {
+            color: white !important;
+            transform: translateY(-2px);
+        }
+        
+        .header {
+            background: linear-gradient(to right, var(--primary), var(--secondary));
+            color: white;
+            padding: 3rem 0;
+            margin-bottom: 2rem;
+            border-radius: 0 0 20px 20px;
+        }
+        
+        .card {
+            border: none;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+            transition: transform 0.3s, box-shadow 0.3s;
+            margin-bottom: 25px;
+            overflow: hidden;
+        }
+        
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
+        }
+        
+        .card-header {
+            background: linear-gradient(to right, var(--secondary), var(--primary));
+            color: white;
+            font-weight: 600;
+            border-bottom: none;
+            padding: 1rem 1.5rem;
+        }
+        
+        .btn-primary {
+            background: var(--secondary);
+            border: none;
+            padding: 10px 20px;
+            border-radius: 50px;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+        
+        .btn-primary:hover {
+            background: var(--primary);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        .btn-success {
+            background: var(--success);
+            border: none;
+            padding: 10px 20px;
+            border-radius: 50px;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+        
+        .btn-success:hover {
+            background: #219653;
+            transform: translateY(-2px);
+        }
+        
+        .form-control {
+            border-radius: 10px;
+            padding: 12px 15px;
+            border: 2px solid #ddd;
+            transition: all 0.3s;
+        }
+        
+        .form-control:focus {
+            border-color: var(--secondary);
+            box-shadow: 0 0 0 0.25rem rgba(52, 152, 219, 0.25);
+        }
+        
+        .result-box {
+            background: var(--light);
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+            text-align: center;
+            box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.05);
+        }
+        
+        .comparison-positive {
+            color: var(--success);
+            font-weight: 700;
+        }
+        
+        .comparison-negative {
+            color: var(--accent);
+            font-weight: 700;
+        }
+        
+        .progress {
+            height: 20px;
+            border-radius: 10px;
+            margin: 10px 0;
+            background: #e0e0e0;
+        }
+        
+        .progress-bar {
+            background: linear-gradient(to right, var(--secondary), var(--primary));
+            border-radius: 10px;
+        }
+        
+        footer {
+            background: var(--primary);
+            color: white;
+            padding: 2rem 0;
+            margin-top: 3rem;
+        }
+        
+        .social-links a {
+            color: white;
+            font-size: 1.5rem;
+            margin: 0 10px;
+            transition: all 0.3s;
+        }
+        
+        .social-links a:hover {
+            color: var(--secondary);
+            transform: translateY(-3px);
+        }
+        
+        .login-container {
+            max-width: 400px;
+            margin: 50px auto;
+            padding: 30px;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+        
+        .feature-icon {
+            font-size: 3rem;
+            color: var(--secondary);
+            margin-bottom: 1rem;
+        }
+        
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .card {
+                margin-bottom: 15px;
+            }
+        }
+        
+        .chart-container {
+            position: relative;
+            height: 250px;
+            width: 100%;
+        }
+        
+        .doctor-profile {
+            text-align: center;
+            padding: 20px;
+        }
+        
+        .doctor-img {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 5px solid var(--secondary);
+            margin-bottom: 15px;
+        }
+    </style>
 </head>
 <body>
-    <div class="container py-5">
-        <div class="row justify-content-center">
+    <!-- Navigation Bar -->
+    <nav class="navbar navbar-expand-lg navbar-dark sticky-top">
+        <div class="container">
+            <a class="navbar-brand" href="#">
+                <i class="fas fa-bone me-2"></i>TRUNG TÂM CHẨN ĐOÁN VÀ DỰ BÁO PHÁT TRIỂN TRẺ EM
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="#"><i class="fas fa-home me-1"></i> Trang chủ</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="https://votuongkha.net" target="_blank"><i class="fas fa-globe me-1"></i> votuongkha.net</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" data-bs-toggle="modal" data-bs-target="#loginModal"><i class="fas fa-sign-in-alt me-1"></i> Đăng nhập</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="https://docs.google.com/forms/d/1mdEQAINfwXB0qUZoClvsiwLF9xHFLsj49q9G97fIwjQ/edit" target="_blank"><i class="fas fa-user-plus me-1"></i> Đăng ký</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="https://drive.google.com/file/d/10mmTnStUKbRJNY2k4hcZlyA6xXSECjb7/view?usp=sharing" target="_blank"><i class="fas fa-money-bill-wave me-1"></i> Thanh toán</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Header Section -->
+    <div class="header">
+        <div class="container text-center">
+            <h1 class="display-4 fw-bold">ỨNG DỤNG ĐO TUỔI XƯƠNG & DỰ BÁO CHIỀU CAO</h1>
+            <p class="lead">Công nghệ tiên tiến - Kết quả chính xác - Tư vấn chuyên sâu</p>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="row">
+            <!-- Main Content -->
             <div class="col-lg-8">
-                <div class="card shadow">
-                    <div class="card-header bg-primary text-white text-center">
-                        <h2>DỰ BÁO CHIỀU CAO TRƯỞNG THÀNH</h2>
-                        <p class="mb-0">So sánh với chuẩn người Việt Nam</p>
+                <!-- Patient Information Form -->
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <h5 class="m-0"><i class="fas fa-user-circle me-2"></i>Thông tin bệnh nhân</h5>
                     </div>
                     <div class="card-body">
-                        <form id="predictionForm">
-                            <div class="row mb-3">
-                                <div class="col-md-6">
-                                    <label for="name" class="form-label">Họ và tên</label>
-                                    <input type="text" class="form-control" id="name" required>
+                        <form id="patientForm">
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label for="patientName" class="form-label">Họ và tên</label>
+                                    <input type="text" class="form-control" id="patientName" required>
                                 </div>
-                                <div class="col-md-6">
-                                    <label for="email" class="form-label">Email</label>
-                                    <input type="email" class="form-control" id="email" required>
+                                <div class="col-md-6 mb-3">
+                                    <label for="patientAge" class="form-label">Tuổi</label>
+                                    <input type="number" class="form-control" id="patientAge" min="0" max="18" step="0.1" required>
                                 </div>
                             </div>
                             
-                            <div class="row mb-3">
-                                <div class="col-md-4">
-                                    <label for="age" class="form-label">Tuổi</label>
-                                    <input type="number" class="form-control" id="age" min="5" max="17" required>
-                                </div>
-                                <div class="col-md-4">
-                                    <label for="gender" class="form-label">Giới tính</label>
-                                    <select class="form-select" id="gender" required>
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label for="patientGender" class="form-label">Giới tính</label>
+                                    <select class="form-select" id="patientGender" required>
                                         <option value="">Chọn giới tính</option>
                                         <option value="male">Nam</option>
                                         <option value="female">Nữ</option>
                                     </select>
                                 </div>
-                                <div class="col-md-4">
-                                    <label for="height" class="form-label">Chiều cao (cm)</label>
-                                    <input type="number" class="form-control" id="height" min="50" max="200" step="0.1" required>
+                                <div class="col-md-6 mb-3">
+                                    <label for="patientHeight" class="form-label">Chiều cao hiện tại (cm)</label>
+                                    <input type="number" class="form-control" id="patientHeight" min="50" max="250" step="0.1" required>
                                 </div>
                             </div>
                             
-                            <div class="mb-3">
-                                <label for="weight" class="form-label">Cân nặng (kg)</label>
-                                <input type="number" class="form-control" id="weight" min="10" max="150" step="0.1" required>
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label for="patientWeight" class="form-label">Cân nặng (kg)</label>
+                                    <input type="number" class="form-control" id="patientWeight" min="5" max="150" step="0.1" required>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label for="boneAge" class="form-label">Tuổi xương (nếu có)</label>
+                                    <input type="number" class="form-control" id="boneAge" min="0" max="18" step="0.1">
+                                    <div class="form-text">Để trống nếu chưa đo tuổi xương</div>
+                                </div>
                             </div>
                             
-                            <div class="d-grid gap-2">
-                                <button type="submit" class="btn btn-primary btn-lg">Tính Toán Dự Báo</button>
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label for="fatherHeight" class="form-label">Chiều cao bố (cm)</label>
+                                    <input type="number" class="form-control" id="fatherHeight" min="140" max="200" step="0.1">
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label for="motherHeight" class="form-label">Chiều cao mẹ (cm)</label>
+                                    <input type="number" class="form-control" id="motherHeight" min="140" max="200" step="0.1">
+                                </div>
+                            </div>
+                            
+                            <div class="text-center mt-4">
+                                <button type="submit" class="btn btn-primary btn-lg"><i class="fas fa-calculator me-2"></i>Phân tích và Dự báo</button>
                             </div>
                         </form>
-                        
-                        <div id="results" class="mt-4 d-none">
-                            <div class="card border-success">
-                                <div class="card-header bg-success text-white">
-                                    <h4>Kết Quả Dự Báo</h4>
+                    </div>
+                </div>
+
+                <!-- Results Section (Initially Hidden) -->
+                <div id="resultsSection" class="d-none">
+                    <!-- Prediction Results -->
+                    <div class="card mb-4">
+                        <div class="card-header">
+                            <h5 class="m-0"><i class="fas fa-chart-line me-2"></i>Kết quả dự báo</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="result-box">
+                                        <h6>Chiều cao dự báo khi trưởng thành</h6>
+                                        <h3 id="predictedHeight">162.5 cm</h3>
+                                        <div id="heightComparison"></div>
+                                    </div>
                                 </div>
-                                <div class="card-body">
-                                    <div class="row">
-                                        <div class="col-md-6">
-                                            <h5>Thông số hiện tại</h5>
-                                            <p><strong>Chiều cao:</strong> <span id="currentHeight"></span> cm</p>
-                                            <p><strong>Cân nặng:</strong> <span id="currentWeight"></span> kg</p>
-                                            <p><strong>BMI:</strong> <span id="currentBMI"></span></p>
-                                        </div>
-                                        <div class="col-md-6">
-                                            <h5>Dự báo</h5>
-                                            <p><strong>Chiều cao trưởng thành:</strong> <span id="predictedHeight"></span> cm</p>
-                                            <p><strong>Chênh lệch chiều cao:</strong> <span id="heightDiff"></span> cm</p>
-                                            <p><strong>Phần trăm chiều cao:</strong> <span id="heightPercentile"></span>%</p>
-                                        </div>
+                                <div class="col-md-6">
+                                    <div class="result-box">
+                                        <h6>Chỉ số BMI hiện tại</h6>
+                                        <h3 id="bmiValue">18.7</h3>
+                                        <div id="bmiComparison"></div>
                                     </div>
-                                    
-                                    <div class="mt-3">
-                                        <h5>So sánh BMI</h5>
-                                        <p><strong>Chênh lệch BMI:</strong> <span id="bmiDiff"></span></p>
-                                        <p><strong>Phần trăm BMI:</strong> <span id="bmiPercentile"></span>%</p>
+                                </div>
+                            </div>
+                            
+                            <div class="row mt-4">
+                                <div class="col-md-6">
+                                    <div class="result-box">
+                                        <h6>Tuổi xương ước tính</h6>
+                                        <h3 id="estimatedBoneAge">8.2 tuổi</h3>
+                                        <div id="boneAgeComparison"></div>
                                     </div>
-                                    
-                                    <div class="mt-4 text-center">
-                                        <button id="generatePDF" class="btn btn-success me-2">Xuất PDF</button>
-                                        <button id="sendEmail" class="btn btn-info">Gửi Email</button>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="result-box">
+                                        <h6>Tiềm năng phát triển còn lại</h6>
+                                        <h3 id="growthPotential">14.3 cm</h3>
+                                        <div id="growthPotentialText">Dự kiến đạt chiều cao trưởng thành ở tuổi 15.5</div>
                                     </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Charts and Visualizations -->
+                    <div class="card mb-4">
+                        <div class="card-header">
+                            <h5 class="m-0"><i class="fas fa-chart-bar me-2"></i>Biểu đồ so sánh</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="chart-container">
+                                        <canvas id="heightChart"></canvas>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="chart-container">
+                                        <canvas id="bmiChart"></canvas>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Recommendations -->
+                    <div class="card mb-4">
+                        <div class="card-header">
+                            <h5 class="m-0"><i class="fas fa-comment-medical me-2"></i>Đánh giá và Khuyến nghị</h5>
+                        </div>
+                        <div class="card-body">
+                            <div id="healthAssessment">
+                                <p>Dựa trên các chỉ số hiện tại, tình trạng phát triển của bệnh nhân được đánh giá là <span class="comparison-positive">BÌNH THƯỜNG</span>.</p>
+                                
+                                <h6 class="mt-4 mb-3 border-bottom pb-2">Khuyến nghị về dinh dưỡng</h6>
+                                <ul>
+                                    <li>Tăng cường thực phẩm giàu Canxi: sữa, phô mai, cá hồi, rau xanh đậm</li>
+                                    <li>Bổ sung Vitamin D để hỗ trợ hấp thụ Canxi</li>
+                                    <li>Đảm bảo đủ protein từ thịt, cá, trứng, đậu</li>
+                                </ul>
+                                
+                                <h6 class="mt-4 mb-3 border-bottom pb-2">Khuyến nghị về vận động</h6>
+                                <ul>
+                                    <li>Tham gia các môn thể thao kéo giãn cơ thể: bơi lội, bóng rổ, xà đơn</li>
+                                    <li>Tập thể dục ít nhất 60 phút mỗi ngày</li>
+                                    <li>Đảm bảo ngủ đủ 8-10 tiếng mỗi đêm</li>
+                                </ul>
+                                
+                                <h6 class="mt-4 mb-3 border-bottom pb-2">Theo dõi</h6>
+                                <ul>
+                                    <li>Đo chiều cao, cân nặng mỗi 3 tháng để theo dõi tiến triển</li>
+                                    <li>Kiểm tra tuổi xương mỗi 12 tháng nếu cần thiết</li>
+                                    <li>Khám chuyên khoa nội tiết nếu tốc độ tăng trưởng chậm hơn 4cm/năm</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Export Options -->
+                    <div class="card mb-4">
+                        <div class="card-header">
+                            <h5 class="m-0"><i class="fas fa-download me-2"></i>Xuất kết quả</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <button id="generatePdf" class="btn btn-primary w-100">
+                                        <i class="fas fa-file-pdf me-2"></i> Tạo báo cáo PDF
+                                    </button>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <button class="btn btn-success w-100" data-bs-toggle="modal" data-bs-target="#emailModal">
+                                        <i class="fas fa-envelope me-2"></i> Gửi email kết quả
+                                    </button>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
+
+            <!-- Sidebar -->
+            <div class="col-lg-4">
+                <!-- Doctor Profile -->
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="m-0"><i class="fas fa-user-md me-2"></i>Bác sĩ chuyên khoa</h5>
+                    </div>
+                    <div class="card-body doctor-profile">
+                        <img src="https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=500&q=80" class="doctor-img" alt="Bác sĩ Võ Tường Kha">
+                        <h4>BS. Võ Tường Kha</h4>
+                        <p class="text-muted">Chuyên khoa Nội tiết & Phát triển Trẻ em</p>
+                        <p>Với hơn 15 năm kinh nghiệm trong lĩnh vực nội tiết nhi khoa và tăng trưởng trẻ em.</p>
+                        <div class="d-flex justify-content-center">
+                            <span class="badge bg-primary me-2">Nội tiết</span>
+                            <span class="badge bg-success me-2">Nhi khoa</span>
+                            <span class="badge bg-warning">Dinh dưỡng</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Bone Age Assessment -->
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="m-0"><i class="fas fa-bone me-2"></i>Đo tuổi xương</h5>
+                    </div>
+                    <div class="card-body">
+                        <p>Đo tuổi xương là phương pháp chính xác để đánh giá sự trưởng thành của xương và dự báo chiều cao.</p>
+                        <a href="https://freeboneage.com/" target="_blank" class="btn btn-outline-primary w-100 mb-3">
+                            <i class="fas fa-external-link-alt me-2"></i>Đo tuổi xương trực tuyến
+                        </a>
+                        <div class="alert alert-info">
+                            <small><i class="fas fa-info-circle me-2"></i>Kết quả đo tuổi xương chính xác sẽ giúp cải thiện độ chính xác của dự báo chiều cao.</small>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Standards Reference -->
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="m-0"><i class="fas fa-book me-2"></i>Tài liệu tham khảo</h5>
+                    </div>
+                    <div class="card-body">
+                        <h6>Tiêu chuẩn WHO</h6>
+                        <ul class="list-group mb-3">
+                            <li class="list-group-item">
+                                <a href="https://cdn.who.int/media/docs/default-source/child-growth/growth-reference-5-19-years/height-for-age-(5-19-years)/sft-hfa-boys-perc-5-19years.pdf?sfvrsn=3fe316bf_4" target="_blank">Chiều cao bé trai</a>
+                            </li>
+                            <li class="list-group-item">
+                                <a href="https://cdn.who.int/media/docs/default-source/child-growth/growth-reference-5-19-years/bmi-for-age-(5-19-years)/sft-bmifa-boys-z-5-19years.pdf?sfvrsn=253efe0d_4" target="_blank">BMI bé trai</a>
+                            </li>
+                            <li class="list-group-item">
+                                <a href="https://cdn.who.int/media/docs/default-source/child-growth/growth-reference-5-19-years/height-for-age-(5-19-years)/sft-hfa-girls-perc-5-19years.pdf?sfvrsn=59b013d8_4" target="_blank">Chiều cao bé gái</a>
+                            </li>
+                            <li class="list-group-item">
+                                <a href="https://cdn.who.int/media/docs/default-source/child-growth/growth-reference-5-19-years/bmi-for-age-(5-19-years)/sft-bmifa-girls-z-5-19years.pdf?sfvrsn=571135b3_4" target="_blank">BMI bé gái</a>
+                            </li>
+                        </ul>
+                        
+                        <h6>Tiêu chuẩn Việt Nam</h6>
+                        <a href="https://hoinhikhoavietnam.org.vn/cong-cu-danh-gia-tang-truong-cho-be" target="_blank" class="btn btn-outline-success w-100">
+                            <i class="fas fa-external-link-alt me-2"></i>Công cụ đánh giá tăng trưởng
+                        </a>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 
+    <!-- Footer -->
+    <footer class="mt-5">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-4 mb-4">
+                    <h5>Trung tâm Chẩn đoán và Dự báo Phát triển Trẻ em</h5>
+                    <p>Địa chỉ: 123 Đường Nguyễn Văn Linh, Quận 7, TP. Hồ Chí Minh</p>
+                    <p>Điện thoại: (028) 3862 5678</p>
+                    <p>Email: info@votuongkha.net</p>
+                </div>
+                <div class="col-md-4 mb-4">
+                    <h5>Giờ làm việc</h5>
+                    <p>Thứ 2 - Thứ 6: 7:30 - 16:30</p>
+                    <p>Thứ 7: 7:30 - 12:00</p>
+                    <p>Chủ nhật: Nghỉ</p>
+                </div>
+                <div class="col-md-4 mb-4">
+                    <h5>Kết nối với chúng tôi</h5>
+                    <div class="social-links">
+                        <a href="#"><i class="fab fa-facebook"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-youtube"></i></a>
+                        <a href="#"><i class="fab fa-linkedin"></i></a>
+                        <a href="#"><i class="fab fa-tiktok"></i></a>
+                    </div>
+                    <div class="mt-3">
+                        <a href="https://votuongkha.net" target="_blank" class="text-white">votuongkha.net</a>
+                    </div>
+                </div>
+            </div>
+            <hr class="bg-light">
+            <div class="text-center">
+                <p class="mb-0">© 2023 Trung tâm Chẩn đoán và Dự báo Phát triển Trẻ em. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Login Modal -->
+    <div class="modal fade" id="loginModal" tabindex="-1" aria-labelledby="loginModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="loginModalLabel">Đăng nhập hệ thống</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form>
+                        <div class="mb-3">
+                            <label for="loginEmail" class="form-label">Email</label>
+                            <input type="email" class="form-control" id="loginEmail" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="loginPassword" class="form-label">Mật khẩu</label>
+                            <input type="password" class="form-control" id="loginPassword" required>
+                        </div>
+                        <div class="mb-3 form-check">
+                            <input type="checkbox" class="form-check-input" id="rememberMe">
+                            <label class="form-check-label" for="rememberMe">Ghi nhớ đăng nhập</label>
+                        </div>
+                        <button type="submit" class="btn btn-primary w-100">Đăng nhập</button>
+                    </form>
+                    <div class="text-center mt-3">
+                        <a href="#">Quên mật khẩu?</a> | 
+                        <a href="https://docs.google.com/forms/d/1mdEQAINfwXB0qUZoClvsiwLF9xHFLsj49q9G97fIwjQ/edit" target="_blank">Đăng ký tài khoản mới</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Email Modal -->
+    <div class="modal fade" id="emailModal" tabindex="-1" aria-labelledby="emailModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="emailModalLabel">Gửi kết quả qua email</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="emailForm">
+                        <div class="mb-3">
+                            <label for="emailAddress" class="form-label">Địa chỉ email</label>
+                            <input type="email" class="form-control" id="emailAddress" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="emailMessage" class="form-label">Lời nhắn (tuỳ chọn)</label>
+                            <textarea class="form-control" id="emailMessage" rows="3"></textarea>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+                    <button type="button" class="btn btn-primary" id="sendEmail">Gửi email</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap & Font Awesome -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="script.js"></script>
+    
+    <script>
+        // Initialize charts and handle form submission
+        document.addEventListener('DOMContentLoaded', function() {
+            // Handle form submission
+            document.getElementById('patientForm').addEventListener('submit', function(e) {
+                e.preventDefault();
+                calculateResults();
+                document.getElementById('resultsSection').classList.remove('d-none');
+                // Scroll to results
+                document.getElementById('resultsSection').scrollIntoView({ behavior: 'smooth' });
+            });
+            
+            // Set up PDF generation
+            document.getElementById('generatePdf').addEventListener('click', generatePdf);
+            
+            // Set up email sending
+            document.getElementById('sendEmail').addEventListener('click', sendEmail);
+        });
+        
+        // Function to calculate all results
+        function calculateResults() {
+            // Get form values
+            const age = parseFloat(document.getElementById('patientAge').value);
+            const gender = document.getElementById('patientGender').value;
+            const height = parseFloat(document.getElementById('patientHeight').value);
+            const weight = parseFloat(document.getElementById('patientWeight').value);
+            const boneAge = document.getElementById('boneAge').value ? 
+                parseFloat(document.getElementById('boneAge').value) : null;
+            const fatherHeight = document.getElementById('fatherHeight').value ? 
+                parseFloat(document.getElementById('fatherHeight').value) : null;
+            const motherHeight = document.getElementById('motherHeight').value ? 
+                parseFloat(document.getElementById('motherHeight').value) : null;
+            
+            // Calculate BMI
+            const bmi = weight / Math.pow(height/100, 2);
+            document.getElementById('bmiValue').textContent = bmi.toFixed(1);
+            
+            // Compare BMI with standard
+            const bmiStandard = getStandardBmi(age, gender);
+            const bmiComparison = document.getElementById('bmiComparison');
+            
+            if (bmi > bmiStandard) {
+                bmiComparison.innerHTML = `<span class="comparison-negative">Cao hơn ${(bmi - bmiStandard).toFixed(1)} so với chuẩn</span>`;
+            } else if (bmi < bmiStandard) {
+                bmiComparison.innerHTML = `<span class="comparison-negative">Thấp hơn ${(bmiStandard - bmi).toFixed(1)} so với chuẩn</span>`;
+            } else {
+                bmiComparison.innerHTML = `<span class="comparison-positive">Bình thường theo chuẩn</span>`;
+            }
+            
+            // Predict adult height (simplified calculation)
+            let predictedHeight;
+            if (boneAge) {
+                // If bone age is provided, use it for prediction
+                predictedHeight = predictHeightFromBoneAge(boneAge, gender, height);
+            } else if (fatherHeight && motherHeight) {
+                // Use parental height method
+                predictedHeight = predictHeightFromParents(gender, fatherHeight, motherHeight);
+            } else {
+                // Otherwise use age-based method
+                predictedHeight = predictHeight(age, gender, height);
+            }
+            
+            document.getElementById('predictedHeight').textContent = predictedHeight.toFixed(1) + ' cm';
+            
+            // Compare with standard height
+            const heightStandard = getStandardHeight(age, gender);
+            const heightComparison = document.getElementById('heightComparison');
+            
+            if (height > heightStandard) {
+                heightComparison.innerHTML = `<span class="comparison-positive">Cao hơn ${(height - heightStandard).toFixed(1)}cm so với chuẩn</span>`;
+            } else if (height < heightStandard) {
+                heightComparison.innerHTML = `<span class="comparison-negative">Thấp hơn ${(heightStandard - height).toFixed(1)}cm so với chuẩn</span>`;
+            } else {
+                heightComparison.innerHTML = `<span class="comparison-positive">Bình thường theo chuẩn</span>`;
+            }
+            
+            // Estimate bone age if not provided
+            if (!boneAge) {
+                const estimatedBoneAge = estimateBoneAge(age, height, gender);
+                document.getElementById('estimatedBoneAge').textContent = estimatedBoneAge.toFixed(1) + ' tuổi';
+                
+                const boneAgeDiff = Math.abs(age - estimatedBoneAge);
+                const boneAgeComparison = document.getElementById('boneAgeComparison');
+                
+                if (boneAgeDiff <= 1) {
+                    boneAgeComparison.innerHTML = `<span class="comparison-positive">Phù hợp với tuổi thực</span>`;
+                } else if (estimatedBoneAge > age) {
+                    boneAgeComparison.innerHTML = `<span class="comparison-negative">Nhanh hơn ${boneAgeDiff.toFixed(1)} năm so với tuổi</span>`;
+                } else {
+                    boneAgeComparison.innerHTML = `<span class="comparison-negative">Chậm hơn ${boneAgeDiff.toFixed(1)} năm so với tuổi</span>`;
+                }
+            } else {
+                document.getElementById('estimatedBoneAge').textContent = boneAge.toFixed(1) + ' tuổi';
+                
+                const boneAgeDiff = Math.abs(age - boneAge);
+                const boneAgeComparison = document.getElementById('boneAgeComparison');
+                
+                if (boneAgeDiff <= 1) {
+                    boneAgeComparison.innerHTML = `<span class="comparison-positive">Phù hợp với tuổi thực</span>`;
+                } else if (boneAge > age) {
+                    boneAgeComparison.innerHTML = `<span class="comparison-negative">Nhanh hơn ${boneAgeDiff.toFixed(1)} năm so với tuổi</span>`;
+                } else {
+                    boneAgeComparison.innerHTML = `<span class="comparison-negative">Chậm hơn ${boneAgeDiff.toFixed(1)} năm so với tuổi</span>`;
+                }
+            }
+            
+            // Calculate growth potential
+            const growthPotential = predictedHeight - height;
+            document.getElementById('growthPotential').textContent = growthPotential.toFixed(1) + ' cm';
+            
+            // Estimate age at reaching adult height
+            const growthAge = estimateGrowthCompletionAge(age, boneAge || estimateBoneAge(age, height, gender), gender);
+            document.getElementById('growthPotentialText').textContent = `Dự kiến đạt chiều cao trưởng thành ở tuổi ${growthAge.toFixed(1)}`;
+            
+            // Create charts
+            createCharts(age, gender, height, bmi, predictedHeight);
+        }
+        
+        // Function to get standard height for Vietnamese children
+        function getStandardHeight(age, gender) {
+            // Simplified data - in a real application, this would be more comprehensive
+            if (gender === 'male') {
+                return 75 + (age * 6) - (age > 10 ? (age-10)*0.5 : 0);
+            } else {
+                return 75 + (age * 5.8) - (age > 9 ? (age-9)*0.6 : 0);
+            }
+        }
+        
+        // Function to get standard BMI for Vietnamese children
+        function getStandardBmi(age, gender) {
+            // Simplified data - in a real application, this would be more comprehensive
+            return 16 + (age * 0.3) - (age > 12 ? (age-12)*0.1 : 0);
+        }
+        
+        // Function to predict adult height (simplified)
+        function predictHeight(age, gender, currentHeight) {
+            // Simplified prediction - in a real application, this would use more sophisticated algorithms
+            if (gender === 'male') {
+                return currentHeight + (18 - age) * 4.5;
+            } else {
+                return currentHeight + (16 - age) * 4.0;
+            }
+        }
+        
+        // Function to predict height from bone age
+        function predictHeightFromBoneAge(boneAge, gender, currentHeight) {
+            // Simplified prediction based on bone age
+            if (gender === 'male') {
+                return currentHeight + (16 - boneAge) * 5.0;
+            } else {
+                return currentHeight + (14 - boneAge) * 4.5;
+            }
+        }
+        
+        // Function to predict height from parental heights
+        function predictHeightFromParents(gender, fatherHeight, motherHeight) {
+            // Mid-parental height method
+            if (gender === 'male') {
+                return ((fatherHeight + motherHeight) / 2) + 6.5;
+            } else {
+                return ((fatherHeight + motherHeight) / 2) - 6.5;
+            }
+        }
+        
+        // Function to estimate bone age
+        function estimateBoneAge(age, height, gender) {
+            // Very simplified estimation - in a real application, this would use medical algorithms
+            const heightStandard = getStandardHeight(age, gender);
+            
+            if (height > heightStandard + 5) {
+                return age + 1.5;
+            } else if (height > heightStandard + 2) {
+                return age + 0.8;
+            } else if (height < heightStandard - 5) {
+                return age - 1.5;
+            } else if (height < heightStandard - 2) {
+                return age - 0.8;
+            } else {
+                return age;
+            }
+        }
+        
+        // Function to estimate when growth will complete
+        function estimateGrowthCompletionAge(age, boneAge, gender) {
+            if (gender === 'male') {
+                return Math.max(age, boneAge) + (16 - boneAge);
+            } else {
+                return Math.max(age, boneAge) + (14 - boneAge);
+            }
+        }
+        
+        // Function to create comparison charts
+        function createCharts(age, gender, height, bmi, predictedHeight) {
+            const standardHeight = getStandardHeight(age, gender);
+            const standardBmi = getStandardBmi(age, gender);
+            
+            // Height chart
+            const heightCtx = document.getElementById('heightChart').getContext('2d');
+            if (window.heightChartInstance) {
+                window.heightChartInstance.destroy();
+            }
+            window.heightChartInstance = new Chart(heightCtx, {
+                type: 'bar',
+                data: {
+                    labels: ['Chiều cao hiện tại', 'Chuẩn chiều cao', 'Dự báo trưởng thành'],
+                    datasets: [{
+                        label: 'Chiều cao (cm)',
+                        data: [height, standardHeight, predictedHeight],
+                        backgroundColor: [
+                            'rgba(54, 162, 235, 0.7)',
+                            'rgba(75, 192, 192, 0.7)',
+                            'rgba(153, 102, 255, 0.7)'
+                        ],
+                        borderColor: [
+                            'rgba(54, 162, 235, 1)',
+                            'rgba(75, 192, 192, 1)',
+                            'rgba(153, 102, 255, 1)'
+                        ],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            beginAtZero: false,
+                            min: Math.min(height, standardHeight, predictedHeight) - 10
+                        }
+                    },
+                    plugins: {
+                        title: {
+                            display: true,
+                            text: 'So sánh chiều cao (cm)'
+                        }
+                    }
+                }
+            });
+            
+            // BMI chart
+            const bmiCtx = document.getElementById('bmiChart').getContext('2d');
+            if (window.bmiChartInstance) {
+                window.bmiChartInstance.destroy();
+            }
+            window.bmiChartInstance = new Chart(bmiCtx, {
+                type: 'bar',
+                data: {
+                    labels: ['BMI hiện tại', 'Chuẩn BMI'],
+                    datasets: [{
+                        label: 'Chỉ số BMI',
+                        data: [bmi, standardBmi],
+                        backgroundColor: [
+                            'rgba(255, 99, 132, 0.7)',
+                            'rgba(255, 159, 64, 0.7)'
+                        ],
+                        borderColor: [
+                            'rgba(255, 99, 132, 1)',
+                            'rgba(255, 159, 64, 1)'
+                        ],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            beginAtZero: false,
+                            min: Math.min(bmi, standardBmi) - 5
+                        }
+                    },
+                    plugins: {
+                        title: {
+                            display: true,
+                            text: 'So sánh chỉ số BMI'
+                        }
+                    }
+                }
+            });
+        }
+        
+        // Function to generate PDF
+        function generatePdf() {
+            // In a real implementation, this would use jsPDF to create a PDF report
+            alert('Tính năng tạo PDF sẽ được kích hoạt trong phiên bản đầy đủ. Trong phiên bản này, bạn có thể sử dụng chức năng in của trình duyệt.');
+            
+            // For demonstration, open print dialog
+            window.print();
+        }
+        
+        // Function to send email
+        function sendEmail() {
+            const email = document.getElementById('emailAddress').value;
+            
+            if (!email) {
+                alert('Vui lòng nhập địa chỉ email');
+                return;
+            }
+            
+            // In a real implementation, this would connect to a backend service
+            alert(`Trong phiên bản đầy đủ, kết quả sẽ được gửi đến ${email}. Hiện tính năng này cần tích hợp với backend.`);
+            
+            // Close the modal
+            const emailModal = bootstrap.Modal.getInstance(document.getElementById('emailModal'));
+            emailModal.hide();
+        }
+    </script>
 </body>
 </html>
