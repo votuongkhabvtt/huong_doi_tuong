@@ -35,6 +35,8 @@
         .navbar-brand {
             font-weight: 700;
             color: var(--dark) !important;
+            display: flex;
+            align-items: center;
         }
         
         .nav-link {
@@ -196,6 +198,10 @@
             .card {
                 margin-bottom: 15px;
             }
+            
+            .navbar-brand img {
+                height: 30px;
+            }
         }
         
         .chart-container {
@@ -228,6 +234,18 @@
             font-size: 0.8rem;
             border: 1px solid var(--secondary);
         }
+        
+        .clinic-logo {
+            max-width: 100%;
+            height: auto;
+            margin-bottom: 15px;
+            border-radius: 10px;
+        }
+        
+        .header-logo {
+            height: 40px;
+            margin-right: 10px;
+        }
     </style>
 </head>
 <body>
@@ -235,7 +253,8 @@
     <nav class="navbar navbar-expand-lg navbar-dark sticky-top">
         <div class="container">
             <a class="navbar-brand" href="#">
-                <i class="fas fa-bone me-2"></i>PHÒNG KHÁM KCB PGS.TS.BS. VÕ TƯỜNG KHA
+                <img src="https://api.logo.com/api/v2/images?design=lg_jbuSeuz5s66vblTfQe&u=65a074a5a9fa8285300d28c6853a4cb707bba4c92a43bbdae020ca84b9748817&width=1600&height=900&margins=300&fit=contain&format=webp&quality=60&tightBounds=true" alt="Logo" class="header-logo">
+                PHÒNG KHÁM KCB PGS.TS.BS. VÕ TƯỜNG KHA
             </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
                 <span class="navbar-toggler-icon"></span>
@@ -467,6 +486,7 @@
                         <h5 class="m-0"><i class="fas fa-user-md me-2"></i>Bác sĩ chuyên khoa</h5>
                     </div>
                     <div class="card-body doctor-profile">
+                        <img src="https://api.logo.com/api/v2/images?design=lg_jbuSeuz5s66vblTfQe&u=65a074a5a9fa8285300d28c6853a4cb707bba4c92a43bbdae020ca84b9748817&width=1600&height=900&margins=300&fit=contain&format=webp&quality=60&tightBounds=true" alt="Logo Phòng khám" class="clinic-logo">
                         <img src="https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=500&q=80" class="doctor-img" alt="PGS.TS.BS. Võ Tường Kha">
                         <h4>PGS.TS.BS. Võ Tường Kha</h4>
                         <p class="text-muted">Chuyên khoa Y học thể thao, Y học cổ truyền, Dinh dưỡng, Nhi khoa, Nội tiết</p>
@@ -903,7 +923,7 @@
                             'rgba(153, 102, 255, 0.7)'
                         ],
                         borderColor: [
-                            'rgba(54, 162, 235, 1)',
+                            'rgasba(54, 162, 235, 1)',
                             'rgba(75, 192, 192, 1)',
                             'rgba(153, 102, 255, 1)'
                         ],
