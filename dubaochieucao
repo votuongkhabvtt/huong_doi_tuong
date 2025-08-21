@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Trung tâm Chẩn đoán và Dự báo Phát triển Trẻ em</title>
+    <title>PHÒNG KHÁM KCB PGS.TS.BS. VÕ TƯỜNG KHA</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -11,18 +11,18 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <style>
         :root {
-            --primary: #2c3e50;
-            --secondary: #3498db;
-            --accent: #e74c3c;
-            --light: #ecf0f1;
-            --dark: #2c3e50;
-            --success: #27ae60;
-            --warning: #f39c12;
+            --primary: #FFD700;
+            --secondary: #FFEB3B;
+            --accent: #FF5722;
+            --light: #FFFDE7;
+            --dark: #333333;
+            --success: #4CAF50;
+            --warning: #FFC107;
         }
         
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            background: linear-gradient(135deg, #FFF9C4 0%, #FFEB3B 100%);
             color: var(--dark);
             min-height: 100vh;
         }
@@ -34,26 +34,27 @@
         
         .navbar-brand {
             font-weight: 700;
-            color: white !important;
+            color: var(--dark) !important;
         }
         
         .nav-link {
-            color: rgba(255, 255, 255, 0.85) !important;
+            color: rgba(0, 0, 0, 0.85) !important;
             font-weight: 500;
             transition: all 0.3s;
         }
         
         .nav-link:hover {
-            color: white !important;
+            color: var(--dark) !important;
             transform: translateY(-2px);
         }
         
         .header {
             background: linear-gradient(to right, var(--primary), var(--secondary));
-            color: white;
+            color: var(--dark);
             padding: 3rem 0;
             margin-bottom: 2rem;
             border-radius: 0 0 20px 20px;
+            text-shadow: 1px 1px 2px rgba(255, 255, 255, 0.7);
         }
         
         .card {
@@ -63,6 +64,7 @@
             transition: transform 0.3s, box-shadow 0.3s;
             margin-bottom: 25px;
             overflow: hidden;
+            background-color: rgba(255, 255, 255, 0.9);
         }
         
         .card:hover {
@@ -72,15 +74,16 @@
         
         .card-header {
             background: linear-gradient(to right, var(--secondary), var(--primary));
-            color: white;
+            color: var(--dark);
             font-weight: 600;
             border-bottom: none;
             padding: 1rem 1.5rem;
         }
         
         .btn-primary {
-            background: var(--secondary);
+            background: var(--primary);
             border: none;
+            color: var(--dark);
             padding: 10px 20px;
             border-radius: 50px;
             font-weight: 600;
@@ -88,9 +91,10 @@
         }
         
         .btn-primary:hover {
-            background: var(--primary);
+            background: var(--secondary);
             transform: translateY(-2px);
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            color: var(--dark);
         }
         
         .btn-success {
@@ -116,7 +120,7 @@
         
         .form-control:focus {
             border-color: var(--secondary);
-            box-shadow: 0 0 0 0.25rem rgba(52, 152, 219, 0.25);
+            box-shadow: 0 0 0 0.25rem rgba(255, 235, 59, 0.25);
         }
         
         .result-box {
@@ -152,20 +156,20 @@
         
         footer {
             background: var(--primary);
-            color: white;
+            color: var(--dark);
             padding: 2rem 0;
             margin-top: 3rem;
         }
         
         .social-links a {
-            color: white;
+            color: var(--dark);
             font-size: 1.5rem;
             margin: 0 10px;
             transition: all 0.3s;
         }
         
         .social-links a:hover {
-            color: var(--secondary);
+            color: var(--accent);
             transform: translateY(-3px);
         }
         
@@ -213,6 +217,17 @@
             border: 5px solid var(--secondary);
             margin-bottom: 15px;
         }
+        
+        .specialty-badge {
+            display: inline-block;
+            background: var(--light);
+            color: var(--dark);
+            padding: 5px 10px;
+            border-radius: 20px;
+            margin: 5px;
+            font-size: 0.8rem;
+            border: 1px solid var(--secondary);
+        }
     </style>
 </head>
 <body>
@@ -220,7 +235,7 @@
     <nav class="navbar navbar-expand-lg navbar-dark sticky-top">
         <div class="container">
             <a class="navbar-brand" href="#">
-                <i class="fas fa-bone me-2"></i>TRUNG TÂM CHẨN ĐOÁN VÀ DỰ BÁO PHÁT TRIỂN TRẺ EM
+                <i class="fas fa-bone me-2"></i>PHÒNG KHÁM KCB PGS.TS.BS. VÕ TƯỜNG KHA
             </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
                 <span class="navbar-toggler-icon"></span>
@@ -272,8 +287,9 @@
                                     <input type="text" class="form-control" id="patientName" required>
                                 </div>
                                 <div class="col-md-6 mb-3">
-                                    <label for="patientAge" class="form-label">Tuổi</label>
-                                    <input type="number" class="form-control" id="patientAge" min="0" max="18" step="0.1" required>
+                                    <label for="patientDob" class="form-label">Ngày tháng năm sinh</label>
+                                    <input type="date" class="form-control" id="patientDob" required>
+                                    <div class="form-text" id="ageDisplay">Tuổi: Chưa xác định</div>
                                 </div>
                             </div>
                             
@@ -451,15 +467,17 @@
                         <h5 class="m-0"><i class="fas fa-user-md me-2"></i>Bác sĩ chuyên khoa</h5>
                     </div>
                     <div class="card-body doctor-profile">
-                        <img src="https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=500&q=80" class="doctor-img" alt="Bác sĩ Võ Tường Kha">
-                        <h4>BS. Võ Tường Kha</h4>
-                        <p class="text-muted">Chuyên khoa Nội tiết & Phát triển Trẻ em</p>
-                        <p>Với hơn 15 năm kinh nghiệm trong lĩnh vực nội tiết nhi khoa và tăng trưởng trẻ em.</p>
-                        <div class="d-flex justify-content-center">
-                            <span class="badge bg-primary me-2">Nội tiết</span>
-                            <span class="badge bg-success me-2">Nhi khoa</span>
-                            <span class="badge bg-warning">Dinh dưỡng</span>
+                        <img src="https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=500&q=80" class="doctor-img" alt="PGS.TS.BS. Võ Tường Kha">
+                        <h4>PGS.TS.BS. Võ Tường Kha</h4>
+                        <p class="text-muted">Chuyên khoa Y học thể thao, Y học cổ truyền, Dinh dưỡng, Nhi khoa, Nội tiết</p>
+                        <div class="my-3">
+                            <span class="specialty-badge">Y học thể thao</span>
+                            <span class="specialty-badge">Y học cổ truyền</span>
+                            <span class="specialty-badge">Dinh dưỡng</span>
+                            <span class="specialty-badge">Nhi khoa</span>
+                            <span class="specialty-badge">Nội tiết</span>
                         </div>
+                        <p>Với hơn 20 năm kinh nghiệm trong lĩnh vực nội tiết nhi khoa, dinh dưỡng và y học thể thao.</p>
                     </div>
                 </div>
 
@@ -516,10 +534,10 @@
         <div class="container">
             <div class="row">
                 <div class="col-md-4 mb-4">
-                    <h5>Trung tâm Chẩn đoán và Dự báo Phát triển Trẻ em</h5>
-                    <p>Địa chỉ: 123 Đường Nguyễn Văn Linh, Quận 7, TP. Hồ Chí Minh</p>
-                    <p>Điện thoại: (028) 3862 5678</p>
-                    <p>Email: info@votuongkha.net</p>
+                    <h5>PHÒNG KHÁM KCB PGS.TS.BS. VÕ TƯỜNG KHA</h5>
+                    <p><i class="fas fa-map-marker-alt me-2"></i>11A, ngõ 102 Khuất Duy Tiến, Thanh Xuân, Hà Nội</p>
+                    <p><i class="fas fa-phone me-2"></i>0913504755</p>
+                    <p><i class="fas fa-envelope me-2"></i>votuongkhabvtt@gmail.com</p>
                 </div>
                 <div class="col-md-4 mb-4">
                     <h5>Giờ làm việc</h5>
@@ -537,13 +555,13 @@
                         <a href="#"><i class="fab fa-tiktok"></i></a>
                     </div>
                     <div class="mt-3">
-                        <a href="https://votuongkha.net" target="_blank" class="text-white">votuongkha.net</a>
+                        <a href="https://votuongkha.net" target="_blank" class="text-dark">votuongkha.net</a>
                     </div>
                 </div>
             </div>
-            <hr class="bg-light">
+            <hr class="bg-dark">
             <div class="text-center">
-                <p class="mb-0">© 2023 Trung tâm Chẩn đoán và Dự báo Phát triển Trẻ em. All rights reserved.</p>
+                <p class="mb-0">© 2023 PHÒNG KHÁM KCB PGS.TS.BS. VÕ TƯỜNG KHA. All rights reserved.</p>
             </div>
         </div>
     </footer>
@@ -615,6 +633,11 @@
     <script>
         // Initialize charts and handle form submission
         document.addEventListener('DOMContentLoaded', function() {
+            // Calculate age from date of birth
+            document.getElementById('patientDob').addEventListener('change', function() {
+                calculateAgeFromDob();
+            });
+            
             // Handle form submission
             document.getElementById('patientForm').addEventListener('submit', function(e) {
                 e.preventDefault();
@@ -631,10 +654,64 @@
             document.getElementById('sendEmail').addEventListener('click', sendEmail);
         });
         
+        // Function to calculate age from date of birth
+        function calculateAgeFromDob() {
+            const dob = new Date(document.getElementById('patientDob').value);
+            if (isNaN(dob.getTime())) {
+                document.getElementById('ageDisplay').textContent = 'Tuổi: Chưa xác định';
+                return null;
+            }
+            
+            const today = new Date();
+            let age = today.getFullYear() - dob.getFullYear();
+            const monthDiff = today.getMonth() - dob.getMonth();
+            
+            if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < dob.getDate())) {
+                age--;
+            }
+            
+            // Calculate exact age with decimal for more precision
+            const exactAge = calculateExactAge(dob, today);
+            document.getElementById('ageDisplay').textContent = `Tuổi: ${exactAge.toFixed(1)}`;
+            return exactAge;
+        }
+        
+        // Function to calculate exact age in years with decimal
+        function calculateExactAge(dob, today) {
+            const birthDate = new Date(dob);
+            const currentDate = new Date(today);
+            
+            let years = currentDate.getFullYear() - birthDate.getFullYear();
+            let months = currentDate.getMonth() - birthDate.getMonth();
+            let days = currentDate.getDate() - birthDate.getDate();
+            
+            if (days < 0) {
+                months--;
+                // Get the number of days in the previous month
+                const prevMonth = new Date(currentDate.getFullYear(), currentDate.getMonth(), 0);
+                days += prevMonth.getDate();
+            }
+            
+            if (months < 0) {
+                years--;
+                months += 12;
+            }
+            
+            // Convert to decimal age (years + months/12 + days/365)
+            const exactAge = years + (months / 12) + (days / 365.25);
+            return exactAge;
+        }
+        
         // Function to calculate all results
         function calculateResults() {
-            // Get form values
-            const age = parseFloat(document.getElementById('patientAge').value);
+            // Get age from date of birth
+            const age = calculateAgeFromDob();
+            if (age === null) {
+                alert('Vui lòng nhập ngày tháng năm sinh hợp lệ');
+                return;
+            }
+            
+            // Get other form values
             const gender = document.getElementById('patientGender').value;
             const height = parseFloat(document.getElementById('patientHeight').value);
             const weight = parseFloat(document.getElementById('patientWeight').value);
