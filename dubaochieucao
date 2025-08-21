@@ -520,8 +520,7 @@
                     </div>
                     <div class="card-body doctor-profile">
                         <img src="https://api.logo.com/api/v2/images?design=lg_jbuSeuz5s66vblTfQe&u=65a074a5a9fa8285300d28c6853a4cb707bba4c92a43bbdae020ca84b9748817&width=1600&height=900&margins=300&fit=contain&format=webp&quality=60&tightBounds=true" alt="Logo Phòng khám" class="clinic-logo">
-                        <img src="https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=500&q=80" class="doctor-img" alt="PGS.TS.BS. Võ Tường Kha">
-                        <h4>PGS.TS.BS. Võ Tường Kha</h4>
+                       <h4>PGS.TS.BS. Võ Tường Kha</h4>
                         <p class="text-muted">Chuyên khoa Y học thể thao, Y học cổ truyền, Dinh dưỡng, Nhi khoa, Nội tiết</p>
                         <div class="my-3">
                             <span class="specialty-badge">Y học thể thao</span>
