@@ -1,0 +1,544 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lá Số Tử Vi - PHAN TRUNG ANH</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Arial', sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #f9f0ff 0%, #e6f0ff 100%);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+            color: #333;
+        }
+        
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+            overflow: hidden;
+            margin-top: 20px;
+        }
+        
+        header {
+            background: linear-gradient(to right, #ff6b6b, #ff9e6d);
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+        
+        h1 {
+            font-size: 28px;
+            margin-bottom: 10px;
+            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.3);
+        }
+        
+        .person-info {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 15px;
+        }
+        
+        .info-item {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-size: 14px;
+        }
+        
+        .tuvi-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            grid-template-rows: repeat(5, 1fr);
+            gap: 1px;
+            background: #ddd;
+            padding: 1px;
+        }
+        
+        .cung {
+            padding: 15px;
+            background: white;
+            min-height: 150px;
+            position: relative;
+            transition: all 0.3s ease;
+            overflow: hidden;
+        }
+        
+        .cung:hover {
+            background: #fff5f5;
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            z-index: 2;
+        }
+        
+        .cung-title {
+            font-weight: bold;
+            font-size: 16px;
+            color: #ff6b6b;
+            border-bottom: 2px solid #ff6b6b;
+            padding-bottom: 5px;
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+        }
+        
+        .cung-number {
+            color: #888;
+            font-size: 14px;
+        }
+        
+        .sao-list {
+            font-size: 13px;
+            line-height: 1.5;
+        }
+        
+        .sao {
+            margin-bottom: 5px;
+            padding: 3px 5px;
+            border-radius: 3px;
+            cursor: pointer;
+        }
+        
+        .sao:hover {
+            background: #ffecec;
+        }
+        
+        .sao-D {
+            color: #e74c3c;
+            font-weight: bold;
+        }
+        
+        .sao-V {
+            color: #3498db;
+            font-weight: bold;
+        }
+        
+        .sao-M {
+            color: #2ecc71;
+            font-weight: bold;
+        }
+        
+        .sao-H {
+            color: #f39c12;
+            font-weight: bold;
+        }
+        
+        .sao-B {
+            color: #9b59b6;
+            font-weight: bold;
+        }
+        
+        .cung-1 { grid-area: 3 / 3 / 4 / 4; }
+        .cung-2 { grid-area: 2 / 2 / 3 / 3; }
+        .cung-3 { grid-area: 2 / 3 / 3 / 4; }
+        .cung-4 { grid-area: 2 / 4 / 3 / 5; }
+        .cung-5 { grid-area: 2 / 5 / 3 / 6; }
+        .cung-6 { grid-area: 3 / 5 / 4 / 6; }
+        .cung-7 { grid-area: 4 / 5 / 5 / 6; }
+        .cung-8 { grid-area: 5 / 5 / 6 / 6; }
+        .cung-9 { grid-area: 5 / 4 / 6 / 5; }
+        .cung-10 { grid-area: 5 / 3 / 6 / 4; }
+        .cung-11 { grid-area: 5 / 2 / 6 / 3; }
+        .cung-12 { grid-area: 4 / 2 / 5 / 3; }
+        
+        .center-cell {
+            grid-area: 3 / 3 / 4 / 4;
+            background: linear-gradient(135deg, #ff6b6b, #ff9e6d);
+            color: white;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 20px;
+        }
+        
+        .center-cell h2 {
+            font-size: 20px;
+            margin-bottom: 15px;
+        }
+        
+        .center-info {
+            font-size: 14px;
+            line-height: 1.6;
+        }
+        
+        .center-info div {
+            margin-bottom: 8px;
+        }
+        
+        .tooltip {
+            position: absolute;
+            background: rgba(0, 0, 0, 0.85);
+            color: white;
+            padding: 10px;
+            border-radius: 5px;
+            font-size: 13px;
+            max-width: 250px;
+            z-index: 100;
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+        
+        .sao:hover .tooltip {
+            opacity: 1;
+        }
+        
+        footer {
+            text-align: center;
+            padding: 20px;
+            margin-top: 20px;
+            color: #777;
+            font-size: 14px;
+        }
+        
+        @media (max-width: 992px) {
+            .tuvi-grid {
+                grid-template-columns: repeat(3, 1fr);
+                grid-template-rows: auto;
+            }
+            
+            .cung {
+                min-height: 120px;
+            }
+            
+            .center-cell {
+                grid-area: unset;
+                order: -1;
+            }
+        }
+        
+        @media (max-width: 576px) {
+            .tuvi-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .person-info {
+                flex-direction: column;
+                align-items: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>LÁ SỐ TỬ VI - BÉ PHAN TRUNG ANH</h1>
+            <div class="person-info">
+                <div class="info-item">Họ tên: PHAN TRUNG ANH</div>
+                <div class="info-item">Giới tính: Nữ</div>
+                <div class="info-item">Ngày sinh: 04/08/2014 (Giáp Ngọ)</div>
+                <div class="info-item">Giờ sinh: 22:30 (Giờ Hợi)</div>
+                <div class="info-item">Nơi sinh: Hà Nội, Việt Nam</div>
+            </div>
+        </header>
+        
+        <div class="tuvi-grid">
+            <!-- Cung 1: Mệnh -->
+            <div class="cung cung-1">
+                <div class="cung-title">
+                    <span>MỆNH</span>
+                    <span class="cung-number">6</span>
+                </div>
+                <div class="sao-list">
+                    <div class="sao sao-H">Văn Khúc (H)</div>
+                    <div class="sao sao-H">Hóa Kỵ (H)</div>
+                    <div class="sao sao-D">Thiên Quý</div>
+                    <div class="sao sao-D">Tiểu Hao (D)</div>
+                    <div class="sao">Giải Thần</div>
+                    <div class="sao sao-D">Bạch Hổ (D)</div>
+                    <div class="sao">Phượng Các</div>
+                    <div class="sao">Dâu - Dưỡng</div>
+                </div>
+            </div>
+            
+            <!-- Cung 2: Phụ Mẫu -->
+            <div class="cung cung-2">
+                <div class="cung-title">
+                    <span>PHỤ MẪU</span>
+                    <span class="cung-number">116</span>
+                </div>
+                <div class="sao-list">
+                    <div class="sao sao-D">Phá Quân (D)</div>
+                    <div class="sao">Tả Phù</div>
+                    <div class="sao">Quả Tú</div>
+                    <div class="sao">Thanh Long</div>
+                    <div class="sao">Thiên La</div>
+                    <div class="sao">Phúc Đức</div>
+                    <div class="sao">Tang Môn</div>
+                    <div class="sao">Thiên Đức</div>
+                    <div class="sao">Thiên Khốc</div>
+                </div>
+            </div>
+            
+            <!-- Cung 3: Phúc Đức -->
+            <div class="cung cung-3">
+                <div class="cung-title">
+                    <span>PHÚC ĐỨC</span>
+                    <span class="cung-number">106</span>
+                </div>
+                <div class="sao-list">
+                    <div class="sao sao-D">Thiên Đồng (D)</div>
+                    <div class="sao sao-H">Thái Phụ - Đà La (H)</div>
+                    <div class="sao">Tam Thai</div>
+                    <div class="sao">Điều Khách</div>
+                    <div class="sao">Lực Sĩ</div>
+                    <div class="sao sao-D">Thiên Mã (D)</div>
+                </div>
+            </div>
+            
+            <!-- Cung 4: Điền Trạch -->
+            <div class="cung cung-4">
+                <div class="cung-title">
+                    <span>ĐIỀN TRẠCH</span>
+                    <span class="cung-number">96</span>
+                </div>
+                <div class="sao-list">
+                    <div class="sao sao-V">Vũ Khúc (V)</div>
+                    <div class="sao sao-M">Thiên Phù (M)</div>
+                    <div class="sao sao-M">Lộc Tồn (M)</div>
+                    <div class="sao">Lưu Hà</div>
+                    <div class="sao sao-H">Hóa Lộc (H)</div>
+                    <div class="sao">Trực Phù</div>
+                    <div class="sao">Bác Sỹ</div>
+                    <div class="sao">Đầu Quân</div>
+                </div>
+            </div>
+            
+            <!-- Cung 5: Quan Lộc -->
+            <div class="cung cung-5">
+                <div class="cung-title">
+                    <span>QUAN LỘC</span>
+                    <span class="cung-number">86</span>
+                </div>
+                <div class="sao-list">
+                    <div class="sao sao-D">Thái Dương (D)</div>
+                    <div class="sao sao-D">Thái Âm (D)</div>
+                    <div class="sao">Địa Giải</div>
+                    <div class="sao sao-D">Kinh Dương (D)</div>
+                    <div class="sao">Hoa Cái</div>
+                    <div class="sao">Quan Phù</div>
+                    <div class="sao">Thái Tuế</div>
+                </div>
+            </div>
+            
+            <!-- Cung 6: Nô Bộc -->
+            <div class="cung cung-6">
+                <div class="cung-title">
+                    <span>NÔ BỘC</span>
+                    <span class="cung-number">76</span>
+                </div>
+                <div class="sao-list">
+                    <div class="sao sao-D">Tham Lang (D)</div>
+                    <div class="sao">Thiên Việt</div>
+                    <div class="sao">Thiên Không</div>
+                    <div class="sao sao-H">Hóa Quyền (H)</div>
+                    <div class="sao">Cô Thần</div>
+                    <div class="sao">Hồng Loan</div>
+                    <div class="sao">Phục Binh</div>
+                    <div class="sao">Thiên Giải</div>
+                    <div class="sao">Kiếp Sát</div>
+                    <div class="sao">Thiên Tú</div>
+                    <div class="sao">Thiên Thương</div>
+                    <div class="sao">Thiên Dương</div>
+                </div>
+            </div>
+            
+            <!-- Cung 7: Thiên Di -->
+            <div class="cung cung-7">
+                <div class="cung-title">
+                    <span>THIÊN DI</span>
+                    <span class="cung-number">66</span>
+                </div>
+                <div class="sao-list">
+                    <div class="sao sao-M">Thiên Cơ (M)</div>
+                    <div class="sao sao-M">Cự Môn (M)</div>
+                    <div class="sao">Bát Tọa</div>
+                    <div class="sao sao-H">Linh Tinh (H)</div>
+                    <div class="sao">Văn T星</div>
+                    <div class="sao sao-D">Thiên Hình (D)</div>
+                    <div class="sao">Thiên Quan</div>
+                    <div class="sao sao-D">Đại Hao (D)</div>
+                    <div class="sao sao-D">Tang Môn (D)</div>
+                </div>
+            </div>
+            
+            <!-- Cung 8: Tật Ách -->
+            <div class="cung cung-8">
+                <div class="cung-title">
+                    <span>TẬT ÁCH</span>
+                    <span class="cung-number">56</span>
+                </div>
+                <div class="sao-list">
+                    <div class="sao sao-V">Tử Vi (V)</div>
+                    <div class="sao sao-V">Thiên Tướng (V)</div>
+                    <div class="sao">Hữu Bật</div>
+                    <div class="sao sao-H">Địa Kiếp (H)</div>
+                    <div class="sao">Thiếu Âm</div>
+                    <div class="sao sao-H">Hóa Tinh (H)</div>
+                    <div class="sao">Thiên Tài</div>
+                    <div class="sao">Bệnh Phù</div>
+                    <div class="sao">Địa Võng</div>
+                    <div class="sao">Thiên Sứ</div>
+                </div>
+            </div>
+            
+            <!-- Cung 9: Tài Bạch -->
+            <div class="cung cung-9">
+                <div class="cung-title">
+                    <span>TÀI BẠCH</span>
+                    <span class="cung-number">46</span>
+                </div>
+                <div class="sao-list">
+                    <div class="sao sao-H">Thiên Lương (H)</div>
+                    <div class="sao sao-D">Văn Xương (D)</div>
+                    <div class="sao">Quan Phù</div>
+                    <div class="sao sao-B">Hóa Khoa (B)</div>
+                    <div class="sao sao-H">Thiên Khốc (H)</div>
+                    <div class="sao">Ân Quang</div>
+                    <div class="sao">Hí Thần</div>
+                    <div class="sao">Đường Phù</div>
+                    <div class="sao">Long Trì</div>
+                    <div class="sao">Lộc Tồn</div>
+                </div>
+            </div>
+            
+            <!-- Cung 10: Tử Tức -->
+            <div class="cung cung-10">
+                <div class="cung-title">
+                    <span>TỬ TỨC</span>
+                    <span class="cung-number">36</span>
+                </div>
+                <div class="sao-list">
+                    <div class="sao sao-M">Thất Sát (M)</div>
+                    <div class="sao">Thiên Khôi</div>
+                    <div class="sao sao-H">Địa Không (H)</div>
+                    <div class="sao">Đào Hoa</div>
+                    <div class="sao">Phi Liêm</div>
+                    <div class="sao">Nguyệt Đức</div>
+                    <div class="sao">Tứ Phù</div>
+                    <div class="sao">Kinh Dương</div>
+                </div>
+            </div>
+            
+            <!-- Cung 11: Phu Thê -->
+            <div class="cung cung-11">
+                <div class="cung-title">
+                    <span>PHU THÊ</span>
+                    <span class="cung-number">26</span>
+                </div>
+                <div class="sao-list">
+                    <div class="sao sao-H">Thiên Diêu (H)</div>
+                    <div class="sao">Phong Cáo</div>
+                    <div class="sao">Tuế Phá</div>
+                    <div class="sao">Tấu Thư</div>
+                    <div class="sao">Phá Toái</div>
+                    <div class="sao sao-D">Thiên Hư (D)</div>
+                </div>
+            </div>
+            
+            <!-- Cung 12: Huynh Đệ -->
+            <div class="cung cung-12">
+                <div class="cung-title">
+                    <span>HUYNH ĐỆ</span>
+                    <span class="cung-number">16</span>
+                </div>
+                <div class="sao-list">
+                    <div class="sao sao-V">Liêm Trinh (V)</div>
+                    <div class="sao">Thiên Hỷ</div>
+                    <div class="sao">Tướng Quân</div>
+                    <div class="sao">Quốc Ân</div>
+                    <div class="sao">Thái Tuế</div>
+                    <div class="sao">Thiên Phúc</div>
+                    <div class="sao">Long Đức</div>
+                </div>
+            </div>
+            
+            <!-- Ô trung tâm -->
+            <div class="center-cell">
+                <h2>LÁ SỐ TỬ VI BÉ PHAN TRUNG ANH</h2>
+                <div class="center-info">
+                    <div>Nữ: 04/08/2014 (Giáp Ngọ)</div>
+                    <div>Giờ: 22:30 (Giờ Hợi)</div>
+                    <div>Nơi sinh: Hà Nội, Việt Nam</div>
+                    <div>Tuổi: 11 tuổi (tính đến 2025)</div>
+                    <div>Mệnh: Sa Trung Kim (Vàng trong cát)</div>
+                    <div>Cục: Kim Tứ Cục</div>
+                    <div>Chủ Mệnh: Văn Khúc</div>
+                    <div>Chủ Thân: Thiên Tướng</div>
+                    <div>Nguyên cục: Âm Nữ</div>
+                </div>
+            </div>
+        </div>
+        
+        <footer>
+            <p>Lá số tử vi được lập theo truyền thống - Thông tin chỉ mang tính chất tham khảo</p>
+        </footer>
+    </div>
+
+    <script>
+        // Thêm hiệu ứng tương tác cho các sao
+        document.querySelectorAll('.sao').forEach(sao => {
+            sao.addEventListener('mouseenter', function() {
+                const tooltip = document.createElement('div');
+                tooltip.className = 'tooltip';
+                
+                // Nội dung tooltip tùy thuộc vào loại sao
+                const saoText = this.textContent;
+                let tooltipText = '';
+                
+                if (saoText.includes('Văn Khúc')) {
+                    tooltipText = 'Văn Khúc - Chủ về văn học, nghệ thuật, trí tuệ. Bé có thiên hướng học giỏi văn chương, nghệ thuật.';
+                } else if (saoText.includes('Hóa Kỵ')) {
+                    tooltipText = 'Hóa Kỵ - Chủ về sự đố kỵ, hiểu lầm, trở ngại. Cần dạy bé tính cách cởi mở, tránh đa nghi.';
+                } else if (saoText.includes('Tử Vi')) {
+                    tooltipText = 'Tử Vi - Đế tinh, chủ về quyền lực, lãnh đạo. Bé có tố chất lãnh đạo, được mọi người yêu mến.';
+                } else if (saoText.includes('Thiên Tướng')) {
+                    tooltipText = 'Thiên Tướng - Tướng tinh, chủ về quản lý, hỗ trợ. Bé có khả năng quản lý, giúp đỡ người khác.';
+                } else if (saoText.includes('Liêm Trinh')) {
+                    tooltipText = 'Liêm Trinh - Chủ về sự trong sạch, công minh. Bé có tính cách ngay thẳng, trung thực.';
+                } else if (saoText.includes('Thiên Cơ')) {
+                    tooltipText = 'Thiên Cơ - Chủ về máy móc, tính toán, linh hoạt. Bé thông minh, nhanh nhẹn, có tư duy logic.';
+                } else if (saoText.includes('Thái Dương')) {
+                    tooltipText = 'Thái Dương - Chủ về quyền lực, danh vọng, sáng tạo. Bé có tính cách mạnh mẽ, sáng tạo.';
+                } else if (saoText.includes('Thiên Lương')) {
+                    tooltipText = 'Thiên Lương - Chủ về y tế, cứu giúp, nhân ái. Bé có lòng nhân hậu, thích giúp đỡ người khác.';
+                } else {
+                    tooltipText = 'Thông tin chi tiết về sao ' + saoText + ' trong tử vi.';
+                }
+                
+                tooltip.textContent = tooltipText;
+                this.appendChild(tooltip);
+                
+                // Định vị tooltip
+                const rect = this.getBoundingClientRect();
+                tooltip.style.left = '50%';
+                tooltip.style.top = (rect.height + 5) + 'px';
+                tooltip.style.transform = 'translateX(-50%)';
+            });
+            
+            sao.addEventListener('mouseleave', function() {
+                const tooltip = this.querySelector('.tooltip');
+                if (tooltip) {
+                    this.removeChild(tooltip);
+                }
+            });
+        });
+    </script>
+</body>
+</html>
