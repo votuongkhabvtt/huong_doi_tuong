@@ -1,1 +1,312 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Theo Dõi Liệu Trình Điều Trị</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        body {
+            margin: 0;
+            padding: 20px;
+            background-color: #f5f7fa;
+            color: #333;
+        }
+        .container {
+            max-width: 1300px;
+            margin: 0 auto;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+        }
+        h1 {
+            text-align: center;
+            color: #2c3e50;
+            margin-bottom: 30px;
+            border-bottom: 2px solid #3498db;
+            padding-bottom: 10px;
+        }
+        .patient-info {
+            background-color: #e8f4fc;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: #2c3e50;
+        }
+        input, select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+        button {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s;
+        }
+        button:hover {
+            background-color: #2980b9;
+        }
+        .treatment-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            overflow-x: auto;
+            display: block;
+        }
+        .treatment-table th, .treatment-table td {
+            border: 1px solid #ddd;
+            padding: 10px;
+            text-align: center;
+        }
+        .treatment-table th {
+            background-color: #3498db;
+            color: white;
+            position: sticky;
+            top: 0;
+        }
+        .treatment-table tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+        .treatment-table tr:hover {
+            background-color: #f1f1f1;
+        }
+        .day-column {
+            min-width: 150px;
+        }
+        .add-day-btn {
+            margin-top: 15px;
+            background-color: #2ecc71;
+        }
+        .add-day-btn:hover {
+            background-color: #27ae60;
+        }
+        .save-btn {
+            background-color: #e74c3c;
+            margin-top: 20px;
+        }
+        .save-btn:hover {
+            background-color: #c0392b;
+        }
+        .signature-cell {
+            min-height: 50px;
+        }
+        .footer {
+            margin-top: 30px;
+            text-align: center;
+            color: #7f8c8d;
+            font-size: 14px;
+        }
+        @media print {
+            button {
+                display: none;
+            }
+            body {
+                background-color: white;
+            }
+            .container {
+                box-shadow: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>THEO DÕI LIỆU TRÌNH ĐIỀU TRỊ BỆNH NHÂN</h1>
+        
+        <div class="patient-info">
+            <div class="form-group">
+                <label for="patient-name">Họ và tên bệnh nhân:</label>
+                <input type="text" id="patient-name" placeholder="Nhập họ tên bệnh nhân">
+            </div>
+            <div class="form-group">
+                <label for="start-date">Ngày bắt đầu điều trị:</label>
+                <input type="date" id="start-date">
+            </div>
+            <div class="form-group">
+                <label for="total-sessions">Tổng số lần (ngày) của liệu trình:</label>
+                <input type="number" id="total-sessions" min="1" value="15">
+            </div>
+            <div class="form-group">
+                <label for="payment-status">Tình trạng thanh toán:</label>
+                <input type="text" id="payment-status" placeholder="Ví dụ: Đã tạm ứng cho 5 ngày">
+            </div>
+        </div>
 
+        <div class="table-container">
+            <table class="treatment-table" id="treatment-table">
+                <thead>
+                    <tr>
+                        <th>STT</th>
+                        <th>Thông tin</th>
+                        <!-- Các cột ngày sẽ được thêm tự động bằng JavaScript -->
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>1</td>
+                        <td>Kỹ thuật điều trị</td>
+                        <!-- Các ô kỹ thuật sẽ được thêm tự động -->
+                    </tr>
+                    <tr>
+                        <td>2</td>
+                        <td>Thuốc thủy châm</td>
+                        <!-- Các ô thuốc sẽ được thêm tự động -->
+                    </tr>
+                    <tr>
+                        <td>3</td>
+                        <td>Chữ ký bệnh nhân</td>
+                        <!-- Các ô chữ ký sẽ được thêm tự động -->
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <button class="add-day-btn" id="add-day-btn">+ Thêm ngày điều trị</button>
+        <button class="save-btn" id="save-btn">Lưu thông tin</button>
+
+        <div class="footer">
+            <p>Bảng theo dõi liệu trình điều trị - Phiên bản 1.0</p>
+        </div>
+    </div>
+
+    <script>
+        // Danh sách kỹ thuật điều trị
+        const techniques = [
+            "Điện châm", "Giác hơi", "Xoa bóp bấm huyệt", 
+            "Kéo giãn-kéo nắn cột sống, khớp", "Thủy châm", "Tens", 
+            "Siêu âm", "Điện phân", "Hồng ngoại", "Cứu huyệt", 
+            "Tập PHCN", "Mát xa hồi phục", "Ngâm chân", 
+            "Chườm thảo dược", "Thông kinh lạc"
+        ];
+
+        // Danh sách thuốc thủy châm
+        const medicines = [
+            "Piroxicam", "3B", "Citicolin", "Nivalin", 
+            "Cerebrolysin", "Methylcoban", "Triam", "Nootropin", 
+            "Tanganil", "Giloba", "Khác"
+        ];
+
+        // Khởi tạo bảng với 3 ngày mặc định
+        document.addEventListener('DOMContentLoaded', function() {
+            addDayColumn("Ngày 1");
+            addDayColumn("Ngày 2");
+            addDayColumn("Ngày 3");
+        });
+
+        // Hàm thêm cột ngày mới
+        function addDayColumn(dayLabel) {
+            const table = document.getElementById('treatment-table');
+            const headerRow = table.querySelector('thead tr');
+            const techniqueRow = table.querySelector('tbody tr:nth-child(1)');
+            const medicineRow = table.querySelector('tbody tr:nth-child(2)');
+            const signatureRow = table.querySelector('tbody tr:nth-child(3)');
+            
+            // Thêm tiêu đề cột ngày
+            const dayHeader = document.createElement('th');
+            dayHeader.textContent = dayLabel;
+            dayHeader.className = 'day-column';
+            headerRow.appendChild(dayHeader);
+            
+            // Thêm ô chọn kỹ thuật
+            const techniqueCell = document.createElement('td');
+            const techniqueSelect = document.createElement('select');
+            techniques.forEach(tech => {
+                const option = document.createElement('option');
+                option.value = tech;
+                option.textContent = tech;
+                techniqueSelect.appendChild(option);
+            });
+            techniqueCell.appendChild(techniqueSelect);
+            techniqueRow.appendChild(techniqueCell);
+            
+            // Thêm ô chọn thuốc
+            const medicineCell = document.createElement('td');
+            const medicineSelect = document.createElement('select');
+            medicines.forEach(med => {
+                const option = document.createElement('option');
+                option.value = med;
+                option.textContent = med;
+                medicineSelect.appendChild(option);
+            });
+            medicineCell.appendChild(medicineSelect);
+            medicineRow.appendChild(medicineCell);
+            
+            // Thêm ô chữ ký
+            const signatureCell = document.createElement('td');
+            signatureCell.className = 'signature-cell';
+            signatureCell.textContent = ''; // Ô trống để ký
+            signatureRow.appendChild(signatureCell);
+        }
+
+        // Xử lý sự kiện thêm ngày
+        document.getElementById('add-day-btn').addEventListener('click', function() {
+            const totalDays = document.querySelectorAll('.day-column').length;
+            const nextDay = totalDays + 1;
+            addDayColumn(`Ngày ${nextDay}`);
+        });
+
+        // Xử lý sự kiện lưu thông tin
+        document.getElementById('save-btn').addEventListener('click', function() {
+            const patientName = document.getElementById('patient-name').value;
+            const startDate = document.getElementById('start-date').value;
+            const totalSessions = document.getElementById('total-sessions').value;
+            const paymentStatus = document.getElementById('payment-status').value;
+            
+            if (!patientName || !startDate) {
+                alert('Vui lòng nhập đầy đủ thông tin bệnh nhân và ngày bắt đầu điều trị!');
+                return;
+            }
+            
+            // Tạo đối tượng chứa dữ liệu
+            const treatmentData = {
+                patientName,
+                startDate,
+                totalSessions,
+                paymentStatus,
+                dailyRecords: []
+            };
+            
+            // Thu thập dữ liệu từng ngày
+            const techniqueSelects = document.querySelectorAll('tbody tr:nth-child(1) select');
+            const medicineSelects = document.querySelectorAll('tbody tr:nth-child(2) select');
+            
+            for (let i = 0; i < techniqueSelects.length; i++) {
+                treatmentData.dailyRecords.push({
+                    day: i + 1,
+                    technique: techniqueSelects[i].value,
+                    medicine: medicineSelects[i].value
+                });
+            }
+            
+            // Lưu vào localStorage (trong thực tế có thể gửi lên server)
+            localStorage.setItem('treatmentData', JSON.stringify(treatmentData));
+            alert('Thông tin đã được lưu thành công!');
+        });
+
+        // Tự động điền ngày bắt đầu là hôm nay
+        document.getElementById('start-date').valueAsDate = new Date();
+    </script>
+</body>
+</html>
