@@ -32,7 +32,7 @@
         }
         
         .container {
-            max-width: 1400px;
+            max-width: 1600px;
             margin: 0 auto;
             background-color: white;
             border-radius: 10px;
@@ -140,6 +140,7 @@
         .nav-tabs {
             display: flex;
             background-color: var(--dark-color);
+            flex-wrap: wrap;
         }
         
         .nav-tab {
@@ -196,6 +197,39 @@
             border: 1px solid #ddd;
             border-radius: 4px;
             font-size: 16px;
+        }
+        
+        /* Advance Payment Section */
+        .advance-payment {
+            background-color: #fff9e6;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            border: 1px solid #ffd966;
+        }
+        
+        .advance-payment-title {
+            font-size: 18px;
+            margin-bottom: 15px;
+            color: var(--warning-color);
+        }
+        
+        .advance-payment-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 15px;
+        }
+        
+        .advance-payment-item {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+        
+        .advance-payment-number {
+            font-weight: bold;
+            color: var(--primary-color);
+            min-width: 100px;
         }
         
         /* Date Selection Section */
@@ -307,6 +341,7 @@
             padding: 0 20px 20px;
             display: flex;
             gap: 10px;
+            flex-wrap: wrap;
         }
         
         button {
@@ -340,6 +375,11 @@
         
         .calendar-btn {
             background-color: #16a085;
+            color: white;
+        }
+        
+        .add-payment-btn {
+            background-color: #e67e22;
             color: white;
         }
         
@@ -396,7 +436,8 @@
             display: flex;
             gap: 15px;
             margin-bottom: 20px;
-            align-items: center;
+            align-items: flex-end;
+            flex-wrap: wrap;
         }
         
         .report-table {
@@ -460,7 +501,7 @@
         
         /* Responsive Design */
         @media (max-width: 768px) {
-            .patient-info, .footer, .calendar-container {
+            .patient-info, .footer, .calendar-container, .advance-payment-list {
                 grid-template-columns: 1fr;
             }
             
@@ -538,7 +579,18 @@
                 </div>
                 <div class="form-group">
                     <label for="payment-status">Tình trạng thanh toán:</label>
-                    <input type="text" id="payment-status" placeholder="Ví dụ: Đã tạm ứng cho 5 ngày">
+                    <input type="text" id="payment-status" placeholder="Ví dụ: Đã thanh toán đủ">
+                </div>
+            </div>
+
+            <!-- Advance Payment Section -->
+            <div class="advance-payment">
+                <h3 class="advance-payment-title">THANH TOÁN TẠM ỨNG</h3>
+                <div class="advance-payment-list" id="advance-payment-list">
+                    <!-- Các khoản tạm ứng sẽ được thêm ở đây -->
+                </div>
+                <div class="action-buttons">
+                    <button class="add-payment-btn" id="add-payment-btn">+ Thêm khoản tạm ứng</button>
                 </div>
             </div>
 
@@ -612,13 +664,17 @@
                         </select>
                     </div>
                     <div class="form-group">
-                        <label for="report-date">Đến ngày:</label>
-                        <input type="date" id="report-date">
+                        <label for="report-date-from">Từ ngày:</label>
+                        <input type="date" id="report-date-from">
+                    </div>
+                    <div class="form-group">
+                        <label for="report-date-to">Đến ngày:</label>
+                        <input type="date" id="report-date-to">
                     </div>
                     <button class="report-btn" id="generate-patient-report">Tạo báo cáo</button>
                 </div>
                 <div id="patient-report-content">
-                    <div class="no-data">Chưa có dữ liệu báo cáo. Vui lòng chọn bệnh nhân và ngày báo cáo.</div>
+                    <div class="no-data">Chưa có dữ liệu báo cáo. Vui lòng chọn bệnh nhân và khoảng thời gian báo cáo.</div>
                 </div>
             </div>
 
@@ -645,6 +701,56 @@
                 </div>
                 <div id="payment-report-content">
                     <div class="no-data">Chưa có dữ liệu báo cáo. Vui lòng nhấn "Tạo báo cáo".</div>
+                </div>
+            </div>
+
+            <!-- Technique Report -->
+            <div class="report-section">
+                <h3 class="report-title">BÁO CÁO THEO KỸ THUẬT ĐIỀU TRỊ</h3>
+                <div class="report-controls">
+                    <div class="form-group">
+                        <label for="report-technique">Chọn kỹ thuật:</label>
+                        <select id="report-technique">
+                            <option value="">-- Chọn kỹ thuật --</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="technique-date-from">Từ ngày:</label>
+                        <input type="date" id="technique-date-from">
+                    </div>
+                    <div class="form-group">
+                        <label for="technique-date-to">Đến ngày:</label>
+                        <input type="date" id="technique-date-to">
+                    </div>
+                    <button class="report-btn" id="generate-technique-report">Tạo báo cáo</button>
+                </div>
+                <div id="technique-report-content">
+                    <div class="no-data">Chưa có dữ liệu báo cáo. Vui lòng chọn kỹ thuật và khoảng thời gian báo cáo.</div>
+                </div>
+            </div>
+
+            <!-- Medicine Report -->
+            <div class="report-section">
+                <h3 class="report-title">BÁO CÁO THEO THUỐC THỦY CHÂM</h3>
+                <div class="report-controls">
+                    <div class="form-group">
+                        <label for="report-medicine">Chọn thuốc:</label>
+                        <select id="report-medicine">
+                            <option value="">-- Chọn thuốc --</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="medicine-date-from">Từ ngày:</label>
+                        <input type="date" id="medicine-date-from">
+                    </div>
+                    <div class="form-group">
+                        <label for="medicine-date-to">Đến ngày:</label>
+                        <input type="date" id="medicine-date-to">
+                    </div>
+                    <button class="report-btn" id="generate-medicine-report">Tạo báo cáo</button>
+                </div>
+                <div id="medicine-report-content">
+                    <div class="no-data">Chưa có dữ liệu báo cáo. Vui lòng chọn thuốc và khoảng thời gian báo cáo.</div>
                 </div>
             </div>
         </div>
@@ -701,6 +807,7 @@
         // Biến toàn cục
         let currentUser = null;
         let selectedDates = [];
+        let advancePayments = [];
         let allPatients = JSON.parse(localStorage.getItem('allPatients')) || {};
 
         // Khởi tạo khi trang được tải
@@ -738,6 +845,8 @@
             document.getElementById('generate-patient-report').addEventListener('click', generatePatientReport);
             document.getElementById('generate-daily-report').addEventListener('click', generateDailyReport);
             document.getElementById('generate-payment-report').addEventListener('click', generatePaymentReport);
+            document.getElementById('generate-technique-report').addEventListener('click', generateTechniqueReport);
+            document.getElementById('generate-medicine-report').addEventListener('click', generateMedicineReport);
             document.getElementById('generate-report-btn').addEventListener('click', function() {
                 document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
                 document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
@@ -746,7 +855,12 @@
                 document.getElementById('reports-tab').classList.add('active');
                 
                 updatePatientList();
+                updateTechniqueList();
+                updateMedicineList();
             });
+            
+            // Xử lý sự kiện thêm khoản tạm ứng
+            document.getElementById('add-payment-btn').addEventListener('click', addAdvancePayment);
             
             // Khởi tạo Flatpickr cho chọn ngày điều trị
             const datePicker = flatpickr("#treatment-dates", {
@@ -766,11 +880,19 @@
             
             // Tự động điền ngày bắt đầu là hôm nay
             document.getElementById('start-date').valueAsDate = new Date();
-            document.getElementById('report-date').valueAsDate = new Date();
+            document.getElementById('report-date-from').valueAsDate = new Date();
+            document.getElementById('report-date-to').valueAsDate = new Date();
+            document.getElementById('technique-date-from').valueAsDate = new Date();
+            document.getElementById('technique-date-to').valueAsDate = new Date();
+            document.getElementById('medicine-date-from').valueAsDate = new Date();
+            document.getElementById('medicine-date-to').valueAsDate = new Date();
             document.getElementById('daily-report-date').valueAsDate = new Date();
             
             // Kiểm tra cảnh báo thanh toán
             document.getElementById('payment-status').addEventListener('input', checkPaymentWarning);
+            
+            // Thêm một khoản tạm ứng mặc định
+            addAdvancePayment();
         });
 
         // Hàm xử lý đăng nhập
@@ -795,6 +917,34 @@
             document.getElementById('user-info').style.display = 'none';
             document.getElementById('username').value = '';
             document.getElementById('password').value = '';
+        }
+
+        // Hàm thêm khoản tạm ứng
+        function addAdvancePayment() {
+            const paymentList = document.getElementById('advance-payment-list');
+            const paymentCount = advancePayments.length + 1;
+            
+            const paymentItem = document.createElement('div');
+            paymentItem.className = 'advance-payment-item';
+            paymentItem.innerHTML = `
+                <div class="advance-payment-number">Tạm ứng lần ${paymentCount}:</div>
+                <input type="number" class="advance-amount" placeholder="Số tiền" min="0">
+                <input type="date" class="advance-date">
+                <input type="text" class="advance-note" placeholder="Ghi chú">
+            `;
+            
+            paymentList.appendChild(paymentItem);
+            
+            // Lưu tham chiếu đến payment item
+            advancePayments.push({
+                element: paymentItem,
+                amountInput: paymentItem.querySelector('.advance-amount'),
+                dateInput: paymentItem.querySelector('.advance-date'),
+                noteInput: paymentItem.querySelector('.advance-note')
+            });
+            
+            // Đặt ngày mặc định là hôm nay
+            advancePayments[advancePayments.length - 1].dateInput.valueAsDate = new Date();
         }
 
         // Hàm cập nhật danh sách ngày đã chọn
@@ -952,12 +1102,29 @@
                 return;
             }
             
+            // Thu thập thông tin tạm ứng
+            const advancePaymentsData = [];
+            advancePayments.forEach(payment => {
+                const amount = payment.amountInput.value;
+                const date = payment.dateInput.value;
+                const note = payment.noteInput.value;
+                
+                if (amount && date) {
+                    advancePaymentsData.push({
+                        amount: parseInt(amount),
+                        date: date,
+                        note: note
+                    });
+                }
+            });
+            
             // Tạo đối tượng chứa dữ liệu
             const treatmentData = {
                 patientName,
                 startDate,
                 totalSessions,
                 paymentStatus,
+                advancePayments: advancePaymentsData,
                 dailyRecords: []
             };
             
@@ -1014,6 +1181,11 @@
                 selectedDates = [];
                 updateSelectedDatesList(selectedDates);
                 
+                // Xóa danh sách tạm ứng
+                advancePayments = [];
+                document.getElementById('advance-payment-list').innerHTML = '';
+                addAdvancePayment();
+                
                 // Reset flatpickr
                 const datePicker = document.getElementById('treatment-dates')._flatpickr;
                 datePicker.clear();
@@ -1035,10 +1207,37 @@
             }
         }
 
+        // Hàm cập nhật danh sách kỹ thuật cho báo cáo
+        function updateTechniqueList() {
+            const techniqueSelect = document.getElementById('report-technique');
+            techniqueSelect.innerHTML = '<option value="">-- Chọn kỹ thuật --</option>';
+            
+            techniques.forEach(tech => {
+                const option = document.createElement('option');
+                option.value = tech;
+                option.textContent = tech;
+                techniqueSelect.appendChild(option);
+            });
+        }
+
+        // Hàm cập nhật danh sách thuốc cho báo cáo
+        function updateMedicineList() {
+            const medicineSelect = document.getElementById('report-medicine');
+            medicineSelect.innerHTML = '<option value="">-- Chọn thuốc --</option>';
+            
+            medicines.forEach(med => {
+                const option = document.createElement('option');
+                option.value = med;
+                option.textContent = med;
+                medicineSelect.appendChild(option);
+            });
+        }
+
         // Hàm tạo báo cáo tiến trình bệnh nhân
         function generatePatientReport() {
             const patientName = document.getElementById('report-patient').value;
-            const reportDate = document.getElementById('report-date').value;
+            const reportDateFrom = document.getElementById('report-date-from').value;
+            const reportDateTo = document.getElementById('report-date-to').value;
             
             if (!patientName) {
                 alert('Vui lòng chọn bệnh nhân!');
@@ -1056,6 +1255,7 @@
                 <p><strong>Ngày bắt đầu:</strong> ${patientData.startDate}</p>
                 <p><strong>Tổng số buổi dự kiến:</strong> ${patientData.totalSessions}</p>
                 <p><strong>Tình trạng thanh toán:</strong> ${patientData.paymentStatus}</p>
+                <p><strong>Khoảng thời gian:</strong> ${reportDateFrom || 'Từ đầu'} - ${reportDateTo || 'Đến nay'}</p>
                 <table class="report-table">
                     <thead>
                         <tr>
@@ -1069,9 +1269,42 @@
             `;
             
             let recordCount = 0;
+            let totalAmount = 0;
+            
+            // Hiển thị thông tin tạm ứng
+            if (patientData.advancePayments && patientData.advancePayments.length > 0) {
+                reportHTML += `
+                    <tr>
+                        <td colspan="4" style="background-color: #fff9e6; font-weight: bold;">THANH TOÁN TẠM ỨNG</td>
+                    </tr>
+                `;
+                
+                patientData.advancePayments.forEach(payment => {
+                    reportHTML += `
+                        <tr>
+                            <td>${payment.date}</td>
+                            <td colspan="2">${payment.note || 'Tạm ứng'}</td>
+                            <td>${payment.amount.toLocaleString('vi-VN')} VNĐ</td>
+                        </tr>
+                    `;
+                    totalAmount += payment.amount;
+                });
+                
+                reportHTML += `
+                    <tr>
+                        <td colspan="3" style="text-align: right; font-weight: bold;">Tổng cộng:</td>
+                        <td style="font-weight: bold;">${totalAmount.toLocaleString('vi-VN')} VNĐ</td>
+                    </tr>
+                    <tr>
+                        <td colspan="4" style="background-color: #f9f9f9;"></td>
+                    </tr>
+                `;
+            }
+            
             patientData.dailyRecords.forEach(record => {
-                // Chỉ hiển thị các bản ghi đến ngày báo cáo
-                if (!reportDate || record.date <= reportDate) {
+                // Chỉ hiển thị các bản ghi trong khoảng thời gian
+                if ((!reportDateFrom || record.date >= reportDateFrom) && 
+                    (!reportDateTo || record.date <= reportDateTo)) {
                     reportHTML += `
                         <tr>
                             <td>${record.dateDisplay}</td>
@@ -1181,6 +1414,7 @@
                             <th>Bệnh nhân</th>
                             <th>Tình trạng thanh toán</th>
                             <th>Số buổi đã điều trị</th>
+                            <th>Tổng tiền tạm ứng</th>
                             <th>Ghi chú</th>
                         </tr>
                     </thead>
@@ -1191,6 +1425,14 @@
             for (const patientName in allPatients) {
                 const patientData = allPatients[patientName];
                 const paymentStatus = patientData.paymentStatus;
+                
+                // Tính tổng tiền tạm ứng
+                let totalAdvance = 0;
+                if (patientData.advancePayments) {
+                    patientData.advancePayments.forEach(payment => {
+                        totalAdvance += payment.amount;
+                    });
+                }
                 
                 // Kiểm tra nếu có thông tin tạm ứng
                 if (paymentStatus && paymentStatus.includes('tạm ứng')) {
@@ -1205,6 +1447,7 @@
                                     <td>${patientName}</td>
                                     <td>${paymentStatus}</td>
                                     <td>${treatmentDays}</td>
+                                    <td>${totalAdvance.toLocaleString('vi-VN')} VNĐ</td>
                                     <td style="color: ${'var(--warning-color)'};">CẦN TẠM ỨNG THÊM</td>
                                 </tr>
                             `;
@@ -1217,7 +1460,7 @@
             if (warningCount === 0) {
                 reportHTML += `
                     <tr>
-                        <td colspan="4" class="no-data">Không có bệnh nhân nào hết tiền tạm ứng</td>
+                        <td colspan="5" class="no-data">Không có bệnh nhân nào hết tiền tạm ứng</td>
                     </tr>
                 `;
             }
@@ -1229,6 +1472,160 @@
             `;
             
             document.getElementById('payment-report-content').innerHTML = reportHTML;
+        }
+
+        // Hàm tạo báo cáo theo kỹ thuật
+        function generateTechniqueReport() {
+            const technique = document.getElementById('report-technique').value;
+            const dateFrom = document.getElementById('technique-date-from').value;
+            const dateTo = document.getElementById('technique-date-to').value;
+            
+            if (!technique) {
+                alert('Vui lòng chọn kỹ thuật!');
+                return;
+            }
+            
+            let reportHTML = `
+                <h4>Báo cáo bệnh nhân theo kỹ thuật: ${technique}</h4>
+                <p><strong>Khoảng thời gian:</strong> ${dateFrom || 'Từ đầu'} - ${dateTo || 'Đến nay'}</p>
+                <table class="report-table">
+                    <thead>
+                        <tr>
+                            <th>Bệnh nhân</th>
+                            <th>Ngày điều trị</th>
+                            <th>Các kỹ thuật khác</th>
+                            <th>Thuốc thủy châm</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+            `;
+            
+            let patientCount = 0;
+            let recordCount = 0;
+            
+            for (const patientName in allPatients) {
+                const patientData = allPatients[patientName];
+                let patientAdded = false;
+                
+                patientData.dailyRecords.forEach(record => {
+                    // Kiểm tra kỹ thuật và khoảng thời gian
+                    if (record.techniques.includes(technique) && 
+                        (!dateFrom || record.date >= dateFrom) && 
+                        (!dateTo || record.date <= dateTo)) {
+                        
+                        const otherTechniques = record.techniques.filter(t => t !== technique);
+                        
+                        reportHTML += `
+                            <tr>
+                                <td>${patientName}</td>
+                                <td>${record.dateDisplay}</td>
+                                <td>${otherTechniques.join(', ')}</td>
+                                <td>${record.medicines.join(', ')}</td>
+                            </tr>
+                        `;
+                        
+                        if (!patientAdded) {
+                            patientCount++;
+                            patientAdded = true;
+                        }
+                        recordCount++;
+                    }
+                });
+            }
+            
+            if (recordCount === 0) {
+                reportHTML += `
+                    <tr>
+                        <td colspan="4" class="no-data">Không có dữ liệu cho kỹ thuật này trong khoảng thời gian đã chọn</td>
+                    </tr>
+                `;
+            }
+            
+            reportHTML += `
+                    </tbody>
+                </table>
+                <p><strong>Tổng số bệnh nhân:</strong> ${patientCount}</p>
+                <p><strong>Tổng số lần điều trị:</strong> ${recordCount}</p>
+            `;
+            
+            document.getElementById('technique-report-content').innerHTML = reportHTML;
+        }
+
+        // Hàm tạo báo cáo theo thuốc
+        function generateMedicineReport() {
+            const medicine = document.getElementById('report-medicine').value;
+            const dateFrom = document.getElementById('medicine-date-from').value;
+            const dateTo = document.getElementById('medicine-date-to').value;
+            
+            if (!medicine) {
+                alert('Vui lòng chọn thuốc!');
+                return;
+            }
+            
+            let reportHTML = `
+                <h4>Báo cáo bệnh nhân theo thuốc: ${medicine}</h4>
+                <p><strong>Khoảng thời gian:</strong> ${dateFrom || 'Từ đầu'} - ${dateTo || 'Đến nay'}</p>
+                <table class="report-table">
+                    <thead>
+                        <tr>
+                            <th>Bệnh nhân</th>
+                            <th>Ngày điều trị</th>
+                            <th>Kỹ thuật điều trị</th>
+                            <th>Các thuốc khác</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+            `;
+            
+            let patientCount = 0;
+            let recordCount = 0;
+            
+            for (const patientName in allPatients) {
+                const patientData = allPatients[patientName];
+                let patientAdded = false;
+                
+                patientData.dailyRecords.forEach(record => {
+                    // Kiểm tra thuốc và khoảng thời gian
+                    if (record.medicines.includes(medicine) && 
+                        (!dateFrom || record.date >= dateFrom) && 
+                        (!dateTo || record.date <= dateTo)) {
+                        
+                        const otherMedicines = record.medicines.filter(m => m !== medicine);
+                        
+                        reportHTML += `
+                            <tr>
+                                <td>${patientName}</td>
+                                <td>${record.dateDisplay}</td>
+                                <td>${record.techniques.join(', ')}</td>
+                                <td>${otherMedicines.join(', ')}</td>
+                            </tr>
+                        `;
+                        
+                        if (!patientAdded) {
+                            patientCount++;
+                            patientAdded = true;
+                        }
+                        recordCount++;
+                    }
+                });
+            }
+            
+            if (recordCount === 0) {
+                reportHTML += `
+                    <tr>
+                        <td colspan="4" class="no-data">Không có dữ liệu cho thuốc này trong khoảng thời gian đã chọn</td>
+                    </tr>
+                `;
+            }
+            
+            reportHTML += `
+                    </tbody>
+                </table>
+                <p><strong>Tổng số bệnh nhân:</strong> ${patientCount}</p>
+                <p><strong>Tổng số lần điều trị:</strong> ${recordCount}</p>
+            `;
+            
+            document.getElementById('medicine-report-content').innerHTML = reportHTML;
         }
     </script>
 </body>
