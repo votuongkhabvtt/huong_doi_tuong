@@ -383,6 +383,11 @@
             color: white;
         }
         
+        .print-btn {
+            background-color: #34495e;
+            color: white;
+        }
+        
         button:hover {
             opacity: 0.9;
         }
@@ -499,6 +504,75 @@
             font-weight: bold;
         }
         
+        /* Print Styles */
+        @media print {
+            body * {
+                visibility: hidden;
+            }
+            
+            .print-section, .print-section * {
+                visibility: visible;
+            }
+            
+            .print-section {
+                position: absolute;
+                left: 0;
+                top: 0;
+                width: 100%;
+                padding: 20px;
+            }
+            
+            .no-print {
+                display: none !important;
+            }
+            
+            .report-table {
+                width: 100%;
+                border-collapse: collapse;
+            }
+            
+            .report-table th, .report-table td {
+                border: 1px solid #000;
+                padding: 6px;
+            }
+            
+            .report-table th {
+                background-color: #f0f0f0 !important;
+                color: #000 !important;
+                -webkit-print-color-adjust: exact;
+            }
+            
+            .print-header {
+                text-align: center;
+                margin-bottom: 20px;
+                border-bottom: 2px solid #000;
+                padding-bottom: 10px;
+            }
+            
+            .print-title {
+                font-size: 24px;
+                font-weight: bold;
+                margin-bottom: 10px;
+            }
+            
+            .print-subtitle {
+                font-size: 18px;
+                margin-bottom: 5px;
+            }
+            
+            .print-footer {
+                margin-top: 30px;
+                text-align: center;
+                font-style: italic;
+                border-top: 1px solid #000;
+                padding-top: 10px;
+            }
+            
+            .page-break {
+                page-break-before: always;
+            }
+        }
+        
         /* Responsive Design */
         @media (max-width: 768px) {
             .patient-info, .footer, .calendar-container, .advance-payment-list {
@@ -511,16 +585,6 @@
             
             .nav-tabs {
                 flex-direction: column;
-            }
-        }
-        
-        @media print {
-            .login-modal, .user-info, .action-buttons, .payment-warning, .nav-tabs, .date-selection {
-                display: none !important;
-            }
-            
-            .tab-content {
-                display: block !important;
             }
         }
     </style>
@@ -672,6 +736,7 @@
                         <input type="date" id="report-date-to">
                     </div>
                     <button class="report-btn" id="generate-patient-report">Tạo báo cáo</button>
+                    <button class="print-btn no-print" id="print-patient-report">In báo cáo</button>
                 </div>
                 <div id="patient-report-content">
                     <div class="no-data">Chưa có dữ liệu báo cáo. Vui lòng chọn bệnh nhân và khoảng thời gian báo cáo.</div>
@@ -687,6 +752,7 @@
                         <input type="date" id="daily-report-date">
                     </div>
                     <button class="report-btn" id="generate-daily-report">Tạo báo cáo</button>
+                    <button class="print-btn no-print" id="print-daily-report">In báo cáo</button>
                 </div>
                 <div id="daily-report-content">
                     <div class="no-data">Chưa có dữ liệu báo cáo. Vui lòng chọn ngày báo cáo.</div>
@@ -698,6 +764,7 @@
                 <h3 class="report-title">DANH SÁCH BỆNH NHÂN HẾT TIỀN TẠM ỨNG</h3>
                 <div class="report-controls">
                     <button class="report-btn" id="generate-payment-report">Tạo báo cáo</button>
+                    <button class="print-btn no-print" id="print-payment-report">In báo cáo</button>
                 </div>
                 <div id="payment-report-content">
                     <div class="no-data">Chưa có dữ liệu báo cáo. Vui lòng nhấn "Tạo báo cáo".</div>
@@ -723,6 +790,7 @@
                         <input type="date" id="technique-date-to">
                     </div>
                     <button class="report-btn" id="generate-technique-report">Tạo báo cáo</button>
+                    <button class="print-btn no-print" id="print-technique-report">In báo cáo</button>
                 </div>
                 <div id="technique-report-content">
                     <div class="no-data">Chưa có dữ liệu báo cáo. Vui lòng chọn kỹ thuật và khoảng thời gian báo cáo.</div>
@@ -748,6 +816,7 @@
                         <input type="date" id="medicine-date-to">
                     </div>
                     <button class="report-btn" id="generate-medicine-report">Tạo báo cáo</button>
+                    <button class="print-btn no-print" id="print-medicine-report">In báo cáo</button>
                 </div>
                 <div id="medicine-report-content">
                     <div class="no-data">Chưa có dữ liệu báo cáo. Vui lòng chọn thuốc và khoảng thời gian báo cáo.</div>
@@ -768,6 +837,11 @@
                 <div class="footer-role">Phó Giáo sư, Tiến sĩ, Bác sĩ chuyên khoa</div>
             </div>
         </div>
+    </div>
+
+    <!-- Print Modal -->
+    <div id="print-modal" style="display: none;">
+        <div id="print-content"></div>
     </div>
 
     <!-- Flatpickr Library -->
@@ -847,6 +921,14 @@
             document.getElementById('generate-payment-report').addEventListener('click', generatePaymentReport);
             document.getElementById('generate-technique-report').addEventListener('click', generateTechniqueReport);
             document.getElementById('generate-medicine-report').addEventListener('click', generateMedicineReport);
+            
+            // Xử lý sự kiện in báo cáo
+            document.getElementById('print-patient-report').addEventListener('click', () => printReport('patient-report-content', 'BÁO CÁO TIẾN TRÌNH ĐIỀU TRỊ BỆNH NHÂN'));
+            document.getElementById('print-daily-report').addEventListener('click', () => printReport('daily-report-content', 'TỔNG HỢP ĐIỀU TRỊ THEO NGÀY'));
+            document.getElementById('print-payment-report').addEventListener('click', () => printReport('payment-report-content', 'DANH SÁCH BỆNH NHÂN HẾT TIỀN TẠM ỨNG'));
+            document.getElementById('print-technique-report').addEventListener('click', () => printReport('technique-report-content', 'BÁO CÁO THEO KỸ THUẬT ĐIỀU TRỊ'));
+            document.getElementById('print-medicine-report').addEventListener('click', () => printReport('medicine-report-content', 'BÁO CÁO THEO THUỐC THỦY CHÂM'));
+            
             document.getElementById('generate-report-btn').addEventListener('click', function() {
                 document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
                 document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
@@ -1251,21 +1333,28 @@
             }
             
             let reportHTML = `
-                <h4>Báo cáo tiến trình điều trị: ${patientName}</h4>
-                <p><strong>Ngày bắt đầu:</strong> ${patientData.startDate}</p>
-                <p><strong>Tổng số buổi dự kiến:</strong> ${patientData.totalSessions}</p>
-                <p><strong>Tình trạng thanh toán:</strong> ${patientData.paymentStatus}</p>
-                <p><strong>Khoảng thời gian:</strong> ${reportDateFrom || 'Từ đầu'} - ${reportDateTo || 'Đến nay'}</p>
-                <table class="report-table">
-                    <thead>
-                        <tr>
-                            <th>Ngày điều trị</th>
-                            <th>Kỹ thuật điều trị</th>
-                            <th>Thuốc thủy châm</th>
-                            <th>Chữ ký</th>
-                        </tr>
-                    </thead>
-                    <tbody>
+                <div class="print-section">
+                    <div class="print-header">
+                        <div class="print-title">PHÒNG KHÁM YHTT & YHCT PGS.VÕ TƯỜNG KHA</div>
+                        <div class="print-subtitle">BÁO CÁO TIẾN TRÌNH ĐIỀU TRỊ BỆNH NHÂN</div>
+                    </div>
+                    <div class="patient-info-print">
+                        <p><strong>Bệnh nhân:</strong> ${patientName}</p>
+                        <p><strong>Ngày bắt đầu:</strong> ${patientData.startDate}</p>
+                        <p><strong>Tổng số buổi dự kiến:</strong> ${patientData.totalSessions}</p>
+                        <p><strong>Tình trạng thanh toán:</strong> ${patientData.paymentStatus}</p>
+                        <p><strong>Khoảng thời gian:</strong> ${reportDateFrom || 'Từ đầu'} - ${reportDateTo || 'Đến nay'}</p>
+                    </div>
+                    <table class="report-table">
+                        <thead>
+                            <tr>
+                                <th>Ngày điều trị</th>
+                                <th>Kỹ thuật điều trị</th>
+                                <th>Thuốc thủy châm</th>
+                                <th>Chữ ký</th>
+                            </tr>
+                        </thead>
+                        <tbody>
             `;
             
             let recordCount = 0;
@@ -1326,9 +1415,13 @@
             }
             
             reportHTML += `
-                    </tbody>
-                </table>
-                <p><strong>Tổng số buổi đã điều trị:</strong> ${recordCount}</p>
+                        </tbody>
+                    </table>
+                    <div class="print-footer">
+                        <p><strong>Tổng số buổi đã điều trị:</strong> ${recordCount}</p>
+                        <p>Ngày in: ${new Date().toLocaleDateString('vi-VN')}</p>
+                    </div>
+                </div>
             `;
             
             document.getElementById('patient-report-content').innerHTML = reportHTML;
@@ -1344,16 +1437,23 @@
             }
             
             let reportHTML = `
-                <h4>Báo cáo tổng hợp điều trị ngày: ${new Date(reportDate).toLocaleDateString('vi-VN')}</h4>
-                <table class="report-table">
-                    <thead>
-                        <tr>
-                            <th>Bệnh nhân</th>
-                            <th>Kỹ thuật điều trị</th>
-                            <th>Thuốc thủy châm</th>
-                        </tr>
-                    </thead>
-                    <tbody>
+                <div class="print-section">
+                    <div class="print-header">
+                        <div class="print-title">PHÒNG KHÁM YHTT & YHCT PGS.VÕ TƯỜNG KHA</div>
+                        <div class="print-subtitle">TỔNG HỢP ĐIỀU TRỊ THEO NGÀY</div>
+                    </div>
+                    <div class="patient-info-print">
+                        <p><strong>Ngày báo cáo:</strong> ${new Date(reportDate).toLocaleDateString('vi-VN')}</p>
+                    </div>
+                    <table class="report-table">
+                        <thead>
+                            <tr>
+                                <th>Bệnh nhân</th>
+                                <th>Kỹ thuật điều trị</th>
+                                <th>Thuốc thủy châm</th>
+                            </tr>
+                        </thead>
+                        <tbody>
             `;
             
             let patientCount = 0;
@@ -1396,9 +1496,13 @@
             }
             
             reportHTML += `
-                    </tbody>
-                </table>
-                <p><strong>Tổng số bệnh nhân:</strong> ${patientCount}</p>
+                        </tbody>
+                    </table>
+                    <div class="print-footer">
+                        <p><strong>Tổng số bệnh nhân:</strong> ${patientCount}</p>
+                        <p>Ngày in: ${new Date().toLocaleDateString('vi-VN')}</p>
+                    </div>
+                </div>
             `;
             
             document.getElementById('daily-report-content').innerHTML = reportHTML;
@@ -1407,18 +1511,22 @@
         // Hàm tạo báo cáo bệnh nhân hết tiền tạm ứng
         function generatePaymentReport() {
             let reportHTML = `
-                <h4>Danh sách bệnh nhân hết tiền tạm ứng</h4>
-                <table class="report-table">
-                    <thead>
-                        <tr>
-                            <th>Bệnh nhân</th>
-                            <th>Tình trạng thanh toán</th>
-                            <th>Số buổi đã điều trị</th>
-                            <th>Tổng tiền tạm ứng</th>
-                            <th>Ghi chú</th>
-                        </tr>
-                    </thead>
-                    <tbody>
+                <div class="print-section">
+                    <div class="print-header">
+                        <div class="print-title">PHÒNG KHÁM YHTT & YHCT PGS.VÕ TƯỜNG KHA</div>
+                        <div class="print-subtitle">DANH SÁCH BỆNH NHÂN HẾT TIỀN TẠM ỨNG</div>
+                    </div>
+                    <table class="report-table">
+                        <thead>
+                            <tr>
+                                <th>Bệnh nhân</th>
+                                <th>Tình trạng thanh toán</th>
+                                <th>Số buổi đã điều trị</th>
+                                <th>Tổng tiền tạm ứng</th>
+                                <th>Ghi chú</th>
+                            </tr>
+                        </thead>
+                        <tbody>
             `;
             
             let warningCount = 0;
@@ -1466,9 +1574,13 @@
             }
             
             reportHTML += `
-                    </tbody>
-                </table>
-                <p><strong>Tổng số bệnh nhân cần tạm ứng:</strong> ${warningCount}</p>
+                        </tbody>
+                    </table>
+                    <div class="print-footer">
+                        <p><strong>Tổng số bệnh nhân cần tạm ứng:</strong> ${warningCount}</p>
+                        <p>Ngày in: ${new Date().toLocaleDateString('vi-VN')}</p>
+                    </div>
+                </div>
             `;
             
             document.getElementById('payment-report-content').innerHTML = reportHTML;
@@ -1486,18 +1598,25 @@
             }
             
             let reportHTML = `
-                <h4>Báo cáo bệnh nhân theo kỹ thuật: ${technique}</h4>
-                <p><strong>Khoảng thời gian:</strong> ${dateFrom || 'Từ đầu'} - ${dateTo || 'Đến nay'}</p>
-                <table class="report-table">
-                    <thead>
-                        <tr>
-                            <th>Bệnh nhân</th>
-                            <th>Ngày điều trị</th>
-                            <th>Các kỹ thuật khác</th>
-                            <th>Thuốc thủy châm</th>
-                        </tr>
-                    </thead>
-                    <tbody>
+                <div class="print-section">
+                    <div class="print-header">
+                        <div class="print-title">PHÒNG KHÁM YHTT & YHCT PGS.VÕ TƯỜNG KHA</div>
+                        <div class="print-subtitle">BÁO CÁO BỆNH NHÂN THEO KỸ THUẬT</div>
+                    </div>
+                    <div class="patient-info-print">
+                        <p><strong>Kỹ thuật:</strong> ${technique}</p>
+                        <p><strong>Khoảng thời gian:</strong> ${dateFrom || 'Từ đầu'} - ${dateTo || 'Đến nay'}</p>
+                    </div>
+                    <table class="report-table">
+                        <thead>
+                            <tr>
+                                <th>Bệnh nhân</th>
+                                <th>Ngày điều trị</th>
+                                <th>Các kỹ thuật khác</th>
+                                <th>Thuốc thủy châm</th>
+                            </tr>
+                        </thead>
+                        <tbody>
             `;
             
             let patientCount = 0;
@@ -1542,10 +1661,14 @@
             }
             
             reportHTML += `
-                    </tbody>
-                </table>
-                <p><strong>Tổng số bệnh nhân:</strong> ${patientCount}</p>
-                <p><strong>Tổng số lần điều trị:</strong> ${recordCount}</p>
+                        </tbody>
+                    </table>
+                    <div class="print-footer">
+                        <p><strong>Tổng số bệnh nhân:</strong> ${patientCount}</p>
+                        <p><strong>Tổng số lần điều trị:</strong> ${recordCount}</p>
+                        <p>Ngày in: ${new Date().toLocaleDateString('vi-VN')}</p>
+                    </div>
+                </div>
             `;
             
             document.getElementById('technique-report-content').innerHTML = reportHTML;
@@ -1563,18 +1686,25 @@
             }
             
             let reportHTML = `
-                <h4>Báo cáo bệnh nhân theo thuốc: ${medicine}</h4>
-                <p><strong>Khoảng thời gian:</strong> ${dateFrom || 'Từ đầu'} - ${dateTo || 'Đến nay'}</p>
-                <table class="report-table">
-                    <thead>
-                        <tr>
-                            <th>Bệnh nhân</th>
-                            <th>Ngày điều trị</th>
-                            <th>Kỹ thuật điều trị</th>
-                            <th>Các thuốc khác</th>
-                        </tr>
-                    </thead>
-                    <tbody>
+                <div class="print-section">
+                    <div class="print-header">
+                        <div class="print-title">PHÒNG KHÁM YHTT & YHCT PGS.VÕ TƯỜNG KHA</div>
+                        <div class="print-subtitle">BÁO CÁO BỆNH NHÂN THEO THUỐC THỦY CHÂM</div>
+                    </div>
+                    <div class="patient-info-print">
+                        <p><strong>Thuốc:</strong> ${medicine}</p>
+                        <p><strong>Khoảng thời gian:</strong> ${dateFrom || 'Từ đầu'} - ${dateTo || 'Đến nay'}</p>
+                    </div>
+                    <table class="report-table">
+                        <thead>
+                            <tr>
+                                <th>Bệnh nhân</th>
+                                <th>Ngày điều trị</th>
+                                <th>Kỹ thuật điều trị</th>
+                                <th>Các thuốc khác</th>
+                            </tr>
+                        </thead>
+                        <tbody>
             `;
             
             let patientCount = 0;
@@ -1619,13 +1749,123 @@
             }
             
             reportHTML += `
-                    </tbody>
-                </table>
-                <p><strong>Tổng số bệnh nhân:</strong> ${patientCount}</p>
-                <p><strong>Tổng số lần điều trị:</strong> ${recordCount}</p>
+                        </tbody>
+                    </table>
+                    <div class="print-footer">
+                        <p><strong>Tổng số bệnh nhân:</strong> ${patientCount}</p>
+                        <p><strong>Tổng số lần điều trị:</strong> ${recordCount}</p>
+                        <p>Ngày in: ${new Date().toLocaleDateString('vi-VN')}</p>
+                    </div>
+                </div>
             `;
             
             document.getElementById('medicine-report-content').innerHTML = reportHTML;
+        }
+
+        // Hàm in báo cáo
+        function printReport(contentId, title) {
+            const content = document.getElementById(contentId).innerHTML;
+            
+            if (!content || content.includes('no-data')) {
+                alert('Không có dữ liệu để in! Vui lòng tạo báo cáo trước.');
+                return;
+            }
+            
+            const printWindow = window.open('', '_blank');
+            printWindow.document.write(`
+                <!DOCTYPE html>
+                <html>
+                <head>
+                    <title>${title}</title>
+                    <meta charset="UTF-8">
+                    <style>
+                        body {
+                            font-family: 'Times New Roman', serif;
+                            margin: 20px;
+                            color: #000;
+                            line-height: 1.4;
+                        }
+                        .print-header {
+                            text-align: center;
+                            margin-bottom: 20px;
+                            border-bottom: 2px solid #000;
+                            padding-bottom: 10px;
+                        }
+                        .print-title {
+                            font-size: 24px;
+                            font-weight: bold;
+                            margin-bottom: 10px;
+                        }
+                        .print-subtitle {
+                            font-size: 18px;
+                            margin-bottom: 5px;
+                        }
+                        .patient-info-print {
+                            margin-bottom: 20px;
+                        }
+                        .patient-info-print p {
+                            margin: 5px 0;
+                        }
+                        .report-table {
+                            width: 100%;
+                            border-collapse: collapse;
+                            margin-top: 15px;
+                            margin-bottom: 20px;
+                        }
+                        .report-table th, .report-table td {
+                            border: 1px solid #000;
+                            padding: 8px;
+                            text-align: left;
+                        }
+                        .report-table th {
+                            background-color: #f0f0f0;
+                            font-weight: bold;
+                        }
+                        .report-table tr:nth-child(even) {
+                            background-color: #f9f9f9;
+                        }
+                        .no-data {
+                            text-align: center;
+                            padding: 20px;
+                            color: #7f8c8d;
+                            font-style: italic;
+                        }
+                        .print-footer {
+                            margin-top: 30px;
+                            text-align: center;
+                            font-style: italic;
+                            border-top: 1px solid #000;
+                            padding-top: 10px;
+                        }
+                        @media print {
+                            body {
+                                margin: 0;
+                                padding: 15px;
+                            }
+                            .report-table {
+                                page-break-inside: auto;
+                            }
+                            .report-table tr {
+                                page-break-inside: avoid;
+                                page-break-after: auto;
+                            }
+                        }
+                    </style>
+                </head>
+                <body>
+                    ${content}
+                    <script>
+                        window.onload = function() {
+                            window.print();
+                            setTimeout(function() {
+                                window.close();
+                            }, 500);
+                        };
+                    <\/script>
+                </body>
+                </html>
+            `);
+            printWindow.document.close();
         }
     </script>
 </body>
