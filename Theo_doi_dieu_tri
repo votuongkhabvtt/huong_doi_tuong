@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Theo Dõi Liệu Trình Điều Trị - Phòng Khám PGS.VÕ TƯỜNG KHA</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
     <style>
         :root {
             --primary-color: #1a5276;
@@ -197,6 +198,48 @@
             font-size: 16px;
         }
         
+        /* Date Selection Section */
+        .date-selection {
+            background-color: #f9f9f9;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            border: 1px solid #ddd;
+        }
+        
+        .date-selection-title {
+            font-size: 18px;
+            margin-bottom: 15px;
+            color: var(--primary-color);
+        }
+        
+        .date-controls {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 15px;
+            align-items: center;
+        }
+        
+        .calendar-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+        
+        .calendar-box {
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 15px;
+            background-color: white;
+        }
+        
+        .calendar-title {
+            font-size: 16px;
+            margin-bottom: 10px;
+            color: var(--dark-color);
+            text-align: center;
+        }
+        
         /* Payment Warning */
         .payment-warning {
             background-color: var(--warning-color);
@@ -295,6 +338,11 @@
             color: white;
         }
         
+        .calendar-btn {
+            background-color: #16a085;
+            color: white;
+        }
+        
         button:hover {
             opacity: 0.9;
         }
@@ -379,13 +427,44 @@
             font-style: italic;
         }
         
+        /* Calendar Styles */
+        .flatpickr-calendar {
+            width: 100% !important;
+        }
+        
+        .selected-dates {
+            margin-top: 15px;
+        }
+        
+        .selected-dates-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 10px;
+        }
+        
+        .date-tag {
+            background-color: var(--secondary-color);
+            color: white;
+            padding: 5px 10px;
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .date-tag-remove {
+            cursor: pointer;
+            font-weight: bold;
+        }
+        
         /* Responsive Design */
         @media (max-width: 768px) {
-            .patient-info, .footer {
+            .patient-info, .footer, .calendar-container {
                 grid-template-columns: 1fr;
             }
             
-            .action-buttons, .report-controls {
+            .action-buttons, .report-controls, .date-controls {
                 flex-direction: column;
             }
             
@@ -395,7 +474,7 @@
         }
         
         @media print {
-            .login-modal, .user-info, .action-buttons, .payment-warning, .nav-tabs {
+            .login-modal, .user-info, .action-buttons, .payment-warning, .nav-tabs, .date-selection {
                 display: none !important;
             }
             
@@ -463,6 +542,25 @@
                 </div>
             </div>
 
+            <!-- Date Selection Section -->
+            <div class="date-selection">
+                <h3 class="date-selection-title">CHỌN NGÀY ĐIỀU TRỊ</h3>
+                <div class="date-controls">
+                    <div class="form-group" style="flex: 1;">
+                        <label for="treatment-dates">Chọn ngày điều trị (có thể chọn nhiều ngày):</label>
+                        <input type="text" id="treatment-dates" placeholder="Chọn ngày" readonly>
+                    </div>
+                    <button class="calendar-btn" id="add-selected-dates">Thêm ngày đã chọn</button>
+                </div>
+                
+                <div class="selected-dates">
+                    <label>Ngày đã chọn:</label>
+                    <div class="selected-dates-list" id="selected-dates-list">
+                        <!-- Các ngày đã chọn sẽ hiển thị ở đây -->
+                    </div>
+                </div>
+            </div>
+
             <!-- Treatment Table -->
             <div class="table-container">
                 <table class="treatment-table" id="treatment-table">
@@ -495,7 +593,6 @@
 
             <!-- Action Buttons -->
             <div class="action-buttons">
-                <button class="add-day-btn" id="add-day-btn">+ Thêm ngày điều trị</button>
                 <button class="save-btn" id="save-btn">Lưu thông tin</button>
                 <button class="reset-btn" id="reset-btn">Làm mới</button>
                 <button class="report-btn" id="generate-report-btn">Xuất báo cáo</button>
@@ -567,6 +664,9 @@
         </div>
     </div>
 
+    <!-- Flatpickr Library -->
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/vn.js"></script>
     <script>
         // Danh sách kỹ thuật điều trị
         const techniques = [
@@ -600,7 +700,7 @@
 
         // Biến toàn cục
         let currentUser = null;
-        let dayCount = 0;
+        let selectedDates = [];
         let allPatients = JSON.parse(localStorage.getItem('allPatients')) || {};
 
         // Khởi tạo khi trang được tải
@@ -613,12 +713,6 @@
             
             // Xử lý sự kiện đăng xuất
             document.getElementById('logout-btn').addEventListener('click', handleLogout);
-            
-            // Xử lý sự kiện thêm ngày
-            document.getElementById('add-day-btn').addEventListener('click', function() {
-                dayCount++;
-                addDayColumn();
-            });
             
             // Xử lý sự kiện lưu thông tin
             document.getElementById('save-btn').addEventListener('click', saveData);
@@ -654,6 +748,22 @@
                 updatePatientList();
             });
             
+            // Khởi tạo Flatpickr cho chọn ngày điều trị
+            const datePicker = flatpickr("#treatment-dates", {
+                mode: "multiple",
+                dateFormat: "d/m/Y",
+                locale: "vn",
+                minDate: "today",
+                onChange: function(selectedDates, dateStr, instance) {
+                    updateSelectedDatesList(selectedDates);
+                }
+            });
+            
+            // Xử lý sự kiện thêm ngày đã chọn
+            document.getElementById('add-selected-dates').addEventListener('click', function() {
+                addSelectedDatesToTable();
+            });
+            
             // Tự động điền ngày bắt đầu là hôm nay
             document.getElementById('start-date').valueAsDate = new Date();
             document.getElementById('report-date').valueAsDate = new Date();
@@ -673,14 +783,6 @@
                 document.getElementById('login-modal').style.display = 'none';
                 document.getElementById('user-info').style.display = 'flex';
                 document.getElementById('display-name').textContent = currentUser.name;
-                
-                // Khởi tạo bảng với 3 ngày mặc định
-                if (dayCount === 0) {
-                    for (let i = 1; i <= 3; i++) {
-                        dayCount++;
-                        addDayColumn();
-                    }
-                }
             } else {
                 alert('Tên đăng nhập hoặc mật khẩu không đúng!');
             }
@@ -695,64 +797,121 @@
             document.getElementById('password').value = '';
         }
 
-        // Hàm thêm cột ngày mới với ngày thực tế
-        function addDayColumn() {
+        // Hàm cập nhật danh sách ngày đã chọn
+        function updateSelectedDatesList(dates) {
+            selectedDates = dates;
+            const datesList = document.getElementById('selected-dates-list');
+            datesList.innerHTML = '';
+            
+            if (dates.length === 0) {
+                datesList.innerHTML = '<div class="no-data">Chưa có ngày nào được chọn</div>';
+                return;
+            }
+            
+            dates.forEach(date => {
+                const dateString = date.toLocaleDateString('vi-VN');
+                const dateTag = document.createElement('div');
+                dateTag.className = 'date-tag';
+                dateTag.innerHTML = `
+                    ${dateString}
+                    <span class="date-tag-remove" data-date="${date.toISOString()}">×</span>
+                `;
+                datesList.appendChild(dateTag);
+            });
+            
+            // Thêm sự kiện xóa ngày
+            document.querySelectorAll('.date-tag-remove').forEach(removeBtn => {
+                removeBtn.addEventListener('click', function() {
+                    const dateToRemove = new Date(this.getAttribute('data-date'));
+                    selectedDates = selectedDates.filter(d => d.getTime() !== dateToRemove.getTime());
+                    updateSelectedDatesList(selectedDates);
+                    
+                    // Cập nhật lại flatpickr
+                    const datePicker = document.getElementById('treatment-dates')._flatpickr;
+                    datePicker.setDate(selectedDates);
+                });
+            });
+        }
+
+        // Hàm thêm ngày đã chọn vào bảng
+        function addSelectedDatesToTable() {
+            if (selectedDates.length === 0) {
+                alert('Vui lòng chọn ít nhất một ngày điều trị!');
+                return;
+            }
+            
+            // Sắp xếp ngày theo thứ tự tăng dần
+            selectedDates.sort((a, b) => a - b);
+            
+            // Xóa các cột ngày hiện tại (giữ lại 2 cột đầu: STT và Thông tin)
             const table = document.getElementById('treatment-table');
             const headerRow = table.querySelector('thead tr');
             const techniqueRow = table.querySelector('tbody tr:nth-child(1)');
             const medicineRow = table.querySelector('tbody tr:nth-child(2)');
             const signatureRow = table.querySelector('tbody tr:nth-child(3)');
             
-            // Tạo ngày thực tế
-            const today = new Date();
-            const dateString = today.toLocaleDateString('vi-VN');
+            // Xóa các cột ngày (bắt đầu từ cột thứ 3)
+            while (headerRow.children.length > 2) {
+                headerRow.removeChild(headerRow.lastChild);
+                techniqueRow.removeChild(techniqueRow.lastChild);
+                medicineRow.removeChild(medicineRow.lastChild);
+                signatureRow.removeChild(signatureRow.lastChild);
+            }
             
-            // Thêm tiêu đề cột ngày
-            const dayHeader = document.createElement('th');
-            dayHeader.textContent = dateString;
-            dayHeader.className = 'day-column';
-            dayHeader.setAttribute('data-date', today.toISOString().split('T')[0]);
-            headerRow.appendChild(dayHeader);
-            
-            // Thêm ô chọn kỹ thuật (cho phép chọn nhiều)
-            const techniqueCell = document.createElement('td');
-            const techniqueSelect = document.createElement('select');
-            techniqueSelect.multiple = true;
-            techniqueSelect.className = 'multiple-select';
-            techniques.forEach(tech => {
-                const option = document.createElement('option');
-                option.value = tech;
-                option.textContent = tech;
-                techniqueSelect.appendChild(option);
+            // Thêm cột cho mỗi ngày đã chọn
+            selectedDates.forEach(date => {
+                const dateString = date.toLocaleDateString('vi-VN');
+                const isoDate = date.toISOString().split('T')[0];
+                
+                // Thêm tiêu đề cột ngày
+                const dayHeader = document.createElement('th');
+                dayHeader.textContent = dateString;
+                dayHeader.className = 'day-column';
+                dayHeader.setAttribute('data-date', isoDate);
+                headerRow.appendChild(dayHeader);
+                
+                // Thêm ô chọn kỹ thuật (cho phép chọn nhiều)
+                const techniqueCell = document.createElement('td');
+                const techniqueSelect = document.createElement('select');
+                techniqueSelect.multiple = true;
+                techniqueSelect.className = 'multiple-select';
+                techniques.forEach(tech => {
+                    const option = document.createElement('option');
+                    option.value = tech;
+                    option.textContent = tech;
+                    techniqueSelect.appendChild(option);
+                });
+                techniqueCell.appendChild(techniqueSelect);
+                techniqueRow.appendChild(techniqueCell);
+                
+                // Thêm ô chọn thuốc (cho phép chọn nhiều)
+                const medicineCell = document.createElement('td');
+                const medicineSelect = document.createElement('select');
+                medicineSelect.multiple = true;
+                medicineSelect.className = 'multiple-select';
+                medicines.forEach(med => {
+                    const option = document.createElement('option');
+                    option.value = med;
+                    option.textContent = med;
+                    medicineSelect.appendChild(option);
+                });
+                medicineCell.appendChild(medicineSelect);
+                medicineRow.appendChild(medicineCell);
+                
+                // Thêm ô chữ ký
+                const signatureCell = document.createElement('td');
+                signatureCell.className = 'signature-cell';
+                const signatureInput = document.createElement('input');
+                signatureInput.type = 'text';
+                signatureInput.placeholder = 'Ký tên';
+                signatureInput.style.width = '100%';
+                signatureInput.style.border = 'none';
+                signatureInput.style.textAlign = 'center';
+                signatureCell.appendChild(signatureInput);
+                signatureRow.appendChild(signatureCell);
             });
-            techniqueCell.appendChild(techniqueSelect);
-            techniqueRow.appendChild(techniqueCell);
             
-            // Thêm ô chọn thuốc (cho phép chọn nhiều)
-            const medicineCell = document.createElement('td');
-            const medicineSelect = document.createElement('select');
-            medicineSelect.multiple = true;
-            medicineSelect.className = 'multiple-select';
-            medicines.forEach(med => {
-                const option = document.createElement('option');
-                option.value = med;
-                option.textContent = med;
-                medicineSelect.appendChild(option);
-            });
-            medicineCell.appendChild(medicineSelect);
-            medicineRow.appendChild(medicineCell);
-            
-            // Thêm ô chữ ký
-            const signatureCell = document.createElement('td');
-            signatureCell.className = 'signature-cell';
-            const signatureInput = document.createElement('input');
-            signatureInput.type = 'text';
-            signatureInput.placeholder = 'Ký tên';
-            signatureInput.style.width = '100%';
-            signatureInput.style.border = 'none';
-            signatureInput.style.textAlign = 'center';
-            signatureCell.appendChild(signatureInput);
-            signatureRow.appendChild(signatureCell);
+            alert(`Đã thêm ${selectedDates.length} ngày điều trị vào bảng theo dõi!`);
         }
 
         // Hàm kiểm tra cảnh báo thanh toán
@@ -766,7 +925,7 @@
                 const match = paymentStatus.match(/\d+/);
                 if (match) {
                     const paidDays = parseInt(match[0]);
-                    if (dayCount >= paidDays) {
+                    if (selectedDates.length >= paidDays) {
                         paymentWarning.style.display = 'block';
                         return;
                     }
@@ -785,6 +944,11 @@
             
             if (!patientName || !startDate) {
                 alert('Vui lòng nhập đầy đủ thông tin bệnh nhân và ngày bắt đầu điều trị!');
+                return;
+            }
+            
+            if (selectedDates.length === 0) {
+                alert('Vui lòng chọn ít nhất một ngày điều trị!');
                 return;
             }
             
@@ -846,13 +1010,13 @@
                     signatureRow.removeChild(signatureRow.lastChild);
                 }
                 
-                dayCount = 0;
+                // Xóa danh sách ngày đã chọn
+                selectedDates = [];
+                updateSelectedDatesList(selectedDates);
                 
-                // Thêm lại 3 ngày mặc định
-                for (let i = 1; i <= 3; i++) {
-                    dayCount++;
-                    addDayColumn();
-                }
+                // Reset flatpickr
+                const datePicker = document.getElementById('treatment-dates')._flatpickr;
+                datePicker.clear();
                 
                 document.getElementById('payment-warning').style.display = 'none';
             }
