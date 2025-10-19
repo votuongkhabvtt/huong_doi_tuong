@@ -314,6 +314,57 @@
         .event-management { background-color: var(--warning); }
         .event-mistake { background-color: var(--danger); }
         
+        .multi-select-container {
+            max-height: 200px;
+            overflow-y: auto;
+            border: 1px solid #ced4da;
+            border-radius: 0.375rem;
+            padding: 10px;
+        }
+        
+        .multi-select-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 8px;
+            padding: 5px;
+            border-radius: 5px;
+            transition: background-color 0.2s;
+        }
+        
+        .multi-select-item:hover {
+            background-color: #f8f9fa;
+        }
+        
+        .multi-select-item input {
+            margin-right: 10px;
+        }
+        
+        .technique-badge, .management-badge, .mistake-badge {
+            display: inline-block;
+            margin: 2px;
+            padding: 3px 8px;
+            border-radius: 12px;
+            font-size: 0.8rem;
+        }
+        
+        .technique-badge {
+            background-color: rgba(52, 152, 219, 0.1);
+            color: #2c3e50;
+            border: 1px solid rgba(52, 152, 219, 0.3);
+        }
+        
+        .management-badge {
+            background-color: rgba(243, 156, 18, 0.1);
+            color: #2c3e50;
+            border: 1px solid rgba(243, 156, 18, 0.3);
+        }
+        
+        .mistake-badge {
+            background-color: rgba(231, 76, 60, 0.1);
+            color: #2c3e50;
+            border: 1px solid rgba(231, 76, 60, 0.3);
+        }
+        
         @media print {
             .no-print {
                 display: none !important;
@@ -1059,7 +1110,7 @@
 
     <!-- Add Treatment Modal -->
     <div class="modal fade" id="treatmentModal" tabindex="-1">
-        <div class="modal-dialog">
+        <div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="treatmentModalTitle">Thêm Điều trị</h5>
@@ -1068,25 +1119,31 @@
                 <div class="modal-body">
                     <form id="treatmentForm">
                         <input type="hidden" id="treatmentId">
-                        <div class="mb-3">
-                            <label for="treatmentDate" class="form-label">Ngày</label>
-                            <input type="date" class="form-control" id="treatmentDate" required>
-                        </div>
-                        <div class="mb-3">
-                            <label for="treatmentEmployee" class="form-label">Nhân viên</label>
-                            <select class="form-control" id="treatmentEmployee" required>
-                                <!-- Options sẽ được thêm bằng JavaScript -->
-                            </select>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="treatmentDate" class="form-label">Ngày</label>
+                                    <input type="date" class="form-control" id="treatmentDate" required>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="treatmentEmployee" class="form-label">Nhân viên</label>
+                                    <select class="form-control" id="treatmentEmployee" required>
+                                        <!-- Options sẽ được thêm bằng JavaScript -->
+                                    </select>
+                                </div>
+                            </div>
                         </div>
                         <div class="mb-3">
                             <label for="treatmentPatient" class="form-label">Bệnh nhân</label>
                             <input type="text" class="form-control" id="treatmentPatient" required>
                         </div>
                         <div class="mb-3">
-                            <label for="treatmentTechnique" class="form-label">Kỹ thuật điều trị</label>
-                            <select class="form-control" id="treatmentTechnique" required>
-                                <!-- Options sẽ được thêm bằng JavaScript -->
-                            </select>
+                            <label class="form-label">Kỹ thuật điều trị (có thể chọn nhiều)</label>
+                            <div class="multi-select-container" id="techniqueMultiSelect">
+                                <!-- Các kỹ thuật sẽ được thêm bằng JavaScript -->
+                            </div>
                         </div>
                         <div class="mb-3">
                             <label for="treatmentDuration" class="form-label">Thời gian (phút)</label>
@@ -1104,7 +1161,7 @@
 
     <!-- Add Management Modal -->
     <div class="modal fade" id="managementModal" tabindex="-1">
-        <div class="modal-dialog">
+        <div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="managementModalTitle">Thêm Quản lý</h5>
@@ -1113,21 +1170,27 @@
                 <div class="modal-body">
                     <form id="managementForm">
                         <input type="hidden" id="managementId">
-                        <div class="mb-3">
-                            <label for="managementDate" class="form-label">Ngày</label>
-                            <input type="date" class="form-control" id="managementDate" required>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="managementDate" class="form-label">Ngày</label>
+                                    <input type="date" class="form-control" id="managementDate" required>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="managementEmployee" class="form-label">Nhân viên</label>
+                                    <select class="form-control" id="managementEmployee" required>
+                                        <!-- Options sẽ được thêm bằng JavaScript -->
+                                    </select>
+                                </div>
+                            </div>
                         </div>
                         <div class="mb-3">
-                            <label for="managementEmployee" class="form-label">Nhân viên</label>
-                            <select class="form-control" id="managementEmployee" required>
-                                <!-- Options sẽ được thêm bằng JavaScript -->
-                            </select>
-                        </div>
-                        <div class="mb-3">
-                            <label for="managementType" class="form-label">Nội dung quản lý</label>
-                            <select class="form-control" id="managementType" required>
-                                <!-- Options sẽ được thêm bằng JavaScript -->
-                            </select>
+                            <label class="form-label">Nội dung quản lý (có thể chọn nhiều)</label>
+                            <div class="multi-select-container" id="managementMultiSelect">
+                                <!-- Các nội dung quản lý sẽ được thêm bằng JavaScript -->
+                            </div>
                         </div>
                     </form>
                 </div>
@@ -1141,7 +1204,7 @@
 
     <!-- Add Mistake Modal -->
     <div class="modal fade" id="mistakeModal" tabindex="-1">
-        <div class="modal-dialog">
+        <div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="mistakeModalTitle">Thêm Lỗi</h5>
@@ -1150,21 +1213,27 @@
                 <div class="modal-body">
                     <form id="mistakeForm">
                         <input type="hidden" id="mistakeId">
-                        <div class="mb-3">
-                            <label for="mistakeDate" class="form-label">Ngày</label>
-                            <input type="date" class="form-control" id="mistakeDate" required>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="mistakeDate" class="form-label">Ngày</label>
+                                    <input type="date" class="form-control" id="mistakeDate" required>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="mistakeEmployee" class="form-label">Nhân viên</label>
+                                    <select class="form-control" id="mistakeEmployee" required>
+                                        <!-- Options sẽ được thêm bằng JavaScript -->
+                                    </select>
+                                </div>
+                            </div>
                         </div>
                         <div class="mb-3">
-                            <label for="mistakeEmployee" class="form-label">Nhân viên</label>
-                            <select class="form-control" id="mistakeEmployee" required>
-                                <!-- Options sẽ được thêm bằng JavaScript -->
-                            </select>
-                        </div>
-                        <div class="mb-3">
-                            <label for="mistakeType" class="form-label">Loại lỗi</label>
-                            <select class="form-control" id="mistakeType" required>
-                                <!-- Options sẽ được thêm bằng JavaScript -->
-                            </select>
+                            <label class="form-label">Loại lỗi (có thể chọn nhiều)</label>
+                            <div class="multi-select-container" id="mistakeMultiSelect">
+                                <!-- Các loại lỗi sẽ được thêm bằng JavaScript -->
+                            </div>
                         </div>
                         <div class="mb-3">
                             <label for="mistakeDescription" class="form-label">Mô tả lỗi</label>
@@ -1709,7 +1778,9 @@
                 
                 // Kỹ thuật
                 const techniqueCell = document.createElement('td');
-                techniqueCell.textContent = treatment.technique;
+                techniqueCell.innerHTML = treatment.techniques.map(tech => 
+                    `<span class="technique-badge">${tech}</span>`
+                ).join('');
                 row.appendChild(techniqueCell);
                 
                 // Thời gian
@@ -1774,7 +1845,9 @@
                 
                 // Nội dung
                 const contentCell = document.createElement('td');
-                contentCell.textContent = item.content;
+                contentCell.innerHTML = item.contents.map(content => 
+                    `<span class="management-badge">${content}</span>`
+                ).join('');
                 row.appendChild(contentCell);
                 
                 // Hành động
@@ -1834,8 +1907,10 @@
                 
                 // Loại lỗi
                 const typeCell = document.createElement('td');
-                const mistakeType = mistakeTypes.find(t => t.code === mistake.type);
-                typeCell.textContent = mistakeType ? `${mistakeType.code} - ${mistakeType.name}` : mistake.type;
+                typeCell.innerHTML = mistake.types.map(type => {
+                    const mistakeType = mistakeTypes.find(t => t.code === type);
+                    return `<span class="mistake-badge">${mistakeType ? `${mistakeType.code} - ${mistakeType.name}` : type}</span>`;
+                }).join('');
                 row.appendChild(typeCell);
                 
                 // Mô tả
@@ -2042,6 +2117,78 @@
                 
                 mistakeTypesBody.appendChild(row);
             });
+        }
+        
+        // Tạo multi-select cho kỹ thuật
+        function createTechniqueMultiSelect(containerId, selectedTechniques = []) {
+            const container = document.getElementById(containerId);
+            container.innerHTML = '';
+            
+            techniques.forEach(technique => {
+                const isSelected = selectedTechniques.includes(technique.name);
+                const item = document.createElement('div');
+                item.className = 'multi-select-item';
+                item.innerHTML = `
+                    <input type="checkbox" id="tech-${technique.id}" value="${technique.name}" ${isSelected ? 'checked' : ''}>
+                    <label for="tech-${technique.id}">${technique.name}</label>
+                `;
+                container.appendChild(item);
+            });
+        }
+        
+        // Tạo multi-select cho nội dung quản lý
+        function createManagementMultiSelect(containerId, selectedContents = []) {
+            const container = document.getElementById(containerId);
+            container.innerHTML = '';
+            
+            managementTypes.forEach(type => {
+                const isSelected = selectedContents.includes(type.name);
+                const item = document.createElement('div');
+                item.className = 'multi-select-item';
+                item.innerHTML = `
+                    <input type="checkbox" id="mgmt-${type.id}" value="${type.name}" ${isSelected ? 'checked' : ''}>
+                    <label for="mgmt-${type.id}">${type.name}</label>
+                `;
+                container.appendChild(item);
+            });
+        }
+        
+        // Tạo multi-select cho loại lỗi
+        function createMistakeMultiSelect(containerId, selectedTypes = []) {
+            const container = document.getElementById(containerId);
+            container.innerHTML = '';
+            
+            mistakeTypes.forEach(type => {
+                const isSelected = selectedTypes.includes(type.code);
+                const item = document.createElement('div');
+                item.className = 'multi-select-item';
+                item.innerHTML = `
+                    <input type="checkbox" id="mistake-${type.id}" value="${type.code}" ${isSelected ? 'checked' : ''}>
+                    <label for="mistake-${type.id}">${type.code} - ${type.name}</label>
+                `;
+                container.appendChild(item);
+            });
+        }
+        
+        // Lấy các kỹ thuật đã chọn
+        function getSelectedTechniques(containerId) {
+            const container = document.getElementById(containerId);
+            const checkboxes = container.querySelectorAll('input[type="checkbox"]:checked');
+            return Array.from(checkboxes).map(cb => cb.value);
+        }
+        
+        // Lấy các nội dung quản lý đã chọn
+        function getSelectedManagementTypes(containerId) {
+            const container = document.getElementById(containerId);
+            const checkboxes = container.querySelectorAll('input[type="checkbox"]:checked');
+            return Array.from(checkboxes).map(cb => cb.value);
+        }
+        
+        // Lấy các loại lỗi đã chọn
+        function getSelectedMistakeTypes(containerId) {
+            const container = document.getElementById(containerId);
+            const checkboxes = container.querySelectorAll('input[type="checkbox"]:checked');
+            return Array.from(checkboxes).map(cb => cb.value);
         }
         
         // Xử lý sự kiện cho các nút thêm/sửa/xóa
@@ -2293,15 +2440,8 @@
                     employeeSelect.appendChild(option);
                 });
                 
-                // Điền danh sách kỹ thuật
-                const techniqueSelect = document.getElementById('treatmentTechnique');
-                techniqueSelect.innerHTML = '';
-                techniques.forEach(technique => {
-                    const option = document.createElement('option');
-                    option.value = technique.id;
-                    option.textContent = technique.name;
-                    techniqueSelect.appendChild(option);
-                });
+                // Tạo multi-select cho kỹ thuật
+                createTechniqueMultiSelect('techniqueMultiSelect');
                 
                 const modal = new bootstrap.Modal(document.getElementById('treatmentModal'));
                 modal.show();
@@ -2313,10 +2453,13 @@
                 const date = document.getElementById('treatmentDate').value;
                 const employeeId = parseInt(document.getElementById('treatmentEmployee').value);
                 const patientName = document.getElementById('treatmentPatient').value;
-                const techniqueId = parseInt(document.getElementById('treatmentTechnique').value);
                 const duration = parseInt(document.getElementById('treatmentDuration').value);
+                const selectedTechniques = getSelectedTechniques('techniqueMultiSelect');
                 
-                const technique = techniques.find(t => t.id === techniqueId);
+                if (selectedTechniques.length === 0) {
+                    alert('Vui lòng chọn ít nhất một kỹ thuật điều trị');
+                    return;
+                }
                 
                 if (id) {
                     // Sửa điều trị
@@ -2325,7 +2468,7 @@
                         treatmentData[index].date = date;
                         treatmentData[index].employeeId = employeeId;
                         treatmentData[index].patientName = patientName;
-                        treatmentData[index].technique = technique.name;
+                        treatmentData[index].techniques = selectedTechniques;
                         treatmentData[index].duration = duration;
                     }
                 } else {
@@ -2336,7 +2479,7 @@
                         date: date,
                         employeeId: employeeId,
                         patientName: patientName,
-                        technique: technique.name,
+                        techniques: selectedTechniques,
                         duration: duration
                     });
                 }
@@ -2362,15 +2505,8 @@
                     employeeSelect.appendChild(option);
                 });
                 
-                // Điền danh sách nội dung quản lý
-                const typeSelect = document.getElementById('managementType');
-                typeSelect.innerHTML = '';
-                managementTypes.forEach(type => {
-                    const option = document.createElement('option');
-                    option.value = type.id;
-                    option.textContent = type.name;
-                    typeSelect.appendChild(option);
-                });
+                // Tạo multi-select cho nội dung quản lý
+                createManagementMultiSelect('managementMultiSelect');
                 
                 const modal = new bootstrap.Modal(document.getElementById('managementModal'));
                 modal.show();
@@ -2381,9 +2517,12 @@
                 const id = document.getElementById('managementId').value;
                 const date = document.getElementById('managementDate').value;
                 const employeeId = parseInt(document.getElementById('managementEmployee').value);
-                const typeId = parseInt(document.getElementById('managementType').value);
+                const selectedContents = getSelectedManagementTypes('managementMultiSelect');
                 
-                const type = managementTypes.find(t => t.id === typeId);
+                if (selectedContents.length === 0) {
+                    alert('Vui lòng chọn ít nhất một nội dung quản lý');
+                    return;
+                }
                 
                 if (id) {
                     // Sửa quản lý
@@ -2391,7 +2530,7 @@
                     if (index !== -1) {
                         managementData[index].date = date;
                         managementData[index].employeeId = employeeId;
-                        managementData[index].content = type.name;
+                        managementData[index].contents = selectedContents;
                     }
                 } else {
                     // Thêm quản lý
@@ -2400,7 +2539,7 @@
                         id: newId,
                         date: date,
                         employeeId: employeeId,
-                        content: type.name
+                        contents: selectedContents
                     });
                 }
                 
@@ -2426,15 +2565,8 @@
                     employeeSelect.appendChild(option);
                 });
                 
-                // Điền danh sách loại lỗi
-                const typeSelect = document.getElementById('mistakeType');
-                typeSelect.innerHTML = '';
-                mistakeTypes.forEach(type => {
-                    const option = document.createElement('option');
-                    option.value = type.code;
-                    option.textContent = `${type.code} - ${type.name}`;
-                    typeSelect.appendChild(option);
-                });
+                // Tạo multi-select cho loại lỗi
+                createMistakeMultiSelect('mistakeMultiSelect');
                 
                 const modal = new bootstrap.Modal(document.getElementById('mistakeModal'));
                 modal.show();
@@ -2445,8 +2577,13 @@
                 const id = document.getElementById('mistakeId').value;
                 const date = document.getElementById('mistakeDate').value;
                 const employeeId = parseInt(document.getElementById('mistakeEmployee').value);
-                const type = document.getElementById('mistakeType').value;
+                const selectedTypes = getSelectedMistakeTypes('mistakeMultiSelect');
                 const description = document.getElementById('mistakeDescription').value;
+                
+                if (selectedTypes.length === 0) {
+                    alert('Vui lòng chọn ít nhất một loại lỗi');
+                    return;
+                }
                 
                 if (id) {
                     // Sửa lỗi
@@ -2454,7 +2591,7 @@
                     if (index !== -1) {
                         mistakesData[index].date = date;
                         mistakesData[index].employeeId = employeeId;
-                        mistakesData[index].type = type;
+                        mistakesData[index].types = selectedTypes;
                         mistakesData[index].description = description;
                     }
                 } else {
@@ -2464,7 +2601,7 @@
                         id: newId,
                         date: date,
                         employeeId: employeeId,
-                        type: type,
+                        types: selectedTypes,
                         description: description
                     });
                 }
@@ -2574,6 +2711,134 @@
                         mistakeTypes = mistakeTypes.filter(m => m.id != id);
                         localStorage.setItem('mistakeTypes', JSON.stringify(mistakeTypes));
                         loadSettings();
+                    }
+                }
+                
+                // Sửa điều trị
+                if (e.target.closest('.edit-treatment')) {
+                    const id = e.target.closest('.edit-treatment').getAttribute('data-id');
+                    const treatment = treatmentData.find(t => t.id == id);
+                    
+                    if (treatment) {
+                        document.getElementById('treatmentModalTitle').textContent = 'Sửa Điều trị';
+                        document.getElementById('treatmentId').value = treatment.id;
+                        document.getElementById('treatmentDate').value = treatment.date;
+                        
+                        // Điền danh sách nhân viên
+                        const employeeSelect = document.getElementById('treatmentEmployee');
+                        employeeSelect.innerHTML = '';
+                        employees.forEach(employee => {
+                            const option = document.createElement('option');
+                            option.value = employee.id;
+                            option.textContent = employee.name;
+                            if (employee.id === treatment.employeeId) {
+                                option.selected = true;
+                            }
+                            employeeSelect.appendChild(option);
+                        });
+                        
+                        document.getElementById('treatmentPatient').value = treatment.patientName;
+                        document.getElementById('treatmentDuration').value = treatment.duration;
+                        
+                        // Tạo multi-select cho kỹ thuật với các kỹ thuật đã chọn
+                        createTechniqueMultiSelect('techniqueMultiSelect', treatment.techniques);
+                        
+                        const modal = new bootstrap.Modal(document.getElementById('treatmentModal'));
+                        modal.show();
+                    }
+                }
+                
+                // Xóa điều trị
+                if (e.target.closest('.delete-treatment')) {
+                    const id = e.target.closest('.delete-treatment').getAttribute('data-id');
+                    if (confirm('Bạn có chắc chắn muốn xóa bản ghi điều trị này?')) {
+                        treatmentData = treatmentData.filter(t => t.id != id);
+                        localStorage.setItem('treatmentData', JSON.stringify(treatmentData));
+                        loadTreatment();
+                    }
+                }
+                
+                // Sửa quản lý
+                if (e.target.closest('.edit-management')) {
+                    const id = e.target.closest('.edit-management').getAttribute('data-id');
+                    const management = managementData.find(m => m.id == id);
+                    
+                    if (management) {
+                        document.getElementById('managementModalTitle').textContent = 'Sửa Quản lý';
+                        document.getElementById('managementId').value = management.id;
+                        document.getElementById('managementDate').value = management.date;
+                        
+                        // Điền danh sách nhân viên
+                        const employeeSelect = document.getElementById('managementEmployee');
+                        employeeSelect.innerHTML = '';
+                        employees.forEach(employee => {
+                            const option = document.createElement('option');
+                            option.value = employee.id;
+                            option.textContent = employee.name;
+                            if (employee.id === management.employeeId) {
+                                option.selected = true;
+                            }
+                            employeeSelect.appendChild(option);
+                        });
+                        
+                        // Tạo multi-select cho nội dung quản lý với các nội dung đã chọn
+                        createManagementMultiSelect('managementMultiSelect', management.contents);
+                        
+                        const modal = new bootstrap.Modal(document.getElementById('managementModal'));
+                        modal.show();
+                    }
+                }
+                
+                // Xóa quản lý
+                if (e.target.closest('.delete-management')) {
+                    const id = e.target.closest('.delete-management').getAttribute('data-id');
+                    if (confirm('Bạn có chắc chắn muốn xóa bản ghi quản lý này?')) {
+                        managementData = managementData.filter(m => m.id != id);
+                        localStorage.setItem('managementData', JSON.stringify(managementData));
+                        loadManagement();
+                    }
+                }
+                
+                // Sửa lỗi
+                if (e.target.closest('.edit-mistake')) {
+                    const id = e.target.closest('.edit-mistake').getAttribute('data-id');
+                    const mistake = mistakesData.find(m => m.id == id);
+                    
+                    if (mistake) {
+                        document.getElementById('mistakeModalTitle').textContent = 'Sửa Lỗi';
+                        document.getElementById('mistakeId').value = mistake.id;
+                        document.getElementById('mistakeDate').value = mistake.date;
+                        
+                        // Điền danh sách nhân viên
+                        const employeeSelect = document.getElementById('mistakeEmployee');
+                        employeeSelect.innerHTML = '';
+                        employees.forEach(employee => {
+                            const option = document.createElement('option');
+                            option.value = employee.id;
+                            option.textContent = employee.name;
+                            if (employee.id === mistake.employeeId) {
+                                option.selected = true;
+                            }
+                            employeeSelect.appendChild(option);
+                        });
+                        
+                        document.getElementById('mistakeDescription').value = mistake.description;
+                        
+                        // Tạo multi-select cho loại lỗi với các loại đã chọn
+                        createMistakeMultiSelect('mistakeMultiSelect', mistake.types);
+                        
+                        const modal = new bootstrap.Modal(document.getElementById('mistakeModal'));
+                        modal.show();
+                    }
+                }
+                
+                // Xóa lỗi
+                if (e.target.closest('.delete-mistake')) {
+                    const id = e.target.closest('.delete-mistake').getAttribute('data-id');
+                    if (confirm('Bạn có chắc chắn muốn xóa bản ghi lỗi này?')) {
+                        mistakesData = mistakesData.filter(m => m.id != id);
+                        localStorage.setItem('mistakesData', JSON.stringify(mistakesData));
+                        loadMistakes();
                     }
                 }
             });
