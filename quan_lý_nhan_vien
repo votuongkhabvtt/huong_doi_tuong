@@ -240,6 +240,80 @@
             color: var(--secondary);
         }
         
+        .calendar-container {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            margin-bottom: 20px;
+        }
+        
+        .calendar-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        
+        .calendar-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 5px;
+        }
+        
+        .calendar-day {
+            padding: 10px;
+            text-align: center;
+            border-radius: 5px;
+            background: #f8f9fa;
+            font-weight: 600;
+        }
+        
+        .calendar-date {
+            padding: 10px;
+            text-align: center;
+            border-radius: 5px;
+            background: white;
+            cursor: pointer;
+            transition: all 0.2s;
+            min-height: 60px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+        
+        .calendar-date:hover {
+            background: #e9ecef;
+        }
+        
+        .calendar-date.today {
+            background: var(--secondary);
+            color: white;
+        }
+        
+        .calendar-date.has-data {
+            background: rgba(52, 152, 219, 0.1);
+            border: 1px solid rgba(52, 152, 219, 0.3);
+        }
+        
+        .calendar-events {
+            font-size: 0.7rem;
+            margin-top: 5px;
+        }
+        
+        .calendar-event-indicator {
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            margin-right: 2px;
+        }
+        
+        .event-attendance { background-color: var(--success); }
+        .event-treatment { background-color: var(--secondary); }
+        .event-management { background-color: var(--warning); }
+        .event-mistake { background-color: var(--danger); }
+        
         @media print {
             .no-print {
                 display: none !important;
@@ -274,6 +348,18 @@
         .login-subtitle {
             color: var(--dark);
             font-size: 0.9rem;
+        }
+        
+        .empty-state {
+            text-align: center;
+            padding: 40px 20px;
+            color: #6c757d;
+        }
+        
+        .empty-state i {
+            font-size: 3rem;
+            margin-bottom: 15px;
+            opacity: 0.5;
         }
     </style>
 </head>
@@ -869,6 +955,231 @@
         </div>
     </div>
 
+    <!-- Add Management Type Modal -->
+    <div class="modal fade" id="managementTypeModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="managementTypeModalTitle">Thêm Nội dung Quản lý</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="managementTypeForm">
+                        <input type="hidden" id="managementTypeId">
+                        <div class="mb-3">
+                            <label for="managementTypeName" class="form-label">Nội dung</label>
+                            <input type="text" class="form-control" id="managementTypeName" required>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                    <button type="button" class="btn btn-primary" id="saveManagementTypeBtn">Lưu</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Mistake Type Modal -->
+    <div class="modal fade" id="mistakeTypeModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="mistakeTypeModalTitle">Thêm Loại Lỗi</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="mistakeTypeForm">
+                        <input type="hidden" id="mistakeTypeId">
+                        <div class="mb-3">
+                            <label for="mistakeTypeName" class="form-label">Loại lỗi</label>
+                            <input type="text" class="form-control" id="mistakeTypeName" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="mistakeTypeCode" class="form-label">Mã lỗi</label>
+                            <input type="text" class="form-control" id="mistakeTypeCode" required>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                    <button type="button" class="btn btn-primary" id="saveMistakeTypeBtn">Lưu</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Attendance Modal -->
+    <div class="modal fade" id="attendanceModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="attendanceModalTitle">Thêm Chấm công</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="attendanceForm">
+                        <input type="hidden" id="attendanceId">
+                        <div class="mb-3">
+                            <label for="attendanceDate" class="form-label">Ngày</label>
+                            <input type="date" class="form-control" id="attendanceDate" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="attendanceEmployee" class="form-label">Nhân viên</label>
+                            <select class="form-control" id="attendanceEmployee" required>
+                                <!-- Options sẽ được thêm bằng JavaScript -->
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="attendanceStatus" class="form-label">Trạng thái</label>
+                            <select class="form-control" id="attendanceStatus" required>
+                                <option value="Ok">✅ Đi đúng giờ (Ok)</option>
+                                <option value="Mn">⏰ Đi muộn (Mn)</option>
+                                <option value="CP">📋 Vắng có phép (CP)</option>
+                                <option value="VK">❌ Vắng không phép (VK)</option>
+                            </select>
+                        </div>
+                        <div class="mb-3" id="minutesField" style="display: none;">
+                            <label for="attendanceMinutes" class="form-label">Số phút muộn</label>
+                            <input type="number" class="form-control" id="attendanceMinutes" min="1" value="15">
+                        </div>
+                        <div class="mb-3" id="reasonField" style="display: none;">
+                            <label for="attendanceReason" class="form-label">Lý do vắng</label>
+                            <input type="text" class="form-control" id="attendanceReason" placeholder="Nhập lý do vắng mặt">
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                    <button type="button" class="btn btn-primary" id="saveAttendanceBtn">Lưu</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Treatment Modal -->
+    <div class="modal fade" id="treatmentModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="treatmentModalTitle">Thêm Điều trị</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="treatmentForm">
+                        <input type="hidden" id="treatmentId">
+                        <div class="mb-3">
+                            <label for="treatmentDate" class="form-label">Ngày</label>
+                            <input type="date" class="form-control" id="treatmentDate" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="treatmentEmployee" class="form-label">Nhân viên</label>
+                            <select class="form-control" id="treatmentEmployee" required>
+                                <!-- Options sẽ được thêm bằng JavaScript -->
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="treatmentPatient" class="form-label">Bệnh nhân</label>
+                            <input type="text" class="form-control" id="treatmentPatient" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="treatmentTechnique" class="form-label">Kỹ thuật điều trị</label>
+                            <select class="form-control" id="treatmentTechnique" required>
+                                <!-- Options sẽ được thêm bằng JavaScript -->
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="treatmentDuration" class="form-label">Thời gian (phút)</label>
+                            <input type="number" class="form-control" id="treatmentDuration" min="1" value="30" required>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                    <button type="button" class="btn btn-primary" id="saveTreatmentBtn">Lưu</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Management Modal -->
+    <div class="modal fade" id="managementModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="managementModalTitle">Thêm Quản lý</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="managementForm">
+                        <input type="hidden" id="managementId">
+                        <div class="mb-3">
+                            <label for="managementDate" class="form-label">Ngày</label>
+                            <input type="date" class="form-control" id="managementDate" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="managementEmployee" class="form-label">Nhân viên</label>
+                            <select class="form-control" id="managementEmployee" required>
+                                <!-- Options sẽ được thêm bằng JavaScript -->
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="managementType" class="form-label">Nội dung quản lý</label>
+                            <select class="form-control" id="managementType" required>
+                                <!-- Options sẽ được thêm bằng JavaScript -->
+                            </select>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                    <button type="button" class="btn btn-primary" id="saveManagementBtn">Lưu</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Mistake Modal -->
+    <div class="modal fade" id="mistakeModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="mistakeModalTitle">Thêm Lỗi</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="mistakeForm">
+                        <input type="hidden" id="mistakeId">
+                        <div class="mb-3">
+                            <label for="mistakeDate" class="form-label">Ngày</label>
+                            <input type="date" class="form-control" id="mistakeDate" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="mistakeEmployee" class="form-label">Nhân viên</label>
+                            <select class="form-control" id="mistakeEmployee" required>
+                                <!-- Options sẽ được thêm bằng JavaScript -->
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="mistakeType" class="form-label">Loại lỗi</label>
+                            <select class="form-control" id="mistakeType" required>
+                                <!-- Options sẽ được thêm bằng JavaScript -->
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="mistakeDescription" class="form-label">Mô tả lỗi</label>
+                            <textarea class="form-control" id="mistakeDescription" rows="3" required></textarea>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                    <button type="button" class="btn btn-primary" id="saveMistakeBtn">Lưu</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- JavaScript -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -1357,6 +1668,21 @@
             const treatmentBody = document.getElementById('treatmentBody');
             treatmentBody.innerHTML = '';
             
+            if (treatmentData.length === 0) {
+                treatmentBody.innerHTML = `
+                    <tr>
+                        <td colspan="7" class="text-center py-4">
+                            <div class="empty-state">
+                                <i class="fas fa-stethoscope"></i>
+                                <h5>Chưa có dữ liệu điều trị</h5>
+                                <p>Nhấn nút "Thêm điều trị" để bắt đầu nhập dữ liệu</p>
+                            </div>
+                        </td>
+                    </tr>
+                `;
+                return;
+            }
+            
             treatmentData.forEach((treatment, index) => {
                 const row = document.createElement('tr');
                 
@@ -1412,6 +1738,21 @@
             const managementBody = document.getElementById('managementBody');
             managementBody.innerHTML = '';
             
+            if (managementData.length === 0) {
+                managementBody.innerHTML = `
+                    <tr>
+                        <td colspan="5" class="text-center py-4">
+                            <div class="empty-state">
+                                <i class="fas fa-tasks"></i>
+                                <h5>Chưa có dữ liệu quản lý</h5>
+                                <p>Nhấn nút "Thêm QL" để bắt đầu nhập dữ liệu</p>
+                            </div>
+                        </td>
+                    </tr>
+                `;
+                return;
+            }
+            
             managementData.forEach((item, index) => {
                 const row = document.createElement('tr');
                 
@@ -1456,6 +1797,21 @@
         function loadMistakes() {
             const mistakesBody = document.getElementById('mistakesBody');
             mistakesBody.innerHTML = '';
+            
+            if (mistakesData.length === 0) {
+                mistakesBody.innerHTML = `
+                    <tr>
+                        <td colspan="6" class="text-center py-4">
+                            <div class="empty-state">
+                                <i class="fas fa-exclamation-triangle"></i>
+                                <h5>Chưa có dữ liệu lỗi</h5>
+                                <p>Nhấn nút "Thêm lỗi" để bắt đầu nhập dữ liệu</p>
+                            </div>
+                        </td>
+                    </tr>
+                `;
+                return;
+            }
             
             mistakesData.forEach((mistake, index) => {
                 const row = document.createElement('tr');
@@ -1729,6 +2085,395 @@
                 loadSettings();
             });
             
+            // Thêm kỹ thuật
+            document.getElementById('addTechniqueBtn').addEventListener('click', function() {
+                document.getElementById('techniqueModalTitle').textContent = 'Thêm Kỹ thuật';
+                document.getElementById('techniqueId').value = '';
+                document.getElementById('techniqueName').value = '';
+                
+                const modal = new bootstrap.Modal(document.getElementById('techniqueModal'));
+                modal.show();
+            });
+            
+            // Lưu kỹ thuật
+            document.getElementById('saveTechniqueBtn').addEventListener('click', function() {
+                const id = document.getElementById('techniqueId').value;
+                const name = document.getElementById('techniqueName').value;
+                
+                if (id) {
+                    // Sửa kỹ thuật
+                    const index = techniques.findIndex(t => t.id == id);
+                    if (index !== -1) {
+                        techniques[index].name = name;
+                    }
+                } else {
+                    // Thêm kỹ thuật
+                    const newId = techniques.length > 0 ? Math.max(...techniques.map(t => t.id)) + 1 : 1;
+                    techniques.push({
+                        id: newId,
+                        name: name
+                    });
+                }
+                
+                localStorage.setItem('techniques', JSON.stringify(techniques));
+                bootstrap.Modal.getInstance(document.getElementById('techniqueModal')).hide();
+                loadSettings();
+            });
+            
+            // Thêm nội dung quản lý
+            document.getElementById('addManagementTypeBtn').addEventListener('click', function() {
+                document.getElementById('managementTypeModalTitle').textContent = 'Thêm Nội dung Quản lý';
+                document.getElementById('managementTypeId').value = '';
+                document.getElementById('managementTypeName').value = '';
+                
+                const modal = new bootstrap.Modal(document.getElementById('managementTypeModal'));
+                modal.show();
+            });
+            
+            // Lưu nội dung quản lý
+            document.getElementById('saveManagementTypeBtn').addEventListener('click', function() {
+                const id = document.getElementById('managementTypeId').value;
+                const name = document.getElementById('managementTypeName').value;
+                
+                if (id) {
+                    // Sửa nội dung quản lý
+                    const index = managementTypes.findIndex(m => m.id == id);
+                    if (index !== -1) {
+                        managementTypes[index].name = name;
+                    }
+                } else {
+                    // Thêm nội dung quản lý
+                    const newId = managementTypes.length > 0 ? Math.max(...managementTypes.map(m => m.id)) + 1 : 1;
+                    managementTypes.push({
+                        id: newId,
+                        name: name
+                    });
+                }
+                
+                localStorage.setItem('managementTypes', JSON.stringify(managementTypes));
+                bootstrap.Modal.getInstance(document.getElementById('managementTypeModal')).hide();
+                loadSettings();
+            });
+            
+            // Thêm loại lỗi
+            document.getElementById('addMistakeTypeBtn').addEventListener('click', function() {
+                document.getElementById('mistakeTypeModalTitle').textContent = 'Thêm Loại Lỗi';
+                document.getElementById('mistakeTypeId').value = '';
+                document.getElementById('mistakeTypeName').value = '';
+                document.getElementById('mistakeTypeCode').value = '';
+                
+                const modal = new bootstrap.Modal(document.getElementById('mistakeTypeModal'));
+                modal.show();
+            });
+            
+            // Lưu loại lỗi
+            document.getElementById('saveMistakeTypeBtn').addEventListener('click', function() {
+                const id = document.getElementById('mistakeTypeId').value;
+                const name = document.getElementById('mistakeTypeName').value;
+                const code = document.getElementById('mistakeTypeCode').value;
+                
+                if (id) {
+                    // Sửa loại lỗi
+                    const index = mistakeTypes.findIndex(m => m.id == id);
+                    if (index !== -1) {
+                        mistakeTypes[index].name = name;
+                        mistakeTypes[index].code = code;
+                    }
+                } else {
+                    // Thêm loại lỗi
+                    const newId = mistakeTypes.length > 0 ? Math.max(...mistakeTypes.map(m => m.id)) + 1 : 1;
+                    mistakeTypes.push({
+                        id: newId,
+                        name: name,
+                        code: code
+                    });
+                }
+                
+                localStorage.setItem('mistakeTypes', JSON.stringify(mistakeTypes));
+                bootstrap.Modal.getInstance(document.getElementById('mistakeTypeModal')).hide();
+                loadSettings();
+            });
+            
+            // Thêm chấm công
+            document.getElementById('addAttendanceBtn').addEventListener('click', function() {
+                document.getElementById('attendanceModalTitle').textContent = 'Thêm Chấm công';
+                document.getElementById('attendanceId').value = '';
+                document.getElementById('attendanceDate').value = new Date().toISOString().split('T')[0];
+                
+                // Điền danh sách nhân viên
+                const employeeSelect = document.getElementById('attendanceEmployee');
+                employeeSelect.innerHTML = '';
+                employees.forEach(employee => {
+                    const option = document.createElement('option');
+                    option.value = employee.id;
+                    option.textContent = employee.name;
+                    employeeSelect.appendChild(option);
+                });
+                
+                document.getElementById('attendanceStatus').value = 'Ok';
+                document.getElementById('minutesField').style.display = 'none';
+                document.getElementById('reasonField').style.display = 'none';
+                
+                const modal = new bootstrap.Modal(document.getElementById('attendanceModal'));
+                modal.show();
+            });
+            
+            // Xử lý thay đổi trạng thái chấm công
+            document.getElementById('attendanceStatus').addEventListener('change', function() {
+                const status = this.value;
+                const minutesField = document.getElementById('minutesField');
+                const reasonField = document.getElementById('reasonField');
+                
+                if (status === 'Mn') {
+                    minutesField.style.display = 'block';
+                    reasonField.style.display = 'none';
+                } else if (status === 'CP') {
+                    minutesField.style.display = 'none';
+                    reasonField.style.display = 'block';
+                } else {
+                    minutesField.style.display = 'none';
+                    reasonField.style.display = 'none';
+                }
+            });
+            
+            // Lưu chấm công
+            document.getElementById('saveAttendanceBtn').addEventListener('click', function() {
+                const id = document.getElementById('attendanceId').value;
+                const date = document.getElementById('attendanceDate').value;
+                const employeeId = parseInt(document.getElementById('attendanceEmployee').value);
+                let status = document.getElementById('attendanceStatus').value;
+                
+                if (status === 'Mn') {
+                    const minutes = document.getElementById('attendanceMinutes').value;
+                    status = `Mn${minutes}`;
+                } else if (status === 'CP') {
+                    const reason = document.getElementById('attendanceReason').value;
+                    status = `CP${reason}`;
+                }
+                
+                if (id) {
+                    // Sửa chấm công
+                    const index = attendanceData.findIndex(a => a.id == id);
+                    if (index !== -1) {
+                        attendanceData[index].date = date;
+                        attendanceData[index].employeeId = employeeId;
+                        attendanceData[index].status = status;
+                    }
+                } else {
+                    // Thêm chấm công
+                    const newId = attendanceData.length > 0 ? Math.max(...attendanceData.map(a => a.id)) + 1 : 1;
+                    attendanceData.push({
+                        id: newId,
+                        date: date,
+                        employeeId: employeeId,
+                        status: status
+                    });
+                }
+                
+                localStorage.setItem('attendanceData', JSON.stringify(attendanceData));
+                bootstrap.Modal.getInstance(document.getElementById('attendanceModal')).hide();
+                loadAttendance();
+            });
+            
+            // Thêm điều trị
+            document.getElementById('addTreatmentBtn').addEventListener('click', function() {
+                document.getElementById('treatmentModalTitle').textContent = 'Thêm Điều trị';
+                document.getElementById('treatmentId').value = '';
+                document.getElementById('treatmentDate').value = new Date().toISOString().split('T')[0];
+                document.getElementById('treatmentPatient').value = '';
+                document.getElementById('treatmentDuration').value = '30';
+                
+                // Điền danh sách nhân viên
+                const employeeSelect = document.getElementById('treatmentEmployee');
+                employeeSelect.innerHTML = '';
+                employees.forEach(employee => {
+                    const option = document.createElement('option');
+                    option.value = employee.id;
+                    option.textContent = employee.name;
+                    employeeSelect.appendChild(option);
+                });
+                
+                // Điền danh sách kỹ thuật
+                const techniqueSelect = document.getElementById('treatmentTechnique');
+                techniqueSelect.innerHTML = '';
+                techniques.forEach(technique => {
+                    const option = document.createElement('option');
+                    option.value = technique.id;
+                    option.textContent = technique.name;
+                    techniqueSelect.appendChild(option);
+                });
+                
+                const modal = new bootstrap.Modal(document.getElementById('treatmentModal'));
+                modal.show();
+            });
+            
+            // Lưu điều trị
+            document.getElementById('saveTreatmentBtn').addEventListener('click', function() {
+                const id = document.getElementById('treatmentId').value;
+                const date = document.getElementById('treatmentDate').value;
+                const employeeId = parseInt(document.getElementById('treatmentEmployee').value);
+                const patientName = document.getElementById('treatmentPatient').value;
+                const techniqueId = parseInt(document.getElementById('treatmentTechnique').value);
+                const duration = parseInt(document.getElementById('treatmentDuration').value);
+                
+                const technique = techniques.find(t => t.id === techniqueId);
+                
+                if (id) {
+                    // Sửa điều trị
+                    const index = treatmentData.findIndex(t => t.id == id);
+                    if (index !== -1) {
+                        treatmentData[index].date = date;
+                        treatmentData[index].employeeId = employeeId;
+                        treatmentData[index].patientName = patientName;
+                        treatmentData[index].technique = technique.name;
+                        treatmentData[index].duration = duration;
+                    }
+                } else {
+                    // Thêm điều trị
+                    const newId = treatmentData.length > 0 ? Math.max(...treatmentData.map(t => t.id)) + 1 : 1;
+                    treatmentData.push({
+                        id: newId,
+                        date: date,
+                        employeeId: employeeId,
+                        patientName: patientName,
+                        technique: technique.name,
+                        duration: duration
+                    });
+                }
+                
+                localStorage.setItem('treatmentData', JSON.stringify(treatmentData));
+                bootstrap.Modal.getInstance(document.getElementById('treatmentModal')).hide();
+                loadTreatment();
+            });
+            
+            // Thêm quản lý
+            document.getElementById('addManagementBtn').addEventListener('click', function() {
+                document.getElementById('managementModalTitle').textContent = 'Thêm Quản lý';
+                document.getElementById('managementId').value = '';
+                document.getElementById('managementDate').value = new Date().toISOString().split('T')[0];
+                
+                // Điền danh sách nhân viên
+                const employeeSelect = document.getElementById('managementEmployee');
+                employeeSelect.innerHTML = '';
+                employees.forEach(employee => {
+                    const option = document.createElement('option');
+                    option.value = employee.id;
+                    option.textContent = employee.name;
+                    employeeSelect.appendChild(option);
+                });
+                
+                // Điền danh sách nội dung quản lý
+                const typeSelect = document.getElementById('managementType');
+                typeSelect.innerHTML = '';
+                managementTypes.forEach(type => {
+                    const option = document.createElement('option');
+                    option.value = type.id;
+                    option.textContent = type.name;
+                    typeSelect.appendChild(option);
+                });
+                
+                const modal = new bootstrap.Modal(document.getElementById('managementModal'));
+                modal.show();
+            });
+            
+            // Lưu quản lý
+            document.getElementById('saveManagementBtn').addEventListener('click', function() {
+                const id = document.getElementById('managementId').value;
+                const date = document.getElementById('managementDate').value;
+                const employeeId = parseInt(document.getElementById('managementEmployee').value);
+                const typeId = parseInt(document.getElementById('managementType').value);
+                
+                const type = managementTypes.find(t => t.id === typeId);
+                
+                if (id) {
+                    // Sửa quản lý
+                    const index = managementData.findIndex(m => m.id == id);
+                    if (index !== -1) {
+                        managementData[index].date = date;
+                        managementData[index].employeeId = employeeId;
+                        managementData[index].content = type.name;
+                    }
+                } else {
+                    // Thêm quản lý
+                    const newId = managementData.length > 0 ? Math.max(...managementData.map(m => m.id)) + 1 : 1;
+                    managementData.push({
+                        id: newId,
+                        date: date,
+                        employeeId: employeeId,
+                        content: type.name
+                    });
+                }
+                
+                localStorage.setItem('managementData', JSON.stringify(managementData));
+                bootstrap.Modal.getInstance(document.getElementById('managementModal')).hide();
+                loadManagement();
+            });
+            
+            // Thêm lỗi
+            document.getElementById('addMistakeBtn').addEventListener('click', function() {
+                document.getElementById('mistakeModalTitle').textContent = 'Thêm Lỗi';
+                document.getElementById('mistakeId').value = '';
+                document.getElementById('mistakeDate').value = new Date().toISOString().split('T')[0];
+                document.getElementById('mistakeDescription').value = '';
+                
+                // Điền danh sách nhân viên
+                const employeeSelect = document.getElementById('mistakeEmployee');
+                employeeSelect.innerHTML = '';
+                employees.forEach(employee => {
+                    const option = document.createElement('option');
+                    option.value = employee.id;
+                    option.textContent = employee.name;
+                    employeeSelect.appendChild(option);
+                });
+                
+                // Điền danh sách loại lỗi
+                const typeSelect = document.getElementById('mistakeType');
+                typeSelect.innerHTML = '';
+                mistakeTypes.forEach(type => {
+                    const option = document.createElement('option');
+                    option.value = type.code;
+                    option.textContent = `${type.code} - ${type.name}`;
+                    typeSelect.appendChild(option);
+                });
+                
+                const modal = new bootstrap.Modal(document.getElementById('mistakeModal'));
+                modal.show();
+            });
+            
+            // Lưu lỗi
+            document.getElementById('saveMistakeBtn').addEventListener('click', function() {
+                const id = document.getElementById('mistakeId').value;
+                const date = document.getElementById('mistakeDate').value;
+                const employeeId = parseInt(document.getElementById('mistakeEmployee').value);
+                const type = document.getElementById('mistakeType').value;
+                const description = document.getElementById('mistakeDescription').value;
+                
+                if (id) {
+                    // Sửa lỗi
+                    const index = mistakesData.findIndex(m => m.id == id);
+                    if (index !== -1) {
+                        mistakesData[index].date = date;
+                        mistakesData[index].employeeId = employeeId;
+                        mistakesData[index].type = type;
+                        mistakesData[index].description = description;
+                    }
+                } else {
+                    // Thêm lỗi
+                    const newId = mistakesData.length > 0 ? Math.max(...mistakesData.map(m => m.id)) + 1 : 1;
+                    mistakesData.push({
+                        id: newId,
+                        date: date,
+                        employeeId: employeeId,
+                        type: type,
+                        description: description
+                    });
+                }
+                
+                localStorage.setItem('mistakesData', JSON.stringify(mistakesData));
+                bootstrap.Modal.getInstance(document.getElementById('mistakeModal')).hide();
+                loadMistakes();
+            });
+            
             // Sửa nhân viên (delegation)
             document.addEventListener('click', function(e) {
                 if (e.target.closest('.edit-employee')) {
@@ -1756,9 +2501,81 @@
                     }
                 }
                 
-                // Tương tự cho các chức năng khác (kỹ thuật, nội dung quản lý, loại lỗi)
-                // Do giới hạn thời gian, tôi chỉ triển khai cho nhân viên
-                // Các chức năng khác có thể triển khai tương tự
+                // Sửa kỹ thuật
+                if (e.target.closest('.edit-technique')) {
+                    const id = e.target.closest('.edit-technique').getAttribute('data-id');
+                    const technique = techniques.find(t => t.id == id);
+                    
+                    if (technique) {
+                        document.getElementById('techniqueModalTitle').textContent = 'Sửa Kỹ thuật';
+                        document.getElementById('techniqueId').value = technique.id;
+                        document.getElementById('techniqueName').value = technique.name;
+                        
+                        const modal = new bootstrap.Modal(document.getElementById('techniqueModal'));
+                        modal.show();
+                    }
+                }
+                
+                // Xóa kỹ thuật
+                if (e.target.closest('.delete-technique')) {
+                    const id = e.target.closest('.delete-technique').getAttribute('data-id');
+                    if (confirm('Bạn có chắc chắn muốn xóa kỹ thuật này?')) {
+                        techniques = techniques.filter(t => t.id != id);
+                        localStorage.setItem('techniques', JSON.stringify(techniques));
+                        loadSettings();
+                    }
+                }
+                
+                // Sửa nội dung quản lý
+                if (e.target.closest('.edit-management-type')) {
+                    const id = e.target.closest('.edit-management-type').getAttribute('data-id');
+                    const type = managementTypes.find(m => m.id == id);
+                    
+                    if (type) {
+                        document.getElementById('managementTypeModalTitle').textContent = 'Sửa Nội dung Quản lý';
+                        document.getElementById('managementTypeId').value = type.id;
+                        document.getElementById('managementTypeName').value = type.name;
+                        
+                        const modal = new bootstrap.Modal(document.getElementById('managementTypeModal'));
+                        modal.show();
+                    }
+                }
+                
+                // Xóa nội dung quản lý
+                if (e.target.closest('.delete-management-type')) {
+                    const id = e.target.closest('.delete-management-type').getAttribute('data-id');
+                    if (confirm('Bạn có chắc chắn muốn xóa nội dung quản lý này?')) {
+                        managementTypes = managementTypes.filter(m => m.id != id);
+                        localStorage.setItem('managementTypes', JSON.stringify(managementTypes));
+                        loadSettings();
+                    }
+                }
+                
+                // Sửa loại lỗi
+                if (e.target.closest('.edit-mistake-type')) {
+                    const id = e.target.closest('.edit-mistake-type').getAttribute('data-id');
+                    const type = mistakeTypes.find(m => m.id == id);
+                    
+                    if (type) {
+                        document.getElementById('mistakeTypeModalTitle').textContent = 'Sửa Loại Lỗi';
+                        document.getElementById('mistakeTypeId').value = type.id;
+                        document.getElementById('mistakeTypeName').value = type.name;
+                        document.getElementById('mistakeTypeCode').value = type.code;
+                        
+                        const modal = new bootstrap.Modal(document.getElementById('mistakeTypeModal'));
+                        modal.show();
+                    }
+                }
+                
+                // Xóa loại lỗi
+                if (e.target.closest('.delete-mistake-type')) {
+                    const id = e.target.closest('.delete-mistake-type').getAttribute('data-id');
+                    if (confirm('Bạn có chắc chắn muốn xóa loại lỗi này?')) {
+                        mistakeTypes = mistakeTypes.filter(m => m.id != id);
+                        localStorage.setItem('mistakeTypes', JSON.stringify(mistakeTypes));
+                        loadSettings();
+                    }
+                }
             });
         });
         
