@@ -15,6 +15,8 @@
             --danger: #e74c3c;
             --light: #ecf0f1;
             --dark: #34495e;
+            --teal: #1abc9c;
+            --purple: #9b59b6;
         }
         
         body {
@@ -29,6 +31,7 @@
             background: white;
             border-radius: 10px;
             box-shadow: 0 0 20px rgba(0,0,0,0.1);
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
         }
         
         .main-container {
@@ -36,10 +39,11 @@
         }
         
         .sidebar {
-            background-color: var(--primary);
+            background: linear-gradient(180deg, var(--primary) 0%, #1a2530 100%);
             color: white;
             min-height: 100vh;
             padding-top: 20px;
+            box-shadow: 3px 0 10px rgba(0,0,0,0.1);
         }
         
         .sidebar .nav-link {
@@ -53,6 +57,7 @@
         .sidebar .nav-link:hover, .sidebar .nav-link.active {
             background-color: rgba(255,255,255,0.1);
             color: white;
+            transform: translateX(5px);
         }
         
         .sidebar .nav-link i {
@@ -65,15 +70,42 @@
             padding: 20px;
         }
         
+        .header-bar {
+            background: white;
+            padding: 15px 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .real-time-clock {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--primary);
+            background: rgba(52, 152, 219, 0.1);
+            padding: 8px 15px;
+            border-radius: 30px;
+            border: 1px solid rgba(52, 152, 219, 0.2);
+        }
+        
         .card {
             border-radius: 10px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
             margin-bottom: 20px;
             border: none;
+            transition: transform 0.3s;
+        }
+        
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 15px rgba(0,0,0,0.1);
         }
         
         .card-header {
-            background-color: white;
+            background: white;
             border-bottom: 1px solid #eee;
             font-weight: 600;
             padding: 15px 20px;
@@ -85,10 +117,10 @@
             font-weight: 600;
         }
         
-        .status-ok { background-color: #d4edda; }
-        .status-mn { background-color: #fff3cd; }
-        .status-cp { background-color: #d1ecf1; }
-        .status-vk { background-color: #f8d7da; }
+        .status-ok { background-color: rgba(39, 174, 96, 0.1); border-left: 4px solid var(--success); }
+        .status-mn { background-color: rgba(243, 156, 18, 0.1); border-left: 4px solid var(--warning); }
+        .status-cp { background-color: rgba(52, 152, 219, 0.1); border-left: 4px solid var(--secondary); }
+        .status-vk { background-color: rgba(231, 76, 60, 0.1); border-left: 4px solid var(--danger); }
         
         .badge-attendance {
             font-size: 0.8em;
@@ -131,8 +163,81 @@
             border-color: var(--danger);
         }
         
+        .btn-teal {
+            background-color: var(--teal);
+            border-color: var(--teal);
+            color: white;
+        }
+        
+        .btn-purple {
+            background-color: var(--purple);
+            border-color: var(--purple);
+            color: white;
+        }
+        
         .report-section {
             page-break-inside: avoid;
+        }
+        
+        .stats-card {
+            text-align: center;
+            padding: 20px;
+            border-radius: 10px;
+            color: white;
+            margin-bottom: 20px;
+        }
+        
+        .stats-card i {
+            font-size: 2.5rem;
+            margin-bottom: 15px;
+            opacity: 0.8;
+        }
+        
+        .stats-card h3 {
+            font-size: 2rem;
+            margin-bottom: 5px;
+        }
+        
+        .stats-card p {
+            margin-bottom: 0;
+            opacity: 0.9;
+        }
+        
+        .today-highlight {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+        
+        .calendar-event {
+            background: rgba(255,255,255,0.2);
+            padding: 10px;
+            border-radius: 5px;
+            margin-bottom: 10px;
+        }
+        
+        .quick-action-btn {
+            background: white;
+            border: none;
+            border-radius: 10px;
+            padding: 15px;
+            text-align: center;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            transition: all 0.3s;
+            margin-bottom: 15px;
+        }
+        
+        .quick-action-btn:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 15px rgba(0,0,0,0.1);
+        }
+        
+        .quick-action-btn i {
+            font-size: 2rem;
+            margin-bottom: 10px;
+            color: var(--secondary);
         }
         
         @media print {
@@ -149,15 +254,36 @@
                 padding: 0;
             }
         }
+        
+        .login-logo {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        
+        .login-logo i {
+            font-size: 4rem;
+            color: var(--secondary);
+            margin-bottom: 10px;
+        }
+        
+        .login-title {
+            color: var(--primary);
+            font-weight: 700;
+        }
+        
+        .login-subtitle {
+            color: var(--dark);
+            font-size: 0.9rem;
+        }
     </style>
 </head>
 <body>
     <!-- Login Form -->
     <div id="loginContainer" class="login-container">
-        <div class="text-center mb-4">
-            <i class="fas fa-clinic-medical fa-3x text-primary mb-3"></i>
-            <h3>Đăng nhập Hệ thống</h3>
-            <p class="text-muted">Quản lý chấm công & điều trị bệnh nhân</p>
+        <div class="login-logo">
+            <i class="fas fa-clinic-medical"></i>
+            <h3 class="login-title">PKPGSKHA</h3>
+            <p class="login-subtitle">Hệ thống Quản lý Chấm công & Điều trị</p>
         </div>
         <form id="loginForm">
             <div class="mb-3">
@@ -170,9 +296,6 @@
             </div>
             <button type="submit" class="btn btn-primary w-100">Đăng nhập</button>
         </form>
-        <div class="mt-3 text-center">
-            <small class="text-muted">Sử dụng: admin / password</small>
-        </div>
     </div>
 
     <!-- Main Application -->
@@ -183,7 +306,8 @@
                 <div class="col-md-2 sidebar no-print">
                     <div class="text-center mb-4">
                         <i class="fas fa-clinic-medical fa-2x mb-2"></i>
-                        <h5>Phòng Khám</h5>
+                        <h5>PKPGSKHA</h5>
+                        <small class="text-muted">Quản lý Chấm công</small>
                     </div>
                     <ul class="nav flex-column">
                         <li class="nav-item">
@@ -207,6 +331,11 @@
                             </a>
                         </li>
                         <li class="nav-item">
+                            <a class="nav-link" href="#" data-section="mistakes">
+                                <i class="fas fa-exclamation-triangle"></i> Lỗi NV
+                            </a>
+                        </li>
+                        <li class="nav-item">
                             <a class="nav-link" href="#" data-section="reports">
                                 <i class="fas fa-chart-bar"></i> Báo cáo
                             </a>
@@ -226,67 +355,57 @@
 
                 <!-- Main Content -->
                 <div class="col-md-10 content">
+                    <!-- Header with Real-time Clock -->
+                    <div class="header-bar no-print">
+                        <h4 id="currentSectionTitle">Tổng quan Hệ thống</h4>
+                        <div class="real-time-clock">
+                            <i class="fas fa-clock me-2"></i>
+                            <span id="realTimeClock">Đang tải...</span>
+                        </div>
+                    </div>
+                    
                     <!-- Dashboard Section -->
                     <div id="dashboardSection" class="content-section">
-                        <div class="d-flex justify-content-between align-items-center mb-4">
-                            <h4>Tổng quan Hệ thống</h4>
-                            <div class="btn-group">
-                                <button class="btn btn-outline-primary" id="todayBtn">Hôm nay</button>
-                                <button class="btn btn-outline-primary" id="monthBtn">Tháng này</button>
+                        <div class="today-highlight">
+                            <div class="row">
+                                <div class="col-md-8">
+                                    <h4>Hôm nay, <span id="todayDate">...</span></h4>
+                                    <p class="mb-0" id="todayEvents">Các sự kiện trong ngày sẽ hiển thị ở đây</p>
+                                </div>
+                                <div class="col-md-4 text-end">
+                                    <h2 id="currentTime">--:--:--</h2>
+                                    <p id="currentDate">Thứ Hai, 01/01/2024</p>
+                                </div>
                             </div>
                         </div>
                         
                         <div class="row">
                             <div class="col-md-3">
-                                <div class="card text-white bg-primary">
-                                    <div class="card-body">
-                                        <div class="d-flex justify-content-between">
-                                            <div>
-                                                <h5 id="totalEmployees">0</h5>
-                                                <p>Nhân viên</p>
-                                            </div>
-                                            <i class="fas fa-users fa-2x"></i>
-                                        </div>
-                                    </div>
+                                <div class="stats-card" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+                                    <i class="fas fa-users"></i>
+                                    <h3 id="totalEmployees">0</h3>
+                                    <p>Nhân viên</p>
                                 </div>
                             </div>
                             <div class="col-md-3">
-                                <div class="card text-white bg-success">
-                                    <div class="card-body">
-                                        <div class="d-flex justify-content-between">
-                                            <div>
-                                                <h5 id="presentToday">0</h5>
-                                                <p>Có mặt hôm nay</p>
-                                            </div>
-                                            <i class="fas fa-user-check fa-2x"></i>
-                                        </div>
-                                    </div>
+                                <div class="stats-card" style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);">
+                                    <i class="fas fa-user-check"></i>
+                                    <h3 id="presentToday">0</h3>
+                                    <p>Có mặt hôm nay</p>
                                 </div>
                             </div>
                             <div class="col-md-3">
-                                <div class="card text-white bg-warning">
-                                    <div class="card-body">
-                                        <div class="d-flex justify-content-between">
-                                            <div>
-                                                <h5 id="lateToday">0</h5>
-                                                <p>Đi muộn hôm nay</p>
-                                            </div>
-                                            <i class="fas fa-clock fa-2x"></i>
-                                        </div>
-                                    </div>
+                                <div class="stats-card" style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);">
+                                    <i class="fas fa-clock"></i>
+                                    <h3 id="lateToday">0</h3>
+                                    <p>Đi muộn hôm nay</p>
                                 </div>
                             </div>
                             <div class="col-md-3">
-                                <div class="card text-white bg-danger">
-                                    <div class="card-body">
-                                        <div class="d-flex justify-content-between">
-                                            <div>
-                                                <h5 id="absentToday">0</h5>
-                                                <p>Vắng hôm nay</p>
-                                            </div>
-                                            <i class="fas fa-user-times fa-2x"></i>
-                                        </div>
-                                    </div>
+                                <div class="stats-card" style="background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);">
+                                    <i class="fas fa-procedures"></i>
+                                    <h3 id="treatmentToday">0</h3>
+                                    <p>Ca điều trị hôm nay</p>
                                 </div>
                             </div>
                         </div>
@@ -294,13 +413,16 @@
                         <div class="row mt-4">
                             <div class="col-md-8">
                                 <div class="card">
-                                    <div class="card-header">
+                                    <div class="card-header d-flex justify-content-between align-items-center">
                                         <h5 class="mb-0">Chấm công tháng hiện tại</h5>
+                                        <div class="btn-group btn-group-sm">
+                                            <button class="btn btn-outline-primary active" data-period="month">Tháng</button>
+                                            <button class="btn btn-outline-primary" data-period="week">Tuần</button>
+                                        </div>
                                     </div>
                                     <div class="card-body">
                                         <div id="attendanceChart" style="height: 300px;">
-                                            <!-- Biểu đồ sẽ được thêm bằng JavaScript -->
-                                            <p class="text-center text-muted py-5">Biểu đồ chấm công sẽ hiển thị tại đây</p>
+                                            <canvas id="attendanceChartCanvas"></canvas>
                                         </div>
                                     </div>
                                 </div>
@@ -308,12 +430,45 @@
                             <div class="col-md-4">
                                 <div class="card">
                                     <div class="card-header">
+                                        <h5 class="mb-0">Thao tác nhanh</h5>
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="row">
+                                            <div class="col-6">
+                                                <button class="quick-action-btn w-100" data-section="attendance">
+                                                    <i class="fas fa-user-clock"></i>
+                                                    <p>Chấm công</p>
+                                                </button>
+                                            </div>
+                                            <div class="col-6">
+                                                <button class="quick-action-btn w-100" data-section="treatment">
+                                                    <i class="fas fa-stethoscope"></i>
+                                                    <p>Điều trị BN</p>
+                                                </button>
+                                            </div>
+                                            <div class="col-6">
+                                                <button class="quick-action-btn w-100" data-section="management">
+                                                    <i class="fas fa-clipboard-list"></i>
+                                                    <p>Quản lý</p>
+                                                </button>
+                                            </div>
+                                            <div class="col-6">
+                                                <button class="quick-action-btn w-100" data-section="mistakes">
+                                                    <i class="fas fa-exclamation-circle"></i>
+                                                    <p>Ghi lỗi</p>
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="card mt-4">
+                                    <div class="card-header">
                                         <h5 class="mb-0">Thống kê điều trị</h5>
                                     </div>
                                     <div class="card-body">
-                                        <div id="treatmentStats" style="height: 300px;">
-                                            <!-- Thống kê điều trị sẽ được thêm bằng JavaScript -->
-                                            <p class="text-center text-muted py-5">Thống kê điều trị sẽ hiển thị tại đây</p>
+                                        <div id="treatmentStats" style="height: 200px;">
+                                            <canvas id="treatmentStatsCanvas"></canvas>
                                         </div>
                                     </div>
                                 </div>
@@ -398,67 +553,61 @@
                     <!-- Management Section -->
                     <div id="managementSection" class="content-section" style="display: none;">
                         <div class="d-flex justify-content-between align-items-center mb-4">
-                            <h4>Tham gia Quản lý & Lỗi</h4>
-                            <div>
-                                <button class="btn btn-primary" id="addManagementBtn">
-                                    <i class="fas fa-plus"></i> Thêm QL
-                                </button>
-                                <button class="btn btn-warning ms-2" id="addMistakeBtn">
-                                    <i class="fas fa-exclamation-triangle"></i> Thêm lỗi
-                                </button>
-                            </div>
+                            <h4>Tham gia Quản lý</h4>
+                            <button class="btn btn-primary" id="addManagementBtn">
+                                <i class="fas fa-plus"></i> Thêm QL
+                            </button>
                         </div>
                         
-                        <div class="row">
-                            <div class="col-md-6">
-                                <div class="card">
-                                    <div class="card-header">
-                                        <h5 class="mb-0">Tham gia Quản lý</h5>
-                                    </div>
-                                    <div class="card-body">
-                                        <div class="table-responsive">
-                                            <table class="table table-bordered table-hover">
-                                                <thead>
-                                                    <tr>
-                                                        <th>STT</th>
-                                                        <th>Ngày</th>
-                                                        <th>Nhân viên</th>
-                                                        <th>Nội dung</th>
-                                                        <th>Hành động</th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody id="managementBody">
-                                                    <!-- Dữ liệu quản lý sẽ được thêm bằng JavaScript -->
-                                                </tbody>
-                                            </table>
-                                        </div>
-                                    </div>
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="table-responsive">
+                                    <table class="table table-bordered table-hover">
+                                        <thead>
+                                            <tr>
+                                                <th>STT</th>
+                                                <th>Ngày</th>
+                                                <th>Nhân viên</th>
+                                                <th>Nội dung</th>
+                                                <th>Hành động</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="managementBody">
+                                            <!-- Dữ liệu quản lý sẽ được thêm bằng JavaScript -->
+                                        </tbody>
+                                    </table>
                                 </div>
                             </div>
-                            <div class="col-md-6">
-                                <div class="card">
-                                    <div class="card-header">
-                                        <h5 class="mb-0">Lỗi nhân viên</h5>
-                                    </div>
-                                    <div class="card-body">
-                                        <div class="table-responsive">
-                                            <table class="table table-bordered table-hover">
-                                                <thead>
-                                                    <tr>
-                                                        <th>STT</th>
-                                                        <th>Ngày</th>
-                                                        <th>Nhân viên</th>
-                                                        <th>Loại lỗi</th>
-                                                        <th>Mô tả</th>
-                                                        <th>Hành động</th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody id="mistakesBody">
-                                                    <!-- Dữ liệu lỗi sẽ được thêm bằng JavaScript -->
-                                                </tbody>
-                                            </table>
-                                        </div>
-                                    </div>
+                        </div>
+                    </div>
+
+                    <!-- Mistakes Section -->
+                    <div id="mistakesSection" class="content-section" style="display: none;">
+                        <div class="d-flex justify-content-between align-items-center mb-4">
+                            <h4>Lỗi nhân viên</h4>
+                            <button class="btn btn-warning" id="addMistakeBtn">
+                                <i class="fas fa-exclamation-triangle"></i> Thêm lỗi
+                            </button>
+                        </div>
+                        
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="table-responsive">
+                                    <table class="table table-bordered table-hover">
+                                        <thead>
+                                            <tr>
+                                                <th>STT</th>
+                                                <th>Ngày</th>
+                                                <th>Nhân viên</th>
+                                                <th>Loại lỗi</th>
+                                                <th>Mô tả</th>
+                                                <th>Hành động</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="mistakesBody">
+                                            <!-- Dữ liệu lỗi sẽ được thêm bằng JavaScript -->
+                                        </tbody>
+                                    </table>
                                 </div>
                             </div>
                         </div>
@@ -722,6 +871,7 @@
 
     <!-- JavaScript -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
         // Dữ liệu mẫu
         let employees = JSON.parse(localStorage.getItem('employees')) || [
@@ -767,6 +917,9 @@
         let managementData = JSON.parse(localStorage.getItem('managementData')) || [];
         let mistakesData = JSON.parse(localStorage.getItem('mistakesData')) || [];
         
+        // Biến toàn cục cho biểu đồ
+        let attendanceChart, treatmentStatsChart;
+        
         // Lưu dữ liệu mẫu nếu chưa có
         function initializeData() {
             if (!localStorage.getItem('employees')) {
@@ -795,20 +948,59 @@
             }
         }
         
+        // Cập nhật thời gian thực
+        function updateRealTimeClock() {
+            const now = new Date();
+            const timeString = now.toLocaleTimeString('vi-VN');
+            const dateString = now.toLocaleDateString('vi-VN', {
+                weekday: 'long',
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric'
+            });
+            
+            document.getElementById('realTimeClock').textContent = timeString;
+            document.getElementById('currentTime').textContent = timeString;
+            document.getElementById('currentDate').textContent = dateString;
+            
+            const todayString = now.toLocaleDateString('vi-VN');
+            document.getElementById('todayDate').textContent = todayString;
+        }
+        
+        // Cập nhật sự kiện Google Calendar (mô phỏng)
+        function updateCalendarEvents() {
+            const events = [
+                "Họp giao ban: 8:00",
+                "Kiểm tra thiết bị: 10:00",
+                "Đào tạo kỹ thuật mới: 14:00"
+            ];
+            
+            document.getElementById('todayEvents').innerHTML = events.map(event => 
+                `<div class="calendar-event">${event}</div>`
+            ).join('');
+        }
+        
         // Đăng nhập
         document.getElementById('loginForm').addEventListener('submit', function(e) {
             e.preventDefault();
             const username = document.getElementById('username').value;
             const password = document.getElementById('password').value;
             
-            // Kiểm tra đăng nhập đơn giản
+            // Kiểm tra đăng nhập
             if (username === 'PKPGSKHA' && password === 'K1019A') {
                 document.getElementById('loginContainer').style.display = 'none';
                 document.getElementById('mainContainer').style.display = 'block';
                 initializeData();
                 loadDashboard();
+                
+                // Cập nhật thời gian thực
+                updateRealTimeClock();
+                setInterval(updateRealTimeClock, 1000);
+                updateCalendarEvents();
             } else {
                 const modal = new bootstrap.Modal(document.getElementById('loginErrorModal'));
+                document.getElementById('loginErrorMsg').textContent = 
+                    'Tên đăng nhập hoặc mật khẩu không đúng! Vui lòng thử lại.';
                 modal.show();
             }
         });
@@ -839,6 +1031,18 @@
                 });
                 document.getElementById(section + 'Section').style.display = 'block';
                 
+                // Cập nhật tiêu đề
+                const sectionTitles = {
+                    'dashboard': 'Tổng quan Hệ thống',
+                    'attendance': 'Theo dõi Chấm công',
+                    'treatment': 'Điều trị Bệnh nhân',
+                    'management': 'Tham gia Quản lý',
+                    'mistakes': 'Lỗi Nhân viên',
+                    'reports': 'Báo cáo & Thống kê',
+                    'settings': 'Cài đặt Hệ thống'
+                };
+                document.getElementById('currentSectionTitle').textContent = sectionTitles[section];
+                
                 // Tải dữ liệu cho section
                 if (section === 'dashboard') {
                     loadDashboard();
@@ -848,11 +1052,21 @@
                     loadTreatment();
                 } else if (section === 'management') {
                     loadManagement();
+                } else if (section === 'mistakes') {
+                    loadMistakes();
                 } else if (section === 'reports') {
                     loadReports();
                 } else if (section === 'settings') {
                     loadSettings();
                 }
+            });
+        });
+        
+        // Thao tác nhanh
+        document.querySelectorAll('.quick-action-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const section = this.getAttribute('data-section');
+                document.querySelector(`.sidebar .nav-link[data-section="${section}"]`).click();
             });
         });
         
@@ -864,14 +1078,136 @@
             // Tính toán số liệu hôm nay
             const today = new Date().toISOString().split('T')[0];
             const todayAttendance = attendanceData.filter(a => a.date === today);
+            const todayTreatment = treatmentData.filter(t => t.date === today);
             
             const presentToday = todayAttendance.filter(a => a.status === 'Ok' || a.status.startsWith('Mn')).length;
             const lateToday = todayAttendance.filter(a => a.status.startsWith('Mn')).length;
-            const absentToday = employees.length - presentToday;
             
             document.getElementById('presentToday').textContent = presentToday;
             document.getElementById('lateToday').textContent = lateToday;
-            document.getElementById('absentToday').textContent = absentToday;
+            document.getElementById('treatmentToday').textContent = todayTreatment.length;
+            
+            // Tạo biểu đồ chấm công
+            createAttendanceChart();
+            
+            // Tạo biểu đồ thống kê điều trị
+            createTreatmentStatsChart();
+        }
+        
+        // Tạo biểu đồ chấm công
+        function createAttendanceChart() {
+            const ctx = document.getElementById('attendanceChartCanvas').getContext('2d');
+            
+            if (attendanceChart) {
+                attendanceChart.destroy();
+            }
+            
+            // Dữ liệu mẫu cho biểu đồ
+            const labels = ['Tuần 1', 'Tuần 2', 'Tuần 3', 'Tuần 4'];
+            const presentData = [18, 22, 19, 21];
+            const lateData = [2, 1, 3, 0];
+            const absentData = [0, 0, 1, 0];
+            
+            attendanceChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: labels,
+                    datasets: [
+                        {
+                            label: 'Có mặt',
+                            data: presentData,
+                            backgroundColor: 'rgba(39, 174, 96, 0.7)',
+                            borderColor: 'rgba(39, 174, 96, 1)',
+                            borderWidth: 1
+                        },
+                        {
+                            label: 'Đi muộn',
+                            data: lateData,
+                            backgroundColor: 'rgba(243, 156, 18, 0.7)',
+                            borderColor: 'rgba(243, 156, 18, 1)',
+                            borderWidth: 1
+                        },
+                        {
+                            label: 'Vắng mặt',
+                            data: absentData,
+                            backgroundColor: 'rgba(231, 76, 60, 0.7)',
+                            borderColor: 'rgba(231, 76, 60, 1)',
+                            borderWidth: 1
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            position: 'top',
+                        },
+                        title: {
+                            display: true,
+                            text: 'Thống kê chấm công theo tuần'
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            title: {
+                                display: true,
+                                text: 'Số nhân viên'
+                            }
+                        }
+                    }
+                }
+            });
+        }
+        
+        // Tạo biểu đồ thống kê điều trị
+        function createTreatmentStatsChart() {
+            const ctx = document.getElementById('treatmentStatsCanvas').getContext('2d');
+            
+            if (treatmentStatsChart) {
+                treatmentStatsChart.destroy();
+            }
+            
+            // Dữ liệu mẫu cho biểu đồ
+            const labels = techniques.slice(0, 5).map(t => t.name);
+            const data = [12, 19, 8, 15, 7];
+            
+            treatmentStatsChart = new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        data: data,
+                        backgroundColor: [
+                            'rgba(52, 152, 219, 0.7)',
+                            'rgba(155, 89, 182, 0.7)',
+                            'rgba(26, 188, 156, 0.7)',
+                            'rgba(241, 196, 15, 0.7)',
+                            'rgba(230, 126, 34, 0.7)'
+                        ],
+                        borderColor: [
+                            'rgba(52, 152, 219, 1)',
+                            'rgba(155, 89, 182, 1)',
+                            'rgba(26, 188, 156, 1)',
+                            'rgba(241, 196, 15, 1)',
+                            'rgba(230, 126, 34, 1)'
+                        ],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                        },
+                        title: {
+                            display: true,
+                            text: 'Kỹ thuật điều trị phổ biến'
+                        }
+                    }
+                }
+            });
         }
         
         // Tải chấm công
@@ -1114,8 +1450,10 @@
                 
                 managementBody.appendChild(row);
             });
-            
-            // Tải lỗi
+        }
+        
+        // Tải lỗi
+        function loadMistakes() {
             const mistakesBody = document.getElementById('mistakesBody');
             mistakesBody.innerHTML = '';
             
