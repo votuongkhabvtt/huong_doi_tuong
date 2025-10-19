@@ -828,12 +828,12 @@
         <div class="footer">
             <div class="footer-section">
                 <div class="footer-title">NGƯỜI THEO DÕI</div>
-                <div class="footer-name">PHAM QUỲNH ANH</div>
+                <div class="footer-name">PHAN QUỲNH ANH</div>
                 <div class="footer-role">Chuyên viên Vật lý trị liệu</div>
             </div>
             <div class="footer-section">
                 <div class="footer-title">TRƯỞNG PHÒNG KHÁM</div>
-                <div class="footer-name">PGS.TS.BS. VÕ TƯỜNG KHA</div>
+                <div class="footer-name">PGS.TS.BS.VÕ TƯỜNG KHA</div>
                 <div class="footer-role">Phó Giáo sư, Tiến sĩ, Bác sĩ chuyên khoa</div>
             </div>
         </div>
@@ -866,13 +866,13 @@
 
         // Thông tin đăng nhập
         const users = {
-            'PHAM QUỲNH ANH': {
-                password: '123456',
+            'PHAN QUỲNH ANH': {
+                password: 'Q19.A08.K14',
                 role: 'theodoi',
-                name: 'PHAM QUỲNH ANH'
+                name: 'PHAN QUỲNH ANH'
             },
             'PGS.TS.BS.VÕ TƯỜNG KHA': {
-                password: 'admin123',
+                password: 'T10.K09.A69',
                 role: 'truongphongkham',
                 name: 'PGS.TS.BS.VÕ TƯỜNG KHA'
             }
