@@ -802,7 +802,7 @@
             const password = document.getElementById('password').value;
             
             // Kiểm tra đăng nhập đơn giản
-            if (username === 'admin' && password === 'password') {
+            if (username === 'PKPGSKHA' && password === 'K1019A') {
                 document.getElementById('loginContainer').style.display = 'none';
                 document.getElementById('mainContainer').style.display = 'block';
                 initializeData();
