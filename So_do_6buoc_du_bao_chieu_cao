@@ -201,39 +201,39 @@
         
         <div class="flowchart-container">
             <div class="canvas-wrapper">
-                <canvas id="flowchartCanvas" width="1300" height="1400"></canvas>
+                <canvas id="flowchartCanvas" width="1300" height="1000"></canvas>
             </div>
             
             <div class="legend">
                 <div class="legend-item">
-                    <div class="legend-color" style="background-color: #e74c3c;"></div>
-                    <span>Đánh giá lâm sàng</span>
-                </div>
-                <div class="legend-item">
                     <div class="legend-color" style="background-color: #3498db;"></div>
-                    <span>Xét nghiệm cơ bản</span>
+                    <span>Bước 1: Đánh giá lâm sàng</span>
                 </div>
                 <div class="legend-item">
                     <div class="legend-color" style="background-color: #2ecc71;"></div>
-                    <span>Đánh giá tuổi xương</span>
+                    <span>Bước 2: Xét nghiệm cơ bản</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color" style="background-color: #e74c3c;"></div>
+                    <span>Bước 3: Đánh giá tuổi xương</span>
                 </div>
                 <div class="legend-item">
                     <div class="legend-color" style="background-color: #f39c12;"></div>
-                    <span>Đánh giá nội tiết</span>
+                    <span>Bước 4: Đánh giá nội tiết</span>
                 </div>
                 <div class="legend-item">
                     <div class="legend-color" style="background-color: #9b59b6;"></div>
-                    <span>Nghiệm pháp GH</span>
+                    <span>Bước 5: Nghiệm pháp GH</span>
                 </div>
                 <div class="legend-item">
                     <div class="legend-color" style="background-color: #1abc9c;"></div>
-                    <span>Tổng hợp kết quả</span>
+                    <span>Bước 6: Tổng hợp kết quả</span>
                 </div>
             </div>
         </div>
         
         <div class="step-details">
-            <div class="step-card" style="border-left-color: #e74c3c;">
+            <div class="step-card" style="border-left-color: #3498db;">
                 <div class="step-title">
                     <span class="step-number">1</span>
                     <span>Đánh giá lâm sàng ban đầu và khai thác tiền sử</span>
@@ -257,7 +257,7 @@
                 </p>
             </div>
             
-            <div class="step-card" style="border-left-color: #3498db;">
+            <div class="step-card" style="border-left-color: #2ecc71;">
                 <div class="step-title">
                     <span class="step-number">2</span>
                     <span>Xét nghiệm cận lâm sàng cơ bản</span>
@@ -273,7 +273,7 @@
                 </p>
             </div>
             
-            <div class="step-card" style="border-left-color: #2ecc71;">
+            <div class="step-card" style="border-left-color: #e74c3c;">
                 <div class="step-title">
                     <span class="step-number">3</span>
                     <span>Đánh giá tuổi xương (X-quang)</span>
@@ -360,9 +360,9 @@
             
             // Colors for each step
             const colors = [
-                '#e74c3c', // Step 1 - Red
-                '#3498db', // Step 2 - Blue
-                '#2ecc71', // Step 3 - Green
+                '#3498db', // Step 1 - Blue
+                '#2ecc71', // Step 2 - Green
+                '#e74c3c', // Step 3 - Red
                 '#f39c12', // Step 4 - Orange
                 '#9b59b6', // Step 5 - Purple
                 '#1abc9c'  // Step 6 - Teal
@@ -395,83 +395,116 @@
                 // Clear canvas
                 ctx.clearRect(0, 0, canvas.width, canvas.height);
                 
-                // Set initial positions
-                const startX = canvas.width / 2;
-                let currentY = 100;
-                const stepWidth = 350;
-                const stepHeight = 220;
-                const verticalSpacing = 140;
+                // Define positions for each step based on the requested layout
+                const stepWidth = 300;
+                const stepHeight = 200;
+                const horizontalSpacing = 350;
+                const verticalSpacing = 250;
                 
-                // Draw start node
-                drawRoundedRect(startX - 120, currentY - 40, 240, 70, 15, '#2c3e50');
-                ctx.fillStyle = 'white';
-                ctx.font = 'bold 20px Arial';
-                ctx.textAlign = 'center';
-                ctx.textBaseline = 'middle';
-                ctx.fillText('BẮT ĐẦU QUY TRÌNH', startX, currentY - 10);
+                // Calculate positions
+                const step1X = 150;
+                const step1Y = 100;
                 
-                currentY += 90;
+                const step2X = step1X + horizontalSpacing;
+                const step2Y = step1Y;
+                
+                const step3X = step2X;
+                const step3Y = step2Y + verticalSpacing;
+                
+                const step4X = step1X;
+                const step4Y = step1Y + verticalSpacing;
+                
+                const step5X = step1X;
+                const step5Y = step4Y + verticalSpacing;
+                
+                const step6X = step2X;
+                const step6Y = step3Y + verticalSpacing;
+                
+                // Draw connecting arrows with red color
+                ctx.strokeStyle = '#8B0000';
+                ctx.lineWidth = 3;
+                ctx.fillStyle = '#8B0000';
+                
+                // Step 1 -> Step 2
+                drawArrow(
+                    step1X + stepWidth, step1Y + stepHeight/2,
+                    step2X, step2Y + stepHeight/2,
+                    10
+                );
+                
+                // Step 2 -> Step 3
+                drawArrow(
+                    step2X + stepWidth/2, step2Y + stepHeight,
+                    step3X + stepWidth/2, step3Y,
+                    10
+                );
+                
+                // Step 3 -> Step 4
+                drawArrow(
+                    step3X, step3Y + stepHeight/2,
+                    step4X + stepWidth, step4Y + stepHeight/2,
+                    10
+                );
+                
+                // Step 4 -> Step 5
+                drawArrow(
+                    step4X + stepWidth/2, step4Y + stepHeight,
+                    step5X + stepWidth/2, step5Y,
+                    10
+                );
+                
+                // Step 5 -> Step 6
+                drawArrow(
+                    step5X + stepWidth, step5Y + stepHeight/2,
+                    step6X, step6Y + stepHeight/2,
+                    10
+                );
                 
                 // Draw steps
-                for (let i = 0; i < 6; i++) {
-                    // Draw connecting arrow
-                    if (i > 0) {
-                        drawArrow(startX, currentY - verticalSpacing + stepHeight, startX, currentY - 20, 10);
-                    }
-                    
-                    // Draw step
-                    drawStep(startX, currentY, stepWidth, stepHeight, colors[i], stepTitles[i], stepDetails[i], i);
-                    
-                    currentY += stepHeight + verticalSpacing;
-                }
-                
-                // Draw end node
-                drawRoundedRect(startX - 120, currentY - 40, 240, 70, 15, '#2c3e50');
-                ctx.fillStyle = 'white';
-                ctx.font = 'bold 20px Arial';
-                ctx.textAlign = 'center';
-                ctx.textBaseline = 'middle';
-                ctx.fillText('KẾT THÚC', startX, currentY - 15);
-                ctx.font = '16px Arial';
-                ctx.fillText('Diễn giải & Tư vấn', startX, currentY + 10);
+                drawStep(step1X, step1Y, stepWidth, stepHeight, colors[0], stepTitles[0], stepDetails[0], 1);
+                drawStep(step2X, step2Y, stepWidth, stepHeight, colors[1], stepTitles[1], stepDetails[1], 2);
+                drawStep(step3X, step3Y, stepWidth, stepHeight, colors[2], stepTitles[2], stepDetails[2], 3);
+                drawStep(step4X, step4Y, stepWidth, stepHeight, colors[3], stepTitles[3], stepDetails[3], 4);
+                drawStep(step5X, step5Y, stepWidth, stepHeight, colors[4], stepTitles[4], stepDetails[4], 5);
+                drawStep(step6X, step6Y, stepWidth, stepHeight, colors[5], stepTitles[5], stepDetails[5], 6);
             }
             
             function drawStep(x, y, width, height, color, title, details, stepNumber) {
                 // Draw main rectangle
-                drawRoundedRect(x - width/2, y, width, height, 20, color);
+                drawRoundedRect(x, y, width, height, 15, color);
                 
                 // Draw step number circle
                 ctx.fillStyle = '#2c3e50';
                 ctx.beginPath();
-                ctx.arc(x - width/2 + 35, y + 35, 25, 0, Math.PI * 2);
+                ctx.arc(x + 30, y + 30, 20, 0, Math.PI * 2);
                 ctx.fill();
                 
                 ctx.fillStyle = 'white';
-                ctx.font = 'bold 18px Arial';
+                ctx.font = 'bold 16px Arial';
                 ctx.textAlign = 'center';
                 ctx.textBaseline = 'middle';
-                ctx.fillText((stepNumber + 1).toString(), x - width/2 + 35, y + 35);
+                ctx.fillText(stepNumber.toString(), x + 30, y + 30);
                 
                 // Draw title
                 ctx.fillStyle = '#2c3e50';
-                ctx.font = 'bold 18px Arial';
+                ctx.font = 'bold 16px Arial';
                 ctx.textAlign = 'center';
                 
                 // Split title by newlines and draw each line
                 const titleLines = title.split('\n');
                 for (let i = 0; i < titleLines.length; i++) {
-                    ctx.fillText(titleLines[i], x, y + 35 + i * 25);
+                    ctx.fillText(titleLines[i], x + width/2, y + 35 + i * 20);
                 }
                 
                 // Draw details
                 ctx.fillStyle = '#2c3e50';
-                ctx.font = '14px Arial';
+                ctx.font = '13px Arial';
                 ctx.textAlign = 'left';
                 
                 // Split details by newlines and draw each line
                 const detailLines = details.split('\n');
                 for (let i = 0; i < detailLines.length; i++) {
-                    ctx.fillText(detailLines[i], x - width/2 + 25, y + 85 + i * 20);
+                    ctx.fillText(detailLines[i], x + 20, y + 75 + i * 18);
                 }
             }
             
@@ -492,12 +525,12 @@
                 
                 // Add subtle shadow
                 ctx.strokeStyle = 'rgba(0, 0, 0, 0.15)';
-                ctx.lineWidth = 3;
+                ctx.lineWidth = 2;
                 ctx.stroke();
             }
             
             function drawArrow(fromX, fromY, toX, toY, headSize) {
-                ctx.strokeStyle = '#7f8c8d';
+                ctx.strokeStyle = '#8B0000';
                 ctx.lineWidth = 3;
                 ctx.beginPath();
                 ctx.moveTo(fromX, fromY);
@@ -507,7 +540,7 @@
                 // Arrowhead
                 const angle = Math.atan2(toY - fromY, toX - fromX);
                 
-                ctx.fillStyle = '#7f8c8d';
+                ctx.fillStyle = '#8B0000';
                 ctx.beginPath();
                 ctx.moveTo(toX, toY);
                 ctx.lineTo(
