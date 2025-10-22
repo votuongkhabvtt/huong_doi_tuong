@@ -27,15 +27,13 @@
             border-radius: 16px;
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
             padding: 30px;
-            display: flex;
-            flex-direction: column;
-            gap: 25px;
         }
         
         header {
             text-align: center;
             padding-bottom: 20px;
             border-bottom: 2px solid #eaeaea;
+            margin-bottom: 30px;
         }
         
         h1 {
@@ -53,27 +51,7 @@
             margin: 0 auto;
         }
         
-        .methodology {
-            background: #f8f9fa;
-            padding: 20px;
-            border-radius: 10px;
-            margin: 20px 0;
-            border-left: 4px solid #3498db;
-        }
-        
-        .methodology h3 {
-            color: #2c3e50;
-            margin-bottom: 10px;
-        }
-        
-        .flowchart-container {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 30px;
-        }
-        
-        .canvas-wrapper {
+        .canvas-container {
             width: 100%;
             overflow: auto;
             border: 1px solid #e1e8ed;
@@ -81,6 +59,7 @@
             background-color: #fff;
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
             padding: 20px;
+            margin-bottom: 30px;
         }
         
         canvas {
@@ -88,11 +67,35 @@
             margin: 0 auto;
         }
         
+        .legend {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 20px;
+            padding: 20px;
+            background-color: #f8fafc;
+            border-radius: 12px;
+            margin-bottom: 30px;
+        }
+        
+        .legend-item {
+            display: flex;
+            align-items: center;
+            margin: 5px 15px;
+        }
+        
+        .legend-color {
+            width: 24px;
+            height: 24px;
+            border-radius: 6px;
+            margin-right: 10px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
         .steps-container {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
             gap: 25px;
-            margin-top: 20px;
         }
         
         .step-card {
@@ -153,6 +156,7 @@
             margin-top: 8px;
             padding-left: 15px;
             border-left: 3px solid #eaeaea;
+            line-height: 1.15; /* 1.15pt line height */
         }
         
         .notes {
@@ -200,14 +204,34 @@
             <p class="subtitle">Phương pháp Greulich & Pyle - Đánh giá tuổi xương thông qua X-quang bàn tay và cổ tay</p>
         </header>
         
-        <div class="methodology">
-            <h3>Giới thiệu về Phương pháp Greulich & Pyle</h3>
-            <p>Phương pháp Greulich & Pyle là kỹ thuật chuẩn vàng trong đánh giá tuổi xương, sử dụng bộ atlas chuẩn để so sánh phim X-quang bàn tay và cổ tay của trẻ với các mẫu chuẩn theo độ tuổi và giới tính.</p>
+        <div class="canvas-container">
+            <canvas id="flowchartCanvas" width="1100" height="700"></canvas>
         </div>
         
-        <div class="flowchart-container">
-            <div class="canvas-wrapper">
-                <canvas id="flowchartCanvas" width="1100" height="700"></canvas>
+        <div class="legend">
+            <div class="legend-item">
+                <div class="legend-color" style="background-color: #3498db;"></div>
+                <span>Bước 1: Chuẩn bị và Chụp X-quang</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-color" style="background-color: #2ecc71;"></div>
+                <span>Bước 2: Chuẩn bị Atlas và Phim</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-color" style="background-color: #e74c3c;"></div>
+                <span>Bước 3: Đánh giá các vùng xương</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-color" style="background-color: #f39c12;"></div>
+                <span>Bước 4: So sánh với Atlas G&P</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-color" style="background-color: #9b59b6;"></div>
+                <span>Bước 5: Phân tích kết quả</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-color" style="background-color: #1abc9c;"></div>
+                <span>Bước 6: Báo cáo và Tư vấn</span>
             </div>
         </div>
         
@@ -224,10 +248,12 @@
                 <p class="step-text">Đặt bàn tay trái của trẻ lên phim với ngón tay hơi khép, lòng bàn tay úp xuống. Cẳng tay và bàn tay thẳng hàng trên cùng một mặt phẳng. Ngón tay cái hơi xoay ra ngoài (khoảng 30°).</p>
                 
                 <div class="step-subtitle">Kỹ thuật chụp:</div>
-                <p class="step-text">Khoảng cách ống X-quang: 90-100 cm. Điện thế: 50-60 kVp. Điện lượng: 2-5 mAs tùy độ tuổi. Đảm bảo toàn bộ bàn tay và cổ tay được hiển thị rõ ràng trên phim.</p>
+                <p class="step-text">Khoảng cách ống X-quang: 90-100 cm. Điện thế: 50-60 kVp. Điện lượng: 2-5 mAs tùy độ tuổi.</p>
                 
                 <div class="step-subtitle">Yêu cầu chất lượng phim:</div>
-                <p class="step-text">Phim phải hiển thị rõ nét toàn bộ bàn tay và cổ tay, bao gồm cả đầu dưới xương quay và xương trụ. Độ tương phản tốt, không bị nhòe, không bị che khuất.</p>
+                <p class="step-text">Phim phải hiển thị rõ nét toàn bộ bàn tay và cổ tay, bao gồm cả đầu dưới xương quay và xương trụ.
+                    <small>Độ tương phản tốt, không bị nhòe, không bị che khuất.</small>
+                </p>
             </div>
             
             <div class="step-card" style="border-top-color: #2ecc71;">
@@ -239,10 +265,12 @@
                 <p class="step-text">Sử dụng Atlas Greulich & Pyle phiên bản mới nhất. Xác định bộ Atlas phù hợp theo giới tính (nam/nữ).</p>
                 
                 <div class="step-subtitle">Sắp xếp phim X-quang:</div>
-                <p class="step-text">Đặt phim X-quang của bệnh nhân trên hộp đèn. Đảm bảo ánh sáng đủ và đồng đều. Điều chỉnh độ sáng để quan sát rõ các chi tiết xương.</p>
+                <p class="step-text">Đặt phim X-quang của bệnh nhân trên hộp đèn. Đảm bảo ánh sáng đủ và đồng đều.</p>
                 
                 <div class="step-subtitle">Xác định thông tin cơ bản:</div>
-                <p class="step-text">Ghi nhận tuổi thực của trẻ (theo ngày tháng năm sinh). Xác định giới tính của trẻ. Ghi nhận ngày chụp X-quang.</p>
+                <p class="step-text">Ghi nhận tuổi thực của trẻ (theo ngày tháng năm sinh). Xác định giới tính của trẻ. Ghi nhận ngày chụp X-quang.
+                    <small>Thông tin chính xác giúp đối chiếu kết quả chính xác hơn.</small>
+                </p>
                 
                 <div class="step-subtitle">Chuẩn bị dụng cụ:</div>
                 <p class="step-text">Chuẩn bị thước đo, kính lúp nếu cần. Đảm bảo khu vực đọc phim đủ ánh sáng và không bị phân tâm.</p>
@@ -254,19 +282,20 @@
                     <span>Đánh giá các vùng xương quan trọng</span>
                 </div>
                 <div class="step-subtitle">Các xương cổ tay:</div>
-                <p class="step-text">Đánh giá sự xuất hiện và phát triển của các xương cổ tay: thuyền, nguyệt, tháp, đậu, thang, thê, cả. Quan sát sự xuất hiện của điểm cốt hóa và hình dạng xương.</p>
+                <p class="step-text">Đánh giá sự xuất hiện và phát triển của các xương cổ tay: thuyền, nguyệt, tháp, đậu, thang, thê, cả.</p>
                 
                 <div class="step-subtitle">Các đầu xương dài:</div>
-                <p class="step-text">Đánh giá đầu dưới xương quay và xương trụ. Quan sát sự phát triển của sụn tăng trưởng và sự xuất hiện của điểm cốt hóa.</p>
+                <p class="step-text">Đánh giá đầu dưới xương quay và xương trụ. Quan sát sự phát triển của sụn tăng trưởng.
+                    <small>Sự xuất hiện của điểm cốt hóa là chỉ số quan trọng.</small>
+                </p>
                 
                 <div class="step-subtitle">Xương đốt bàn tay:</div>
                 <p class="step-text">Quan sát sự phát triển của các xương đốt bàn tay I-V. Đánh giá hình dạng và kích thước của chúng.</p>
                 
                 <div class="step-subtitle">Xương ngón tay:</div>
-                <p class="step-text">Đánh giá các xương đốt gần, đốt giữa và đốt xa của tất cả các ngón tay. Quan sát sự phát triển của các đầu xương và sự thu hẹp của sụn tăng trưởng.</p>
-                
-                <div class="step-subtitle">Xương đốt ngón cái:</div>
-                <p class="step-text">Đặc biệt chú ý đến xương đốt ngón cái, thường có mẫu phát triển đặc trưng theo tuổi.</p>
+                <p class="step-text">Đánh giá các xương đốt gần, đốt giữa và đốt xa của tất cả các ngón tay.
+                    <small>Quan sát sự phát triển của các đầu xương và sự thu hẹp của sụn tăng trưởng.</small>
+                </p>
             </div>
             
             <div class="step-card" style="border-top-color: #f39c12;">
@@ -275,16 +304,20 @@
                     <span>So sánh với Atlas Greulich & Pyle</span>
                 </div>
                 <div class="step-subtitle">Phương pháp so sánh toàn bộ:</div>
-                <p class="step-text">So sánh tổng thể phim X-quang của bệnh nhân với các mẫu trong Atlas. Tìm mẫu có mức độ phát triển xương tương đồng nhất. Xem xét tất cả các vùng xương cùng lúc.</p>
+                <p class="step-text">So sánh tổng thể phim X-quang của bệnh nhân với các mẫu trong Atlas. Tìm mẫu có mức độ phát triển xương tương đồng nhất.</p>
                 
                 <div class="step-subtitle">Phương pháp so sánh từng xương:</div>
-                <p class="step-text">So sánh từng xương riêng lẻ với Atlas. Đánh giá mức độ phát triển của từng xương. Ghi nhận sự tương đồng và khác biệt.</p>
+                <p class="step-text">So sánh từng xương riêng lẻ với Atlas. Đánh giá mức độ phát triển của từng xương.
+                    <small>Ghi nhận sự tương đồng và khác biệt với mẫu chuẩn.</small>
+                </p>
                 
                 <div class="step-subtitle">Đánh giá theo trình tự phát triển:</div>
                 <p class="step-text">Xác định trình tự xuất hiện và phát triển của các điểm cốt hóa. So sánh với trình tự chuẩn trong Atlas.</p>
                 
                 <div class="step-subtitle">Xác định tuổi xương ước tính:</div>
-                <p class="step-text">Dựa trên sự so sánh, xác định tuổi xương ước tính (theo tháng/năm). Ghi nhận tuổi xương tương ứng với mẫu phù hợp nhất.</p>
+                <p class="step-text">Dựa trên sự so sánh, xác định tuổi xương ước tính (theo tháng/năm).
+                    <small>Ghi nhận tuổi xương tương ứng với mẫu phù hợp nhất.</small>
+                </p>
             </div>
             
             <div class="step-card" style="border-top-color: #9b59b6;">
@@ -299,10 +332,12 @@
                 <p class="step-text">Xác định mức độ trưởng thành của hệ xương. Đánh giá tiềm năng tăng trưởng còn lại dựa trên tuổi xương.</p>
                 
                 <div class="step-subtitle">Phân tích các bất thường:</div>
-                <p class="step-text">Ghi nhận các bất thường nếu có: bất thường về hình dạng xương, kích thước, mật độ xương, hay sự bất đối xứng.</p>
+                <p class="step-text">Ghi nhận các bất thường nếu có: bất thường về hình dạng xương, kích thước, mật độ xương.
+                    <small>Bất thường có thể chỉ ra vấn đề về phát triển hoặc bệnh lý.</small>
+                </p>
                 
                 <div class="step-subtitle">Đánh giá độ chính xác:</div>
-                <p class="step-text">Xác định độ tin cậy của kết quả. Ghi nhận các yếu tố có thể ảnh hưởng đến độ chính xác: chất lượng phim, kinh nghiệm người đọc.</p>
+                <p class="step-text">Xác định độ tin cậy của kết quả. Ghi nhận các yếu tố có thể ảnh hưởng đến độ chính xác.</p>
             </div>
             
             <div class="step-card" style="border-top-color: #1abc9c;">
@@ -311,16 +346,20 @@
                     <span>Báo cáo và Tư vấn</span>
                 </div>
                 <div class="step-subtitle">Lập báo cáo kết quả:</div>
-                <p class="step-text">Ghi rõ tuổi xương ước tính (theo năm và tháng). So sánh với tuổi thực và tính chênh lệch. Mô tả ngắn gọn các đặc điểm phát triển xương quan trọng.</p>
+                <p class="step-text">Ghi rõ tuổi xương ước tính (theo năm và tháng). So sánh với tuổi thực và tính chênh lệch.</p>
                 
                 <div class="step-subtitle">Diễn giải ý nghĩa lâm sàng:</div>
-                <p class="step-text">Giải thích ý nghĩa của kết quả tuổi xương trong bối cảnh lâm sàng. Đánh giá tác động đến tiên lượng tăng trưởng chiều cao.</p>
+                <p class="step-text">Giải thích ý nghĩa của kết quả tuổi xương trong bối cảnh lâm sàng.
+                    <small>Đánh giá tác động đến tiên lượng tăng trưởng chiều cao.</small>
+                </p>
                 
                 <div class="step-subtitle">Tư vấn cho bác sĩ lâm sàng:</div>
-                <p class="step-text">Cung cấp thông tin cho bác sĩ điều trị để hỗ trợ chẩn đoán và điều trị. Đề xuất các đánh giá bổ sung nếu cần.</p>
+                <p class="step-text">Cung cấp thông tin cho bác sĩ điều trị để hỗ trợ chẩn đoán và điều trị.</p>
                 
                 <div class="step-subtitle">Tư vấn cho gia đình:</div>
-                <p class="step-text">Giải thích kết quả cho phụ huynh một cách dễ hiểu. Cung cấp thông tin về ý nghĩa của tuổi xương và tác động đến sự phát triển của trẻ. Đưa ra các khuyến nghị về theo dõi và can thiệp nếu cần.</p>
+                <p class="step-text">Giải thích kết quả cho phụ huynh một cách dễ hiểu. Cung cấp thông tin về ý nghĩa của tuổi xương.
+                    <small>Đưa ra các khuyến nghị về theo dõi và can thiệp nếu cần.</small>
+                </p>
             </div>
         </div>
         
@@ -491,10 +530,11 @@
                 ctx.font = '11px Arial';
                 ctx.textAlign = 'left';
                 
-                // Split details by newlines and draw each line
+                // Split details by newlines and draw each line with 1.15 line height
                 const detailLines = details.split('\n');
+                const lineHeight = 13.8; // 11px * 1.15 = 12.65pt ≈ 13.8px
                 for (let i = 0; i < detailLines.length; i++) {
-                    ctx.fillText(detailLines[i], x + 10, y + 95 + i * 14);
+                    ctx.fillText(detailLines[i], x + 10, y + 95 + i * lineHeight);
                 }
             }
             
