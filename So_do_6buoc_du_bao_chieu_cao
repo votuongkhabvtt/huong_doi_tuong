@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sơ đồ Quy trình Tầm Soát và Dự Báo Chiều Cao</title>
+    <title>Quy trình Chẩn đoán Tuổi Xương - Greulich & Pyle</title>
     <style>
         * {
             margin: 0;
@@ -13,7 +13,7 @@
         
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            background: linear-gradient(135deg, #f5f7fa 0%, #e4efe9 100%);
             color: #333;
             line-height: 1.6;
             padding: 20px;
@@ -21,7 +21,7 @@
         }
         
         .container {
-            max-width: 1400px;
+            max-width: 1200px;
             margin: 0 auto;
             background-color: rgba(255, 255, 255, 0.95);
             border-radius: 16px;
@@ -40,17 +40,30 @@
         
         h1 {
             color: #2c3e50;
-            font-size: 2.4rem;
+            font-size: 2.2rem;
             margin-bottom: 10px;
             font-weight: 700;
         }
         
         .subtitle {
             color: #7f8c8d;
-            font-size: 1.2rem;
+            font-size: 1.1rem;
             font-style: italic;
             max-width: 800px;
             margin: 0 auto;
+        }
+        
+        .methodology {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+            border-left: 4px solid #3498db;
+        }
+        
+        .methodology h3 {
+            color: #2c3e50;
+            margin-bottom: 10px;
         }
         
         .flowchart-container {
@@ -75,35 +88,9 @@
             margin: 0 auto;
         }
         
-        .legend {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            gap: 20px;
-            padding: 20px;
-            background-color: #f8fafc;
-            border-radius: 12px;
-            width: 100%;
-            max-width: 900px;
-        }
-        
-        .legend-item {
-            display: flex;
-            align-items: center;
-            margin: 5px 15px;
-        }
-        
-        .legend-color {
-            width: 24px;
-            height: 24px;
-            border-radius: 6px;
-            margin-right: 10px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-        }
-        
-        .step-details {
+        .steps-container {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
             gap: 25px;
             margin-top: 20px;
         }
@@ -114,7 +101,8 @@
             padding: 25px;
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.07);
             transition: transform 0.3s ease, box-shadow 0.3s ease;
-            border-left: 5px solid;
+            border-top: 5px solid;
+            height: 100%;
         }
         
         .step-card:hover {
@@ -126,7 +114,7 @@
             font-weight: 700;
             color: #2c3e50;
             margin-bottom: 18px;
-            font-size: 1.3rem;
+            font-size: 1.25rem;
             display: flex;
             align-items: center;
             gap: 10px;
@@ -167,6 +155,19 @@
             border-left: 3px solid #eaeaea;
         }
         
+        .notes {
+            background: #fff9e6;
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 30px;
+            border-left: 4px solid #f39c12;
+        }
+        
+        .notes h3 {
+            color: #e67e22;
+            margin-bottom: 10px;
+        }
+        
         .footer {
             text-align: center;
             margin-top: 30px;
@@ -178,7 +179,7 @@
         }
         
         @media (max-width: 768px) {
-            .step-details {
+            .steps-container {
                 grid-template-columns: 1fr;
             }
             
@@ -195,161 +196,144 @@
 <body>
     <div class="container">
         <header>
-            <h1>Sơ đồ Quy trình Tầm Soát và Dự Báo Chiều Cao Trưởng Thành</h1>
-            <p class="subtitle">Quy trình đánh giá toàn diện và khoa học để dự báo chiều cao trưởng thành ở trẻ em</p>
+            <h1>Quy trình Kỹ thuật Chẩn đoán Tuổi Xương Trẻ em</h1>
+            <p class="subtitle">Phương pháp Greulich & Pyle - Đánh giá tuổi xương thông qua X-quang bàn tay và cổ tay</p>
         </header>
+        
+        <div class="methodology">
+            <h3>Giới thiệu về Phương pháp Greulich & Pyle</h3>
+            <p>Phương pháp Greulich & Pyle là kỹ thuật chuẩn vàng trong đánh giá tuổi xương, sử dụng bộ atlas chuẩn để so sánh phim X-quang bàn tay và cổ tay của trẻ với các mẫu chuẩn theo độ tuổi và giới tính.</p>
+        </div>
         
         <div class="flowchart-container">
             <div class="canvas-wrapper">
-                <canvas id="flowchartCanvas" width="1300" height="1000"></canvas>
-            </div>
-            
-            <div class="legend">
-                <div class="legend-item">
-                    <div class="legend-color" style="background-color: #3498db;"></div>
-                    <span>Bước 1: Đánh giá lâm sàng</span>
-                </div>
-                <div class="legend-item">
-                    <div class="legend-color" style="background-color: #2ecc71;"></div>
-                    <span>Bước 2: Xét nghiệm cơ bản</span>
-                </div>
-                <div class="legend-item">
-                    <div class="legend-color" style="background-color: #e74c3c;"></div>
-                    <span>Bước 3: Đánh giá tuổi xương</span>
-                </div>
-                <div class="legend-item">
-                    <div class="legend-color" style="background-color: #f39c12;"></div>
-                    <span>Bước 4: Đánh giá nội tiết</span>
-                </div>
-                <div class="legend-item">
-                    <div class="legend-color" style="background-color: #9b59b6;"></div>
-                    <span>Bước 5: Nghiệm pháp GH</span>
-                </div>
-                <div class="legend-item">
-                    <div class="legend-color" style="background-color: #1abc9c;"></div>
-                    <span>Bước 6: Tổng hợp kết quả</span>
-                </div>
+                <canvas id="flowchartCanvas" width="1100" height="700"></canvas>
             </div>
         </div>
         
-        <div class="step-details">
-            <div class="step-card" style="border-left-color: #3498db;">
+        <div class="steps-container">
+            <div class="step-card" style="border-top-color: #3498db;">
                 <div class="step-title">
                     <span class="step-number">1</span>
-                    <span>Đánh giá lâm sàng ban đầu và khai thác tiền sử</span>
+                    <span>Chuẩn bị và Chụp X-quang</span>
                 </div>
-                <div class="step-subtitle">Đo đạc nhân trắc học:</div>
-                <p class="step-text">Đo chiều cao và cân nặng một cách chính xác. So sánh với biểu đồ tăng trưởng WHO hoặc CDC để xác định phân vị.
-                    <small>Phân vị dưới 3% hoặc trên 97% cần được đánh giá kỹ lưỡng hơn.</small>
-                </p>
+                <div class="step-subtitle">Chuẩn bị bệnh nhân:</div>
+                <p class="step-text">Giải thích quy trình cho trẻ và phụ huynh. Đảm bảo trẻ tháo bỏ trang sức, đồng hồ ở tay trái.</p>
                 
-                <div class="step-subtitle">Khai thác tiền sử:</div>
-                <p class="step-text">Tiền sử gia đình: Chiều cao của cha mẹ (để tính chiều cao mục tiêu di truyền), tuổi dậy thì của cha mẹ. Tiền sử bản thân trẻ: Cân nặng khi sinh, quá trình phát triển, bệnh lý đã mắc, chế độ dinh dưỡng, giấc ngủ, thói quen vận động.</p>
+                <div class="step-subtitle">Tư thế chụp:</div>
+                <p class="step-text">Đặt bàn tay trái của trẻ lên phim với ngón tay hơi khép, lòng bàn tay úp xuống. Cẳng tay và bàn tay thẳng hàng trên cùng một mặt phẳng. Ngón tay cái hơi xoay ra ngoài (khoảng 30°).</p>
                 
-                <div class="step-subtitle">Tốc độ tăng trưởng:</div>
-                <p class="step-text">Theo dõi mức tăng chiều cao hằng năm (cm/năm). Tốc độ tăng &lt; 4–5 cm/năm (sau 4 tuổi) là dấu hiệu cần quan tâm.
-                    <small>Tốc độ tăng trưởng chậm có thể là dấu hiệu của các vấn đề nội tiết hoặc bệnh mạn tính.</small>
-                </p>
+                <div class="step-subtitle">Kỹ thuật chụp:</div>
+                <p class="step-text">Khoảng cách ống X-quang: 90-100 cm. Điện thế: 50-60 kVp. Điện lượng: 2-5 mAs tùy độ tuổi. Đảm bảo toàn bộ bàn tay và cổ tay được hiển thị rõ ràng trên phim.</p>
                 
-                <div class="step-subtitle">Giai đoạn dậy thì:</div>
-                <p class="step-text">Đánh giá bằng thang điểm Tanner (độ trưởng thành sinh dục thứ phát).
-                    <small>Đánh giá này giúp xác định giai đoạn phát triển và tiên lượng thời gian còn lại để tăng trưởng chiều cao.</small>
-                </p>
+                <div class="step-subtitle">Yêu cầu chất lượng phim:</div>
+                <p class="step-text">Phim phải hiển thị rõ nét toàn bộ bàn tay và cổ tay, bao gồm cả đầu dưới xương quay và xương trụ. Độ tương phản tốt, không bị nhòe, không bị che khuất.</p>
             </div>
             
-            <div class="step-card" style="border-left-color: #2ecc71;">
+            <div class="step-card" style="border-top-color: #2ecc71;">
                 <div class="step-title">
                     <span class="step-number">2</span>
-                    <span>Xét nghiệm cận lâm sàng cơ bản</span>
+                    <span>Chuẩn bị Atlas và Phim X-quang</span>
                 </div>
-                <div class="step-subtitle">Xét nghiệm sinh hóa máu:</div>
-                <p class="step-text">Công thức máu (CBC): Loại trừ thiếu máu. Chức năng gan và thận: Đảm bảo chuyển hóa bình thường. Điện giải (Canxi, Phospho, Natri, Kali): Đánh giá cân bằng khoáng chất thiết yếu cho phát triển xương.
-                    <small>Các xét nghiệm này giúp loại trừ các bệnh lý toàn thân ảnh hưởng đến tăng trưởng.</small>
-                </p>
+                <div class="step-subtitle">Chuẩn bị Atlas Greulich & Pyle:</div>
+                <p class="step-text">Sử dụng Atlas Greulich & Pyle phiên bản mới nhất. Xác định bộ Atlas phù hợp theo giới tính (nam/nữ).</p>
                 
-                <div class="step-subtitle">Xét nghiệm nước tiểu:</div>
-                <p class="step-text">Phát hiện bất thường về chuyển hóa hoặc chức năng thận.
-                    <small>Giúp phát hiện các rối loạn chuyển hóa hoặc bệnh lý thận ảnh hưởng đến phát triển.</small>
-                </p>
+                <div class="step-subtitle">Sắp xếp phim X-quang:</div>
+                <p class="step-text">Đặt phim X-quang của bệnh nhân trên hộp đèn. Đảm bảo ánh sáng đủ và đồng đều. Điều chỉnh độ sáng để quan sát rõ các chi tiết xương.</p>
+                
+                <div class="step-subtitle">Xác định thông tin cơ bản:</div>
+                <p class="step-text">Ghi nhận tuổi thực của trẻ (theo ngày tháng năm sinh). Xác định giới tính của trẻ. Ghi nhận ngày chụp X-quang.</p>
+                
+                <div class="step-subtitle">Chuẩn bị dụng cụ:</div>
+                <p class="step-text">Chuẩn bị thước đo, kính lúp nếu cần. Đảm bảo khu vực đọc phim đủ ánh sáng và không bị phân tâm.</p>
             </div>
             
-            <div class="step-card" style="border-left-color: #e74c3c;">
+            <div class="step-card" style="border-top-color: #e74c3c;">
                 <div class="step-title">
                     <span class="step-number">3</span>
-                    <span>Đánh giá tuổi xương (X-quang)</span>
+                    <span>Đánh giá các vùng xương quan trọng</span>
                 </div>
-                <div class="step-subtitle">Mục đích:</div>
-                <p class="step-text">Xác định mức độ trưởng thành của bộ xương ("tuổi sinh học") – chính xác hơn tuổi đời.
-                    <small>Tuổi xương phản ánh mức độ trưởng thành thực tế của hệ xương và là yếu tố quan trọng để dự báo chiều cao.</small>
-                </p>
+                <div class="step-subtitle">Các xương cổ tay:</div>
+                <p class="step-text">Đánh giá sự xuất hiện và phát triển của các xương cổ tay: thuyền, nguyệt, tháp, đậu, thang, thê, cả. Quan sát sự xuất hiện của điểm cốt hóa và hình dạng xương.</p>
                 
-                <div class="step-subtitle">Thực hiện:</div>
-                <p class="step-text">Chụp X-quang bàn tay và cổ tay trái. So sánh với Atlas Greulich & Pyle để ước tính tuổi xương.
-                    <small>Bàn tay và cổ tay chứa nhiều đầu xương dài, là vị trí lý tưởng để đánh giá tuổi xương.</small>
-                </p>
+                <div class="step-subtitle">Các đầu xương dài:</div>
+                <p class="step-text">Đánh giá đầu dưới xương quay và xương trụ. Quan sát sự phát triển của sụn tăng trưởng và sự xuất hiện của điểm cốt hóa.</p>
                 
-                <div class="step-subtitle">Diễn giải:</div>
-                <p class="step-text">Tuổi xương = Tuổi đời: Phát triển bình thường. Tuổi xương &lt; Tuổi đời (&gt; 2 năm): Có thể do thiếu hormone tăng trưởng (GH), suy dinh dưỡng hoặc bệnh mạn tính → tiềm năng phát triển chiều cao còn lớn. Tuổi xương &gt; Tuổi đời: Có thể do dậy thì sớm hoặc cường giáp → tiềm năng phát triển chiều cao bị hạn chế.
-                    <small>Chênh lệch giữa tuổi xương và tuổi đời cung cấp thông tin quan trọng về tiềm năng tăng trưởng còn lại.</small>
-                </p>
+                <div class="step-subtitle">Xương đốt bàn tay:</div>
+                <p class="step-text">Quan sát sự phát triển của các xương đốt bàn tay I-V. Đánh giá hình dạng và kích thước của chúng.</p>
+                
+                <div class="step-subtitle">Xương ngón tay:</div>
+                <p class="step-text">Đánh giá các xương đốt gần, đốt giữa và đốt xa của tất cả các ngón tay. Quan sát sự phát triển của các đầu xương và sự thu hẹp của sụn tăng trưởng.</p>
+                
+                <div class="step-subtitle">Xương đốt ngón cái:</div>
+                <p class="step-text">Đặc biệt chú ý đến xương đốt ngón cái, thường có mẫu phát triển đặc trưng theo tuổi.</p>
             </div>
             
-            <div class="step-card" style="border-left-color: #f39c12;">
+            <div class="step-card" style="border-top-color: #f39c12;">
                 <div class="step-title">
                     <span class="step-number">4</span>
-                    <span>Đánh giá nội tiết và miễn dịch</span>
+                    <span>So sánh với Atlas Greulich & Pyle</span>
                 </div>
-                <div class="step-subtitle">Xét nghiệm nội tiết tố:</div>
-                <p class="step-text">IGF-1 & IGFBP-3: Dấu ấn gián tiếp và ổn định phản ánh hoạt động của hormone tăng trưởng (GH). Hormone tuyến giáp (TSH, FT4): Loại trừ suy giáp. Hormone sinh dục (Testosterone, Estradiol, FSH, LH): Đánh giá tình trạng dậy thì sớm hoặc muộn.
-                    <small>Các xét nghiệm này giúp đánh giá chức năng của các tuyến nội tiết quan trọng ảnh hưởng đến tăng trưởng.</small>
-                </p>
+                <div class="step-subtitle">Phương pháp so sánh toàn bộ:</div>
+                <p class="step-text">So sánh tổng thể phim X-quang của bệnh nhân với các mẫu trong Atlas. Tìm mẫu có mức độ phát triển xương tương đồng nhất. Xem xét tất cả các vùng xương cùng lúc.</p>
                 
-                <div class="step-subtitle">Xét nghiệm miễn dịch và di truyền (nếu cần):</div>
-                <p class="step-text">Phân tích nhiễm sắc thể: Phát hiện các hội chứng Turner (ở nữ) hoặc Klinefelter (ở nam). Sàng lọc tự miễn (ví dụ kháng thể Celiac): Phát hiện bệnh kém hấp thu hoặc bệnh tự miễn ảnh hưởng đến dinh dưỡng.
-                    <small>Các xét nghiệm chuyên sâu này chỉ được thực hiện khi có nghi ngờ lâm sàng về rối loạn di truyền hoặc tự miễn.</small>
-                </p>
+                <div class="step-subtitle">Phương pháp so sánh từng xương:</div>
+                <p class="step-text">So sánh từng xương riêng lẻ với Atlas. Đánh giá mức độ phát triển của từng xương. Ghi nhận sự tương đồng và khác biệt.</p>
+                
+                <div class="step-subtitle">Đánh giá theo trình tự phát triển:</div>
+                <p class="step-text">Xác định trình tự xuất hiện và phát triển của các điểm cốt hóa. So sánh với trình tự chuẩn trong Atlas.</p>
+                
+                <div class="step-subtitle">Xác định tuổi xương ước tính:</div>
+                <p class="step-text">Dựa trên sự so sánh, xác định tuổi xương ước tính (theo tháng/năm). Ghi nhận tuổi xương tương ứng với mẫu phù hợp nhất.</p>
             </div>
             
-            <div class="step-card" style="border-left-color: #9b59b6;">
+            <div class="step-card" style="border-top-color: #9b59b6;">
                 <div class="step-title">
                     <span class="step-number">5</span>
-                    <span>Nghiệm pháp kích thích hormone tăng trưởng (nếu nghi ngờ thiếu GH)</span>
+                    <span>Phân tích và Diễn giải kết quả</span>
                 </div>
-                <div class="step-subtitle">Chỉ định:</div>
-                <p class="step-text">Khi IGF-1 thấp và có dấu hiệu lâm sàng gợi ý thiếu GH.
-                    <small>Nghiệm pháp này chỉ được thực hiện khi có bằng chứng gợi ý thiếu hụt GH từ các đánh giá trước đó.</small>
-                </p>
+                <div class="step-subtitle">So sánh tuổi xương và tuổi thực:</div>
+                <p class="step-text">Tính toán chênh lệch giữa tuổi xương và tuổi thực. Đánh giá mức độ chênh lệch: bình thường, chậm trễ, hay tăng tốc.</p>
                 
-                <div class="step-subtitle">Thực hiện:</div>
-                <p class="step-text">Sử dụng các thuốc kích thích như clonidine, arginine, hoặc insulin. Lấy máu nhiều lần để đo đáp ứng tiết GH của cơ thể.
-                    <small>Quá trình này cần được thực hiện tại bệnh viện dưới sự giám sát của nhân viên y tế.</small>
-                </p>
+                <div class="step-subtitle">Đánh giá mức độ trưởng thành:</div>
+                <p class="step-text">Xác định mức độ trưởng thành của hệ xương. Đánh giá tiềm năng tăng trưởng còn lại dựa trên tuổi xương.</p>
+                
+                <div class="step-subtitle">Phân tích các bất thường:</div>
+                <p class="step-text">Ghi nhận các bất thường nếu có: bất thường về hình dạng xương, kích thước, mật độ xương, hay sự bất đối xứng.</p>
+                
+                <div class="step-subtitle">Đánh giá độ chính xác:</div>
+                <p class="step-text">Xác định độ tin cậy của kết quả. Ghi nhận các yếu tố có thể ảnh hưởng đến độ chính xác: chất lượng phim, kinh nghiệm người đọc.</p>
             </div>
             
-            <div class="step-card" style="border-left-color: #1abc9c;">
+            <div class="step-card" style="border-top-color: #1abc9c;">
                 <div class="step-title">
                     <span class="step-number">6</span>
-                    <span>Tổng hợp kết quả và dự báo chiều cao trưởng thành</span>
+                    <span>Báo cáo và Tư vấn</span>
                 </div>
-                <div class="step-subtitle">Tổng hợp dữ liệu:</div>
-                <p class="step-text">Tuổi xương, tuổi đời, chiều cao hiện tại, giới tính, giai đoạn dậy thì.
-                    <small>Kết hợp tất cả thông tin thu thập được để có cái nhìn toàn diện về tình trạng phát triển của trẻ.</small>
-                </p>
+                <div class="step-subtitle">Lập báo cáo kết quả:</div>
+                <p class="step-text">Ghi rõ tuổi xương ước tính (theo năm và tháng). So sánh với tuổi thực và tính chênh lệch. Mô tả ngắn gọn các đặc điểm phát triển xương quan trọng.</p>
                 
-                <div class="step-subtitle">Phương pháp dự báo:</div>
-                <p class="step-text">Phương pháp Bayley–Pinneau: Dựa vào tuổi xương (theo bảng Greulich & Pyle). Phương pháp Tanner–Whitehouse 2 (TW2): Dựa vào điểm số phát triển từng xương (RUS score).
-                    <small>Các phương pháp này sử dụng thuật toán dựa trên dữ liệu từ hàng ngàn trẻ em để dự báo chiều cao trưởng thành.</small>
-                </p>
+                <div class="step-subtitle">Diễn giải ý nghĩa lâm sàng:</div>
+                <p class="step-text">Giải thích ý nghĩa của kết quả tuổi xương trong bối cảnh lâm sàng. Đánh giá tác động đến tiên lượng tăng trưởng chiều cao.</p>
                 
-                <div class="step-subtitle">Diễn giải và tư vấn:</div>
-                <p class="step-text">Chẩn đoán nguyên nhân: thiếu GH, dậy thì sớm, bệnh mạn tính, rối loạn dinh dưỡng... Dự đoán chiều cao trưởng thành tiềm năng và đánh giá khả năng phát triển còn lại. Lập kế hoạch theo dõi hoặc điều trị: Bổ sung hormone (nếu cần), điều chỉnh dinh dưỡng và vi chất, kiểm soát thời điểm dậy thì, theo dõi định kỳ mỗi 3–6 tháng.
-                    <small>Kết quả dự báo cần được giải thích rõ ràng cho gia đình cùng với kế hoạch quản lý và can thiệp phù hợp.</small>
-                </p>
+                <div class="step-subtitle">Tư vấn cho bác sĩ lâm sàng:</div>
+                <p class="step-text">Cung cấp thông tin cho bác sĩ điều trị để hỗ trợ chẩn đoán và điều trị. Đề xuất các đánh giá bổ sung nếu cần.</p>
+                
+                <div class="step-subtitle">Tư vấn cho gia đình:</div>
+                <p class="step-text">Giải thích kết quả cho phụ huynh một cách dễ hiểu. Cung cấp thông tin về ý nghĩa của tuổi xương và tác động đến sự phát triển của trẻ. Đưa ra các khuyến nghị về theo dõi và can thiệp nếu cần.</p>
             </div>
+        </div>
+        
+        <div class="notes">
+            <h3>Lưu ý quan trọng khi thực hiện</h3>
+            <p>• Phương pháp Greulich & Pyle có độ chính xác cao nhưng phụ thuộc vào kinh nghiệm của người đọc.</p>
+            <p>• Cần xem xét các yếu tố ảnh hưởng đến sự phát triển xương: dinh dưỡng, bệnh tật, nội tiết.</p>
+            <p>• Kết quả nên được diễn giải trong bối cảnh lâm sàng tổng thể của bệnh nhân.</p>
+            <p>• Đối với trẻ có bất thường về phát triển, có thể cần đánh giá tuổi xương định kỳ 6-12 tháng/lần.</p>
         </div>
         
         <div class="footer">
-            <p>Sơ đồ quy trình tầm soát và dự báo chiều cao trưởng thành - Phương pháp đánh giá toàn diện dựa trên bằng chứng khoa học</p>
+            <p>Quy trình kỹ thuật chẩn đoán tuổi xương theo phương pháp Greulich & Pyle - Tài liệu tham khảo cho chuyên gia y tế</p>
         </div>
     </div>
 
@@ -370,22 +354,22 @@
             
             // Step titles
             const stepTitles = [
-                "Bước 1: Đánh giá lâm sàng ban đầu\nvà khai thác tiền sử",
-                "Bước 2: Xét nghiệm cận lâm sàng cơ bản",
-                "Bước 3: Đánh giá tuổi xương (X-quang)",
-                "Bước 4: Đánh giá nội tiết và miễn dịch",
-                "Bước 5: Nghiệm pháp kích thích GH\n(nếu nghi ngờ thiếu GH)",
-                "Bước 6: Tổng hợp kết quả và\ndự báo chiều cao trưởng thành"
+                "Bước 1:\nChuẩn bị và\nChụp X-quang",
+                "Bước 2:\nChuẩn bị Atlas\nvà Phim X-quang",
+                "Bước 3:\nĐánh giá các vùng\nxương quan trọng",
+                "Bước 4:\nSo sánh với\nAtlas G&P",
+                "Bước 5:\nPhân tích và\nDiễn giải kết quả",
+                "Bước 6:\nBáo cáo và\nTư vấn"
             ];
             
             // Step details (shortened for display in flowchart)
             const stepDetails = [
-                "• Đo chiều cao, cân nặng\n• So sánh biểu đồ tăng trưởng\n• Khai thác tiền sử gia đình & bản thân\n• Đánh giá tốc độ tăng trưởng\n• Đánh giá giai đoạn dậy thì (Tanner)",
-                "• Xét nghiệm sinh hóa máu\n  - Công thức máu (CBC)\n  - Chức năng gan, thận\n  - Điện giải (Ca, P, Na, K)\n• Xét nghiệm nước tiểu",
-                "• Chụp X-quang bàn tay & cổ tay trái\n• So sánh Atlas Greulich & Pyle\n• Diễn giải kết quả:\n  - Tuổi xương = Tuổi đời: Bình thường\n  - Tuổi xương < Tuổi đời: Tiềm năng cao\n  - Tuổi xương > Tuổi đời: Tiềm năng thấp",
-                "• Xét nghiệm nội tiết tố:\n  - IGF-1 & IGFBP-3\n  - Hormone tuyến giáp (TSH, FT4)\n  - Hormone sinh dục\n• Xét nghiệm miễn dịch & di truyền\n(nếu cần)",
-                "• Chỉ định khi:\n  - IGF-1 thấp\n  - Dấu hiệu lâm sàng thiếu GH\n• Thực hiện:\n  - Dùng thuốc kích thích\n  - Lấy máu nhiều lần\n  - Đo đáp ứng GH",
-                "• Tổng hợp dữ liệu\n• Phương pháp dự báo:\n  - Bayley-Pinneau\n  - Tanner-Whitehouse 2 (TW2)\n• Chẩn đoán nguyên nhân\n• Lập kế hoạch điều trị & theo dõi"
+                "• Chuẩn bị bệnh nhân\n• Tư thế chụp chuẩn\n• Kỹ thuật chụp X-quang\n• Đảm bảo chất lượng phim",
+                "• Chuẩn bị Atlas G&P\n• Sắp xếp phim X-quang\n• Xác định thông tin\n• Chuẩn bị dụng cụ",
+                "• Xương cổ tay\n• Đầu xương dài\n• Xương đốt bàn tay\n• Xương ngón tay",
+                "• So sánh toàn bộ\n• So sánh từng xương\n• Đánh giá trình tự\n• Xác định tuổi xương",
+                "• So sánh tuổi xương/thực\n• Đánh giá trưởng thành\n• Phân tích bất thường\n• Đánh giá độ chính xác",
+                "• Lập báo cáo kết quả\n• Diễn giải lâm sàng\n• Tư vấn bác sĩ\n• Tư vấn gia đình"
             ];
             
             // Draw the flowchart
@@ -395,32 +379,32 @@
                 // Clear canvas
                 ctx.clearRect(0, 0, canvas.width, canvas.height);
                 
-                // Define positions for each step based on the requested layout
-                const stepWidth = 300;
-                const stepHeight = 200;
-                const horizontalSpacing = 350;
-                const verticalSpacing = 250;
+                // Define positions for each step
+                const stepWidth = 160;
+                const stepHeight = 180;
+                const horizontalSpacing = 200;
+                const startY = 100;
                 
-                // Calculate positions
+                // Calculate positions for steps in two rows
                 const step1X = 150;
-                const step1Y = 100;
+                const step1Y = startY;
                 
                 const step2X = step1X + horizontalSpacing;
-                const step2Y = step1Y;
+                const step2Y = startY;
                 
-                const step3X = step2X;
-                const step3Y = step2Y + verticalSpacing;
+                const step3X = step2X + horizontalSpacing;
+                const step3Y = startY;
                 
                 const step4X = step1X;
-                const step4Y = step1Y + verticalSpacing;
+                const step4Y = startY + stepHeight + 100;
                 
-                const step5X = step1X;
-                const step5Y = step4Y + verticalSpacing;
+                const step5X = step2X;
+                const step5Y = startY + stepHeight + 100;
                 
-                const step6X = step2X;
-                const step6Y = step3Y + verticalSpacing;
+                const step6X = step3X;
+                const step6Y = startY + stepHeight + 100;
                 
-                // Draw connecting arrows with red color
+                // Draw connecting arrows
                 ctx.strokeStyle = '#8B0000';
                 ctx.lineWidth = 3;
                 ctx.fillStyle = '#8B0000';
@@ -429,35 +413,35 @@
                 drawArrow(
                     step1X + stepWidth, step1Y + stepHeight/2,
                     step2X, step2Y + stepHeight/2,
-                    10
+                    8
                 );
                 
                 // Step 2 -> Step 3
                 drawArrow(
-                    step2X + stepWidth/2, step2Y + stepHeight,
-                    step3X + stepWidth/2, step3Y,
-                    10
+                    step2X + stepWidth, step2Y + stepHeight/2,
+                    step3X, step3Y + stepHeight/2,
+                    8
                 );
                 
                 // Step 3 -> Step 4
                 drawArrow(
-                    step3X, step3Y + stepHeight/2,
-                    step4X + stepWidth, step4Y + stepHeight/2,
-                    10
+                    step3X + stepWidth/2, step3Y + stepHeight,
+                    step4X + stepWidth/2, step4Y,
+                    8
                 );
                 
                 // Step 4 -> Step 5
                 drawArrow(
-                    step4X + stepWidth/2, step4Y + stepHeight,
-                    step5X + stepWidth/2, step5Y,
-                    10
+                    step4X + stepWidth, step4Y + stepHeight/2,
+                    step5X, step5Y + stepHeight/2,
+                    8
                 );
                 
                 // Step 5 -> Step 6
                 drawArrow(
                     step5X + stepWidth, step5Y + stepHeight/2,
                     step6X, step6Y + stepHeight/2,
-                    10
+                    8
                 );
                 
                 // Draw steps
@@ -467,6 +451,12 @@
                 drawStep(step4X, step4Y, stepWidth, stepHeight, colors[3], stepTitles[3], stepDetails[3], 4);
                 drawStep(step5X, step5Y, stepWidth, stepHeight, colors[4], stepTitles[4], stepDetails[4], 5);
                 drawStep(step6X, step6Y, stepWidth, stepHeight, colors[5], stepTitles[5], stepDetails[5], 6);
+                
+                // Draw title
+                ctx.fillStyle = '#2c3e50';
+                ctx.font = 'bold 24px Arial';
+                ctx.textAlign = 'center';
+                ctx.fillText('QUY TRÌNH CHẨN ĐOÁN TUỔI XƯƠNG THEO GREULICH & PYLE', canvas.width/2, 50);
             }
             
             function drawStep(x, y, width, height, color, title, details, stepNumber) {
@@ -476,35 +466,35 @@
                 // Draw step number circle
                 ctx.fillStyle = '#2c3e50';
                 ctx.beginPath();
-                ctx.arc(x + 30, y + 30, 20, 0, Math.PI * 2);
+                ctx.arc(x + width/2, y + 25, 18, 0, Math.PI * 2);
                 ctx.fill();
                 
                 ctx.fillStyle = 'white';
-                ctx.font = 'bold 16px Arial';
+                ctx.font = 'bold 14px Arial';
                 ctx.textAlign = 'center';
                 ctx.textBaseline = 'middle';
-                ctx.fillText(stepNumber.toString(), x + 30, y + 30);
+                ctx.fillText(stepNumber.toString(), x + width/2, y + 25);
                 
                 // Draw title
                 ctx.fillStyle = '#2c3e50';
-                ctx.font = 'bold 16px Arial';
+                ctx.font = 'bold 14px Arial';
                 ctx.textAlign = 'center';
                 
                 // Split title by newlines and draw each line
                 const titleLines = title.split('\n');
                 for (let i = 0; i < titleLines.length; i++) {
-                    ctx.fillText(titleLines[i], x + width/2, y + 35 + i * 20);
+                    ctx.fillText(titleLines[i], x + width/2, y + 55 + i * 18);
                 }
                 
                 // Draw details
                 ctx.fillStyle = '#2c3e50';
-                ctx.font = '13px Arial';
+                ctx.font = '11px Arial';
                 ctx.textAlign = 'left';
                 
                 // Split details by newlines and draw each line
                 const detailLines = details.split('\n');
                 for (let i = 0; i < detailLines.length; i++) {
-                    ctx.fillText(detailLines[i], x + 20, y + 75 + i * 18);
+                    ctx.fillText(detailLines[i], x + 10, y + 95 + i * 14);
                 }
             }
             
