@@ -1,1 +1,527 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sơ đồ Quy trình Tầm Soát và Dự Báo Chiều Cao</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            color: #333;
+            line-height: 1.6;
+            padding: 20px;
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background-color: rgba(255, 255, 255, 0.95);
+            border-radius: 16px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            padding: 30px;
+            display: flex;
+            flex-direction: column;
+            gap: 25px;
+        }
+        
+        header {
+            text-align: center;
+            padding-bottom: 20px;
+            border-bottom: 2px solid #eaeaea;
+        }
+        
+        h1 {
+            color: #2c3e50;
+            font-size: 2.4rem;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+        
+        .subtitle {
+            color: #7f8c8d;
+            font-size: 1.2rem;
+            font-style: italic;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .flowchart-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 30px;
+        }
+        
+        .canvas-wrapper {
+            width: 100%;
+            overflow: auto;
+            border: 1px solid #e1e8ed;
+            border-radius: 12px;
+            background-color: #fff;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            padding: 20px;
+        }
+        
+        canvas {
+            display: block;
+            margin: 0 auto;
+        }
+        
+        .legend {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 20px;
+            padding: 20px;
+            background-color: #f8fafc;
+            border-radius: 12px;
+            width: 100%;
+            max-width: 900px;
+        }
+        
+        .legend-item {
+            display: flex;
+            align-items: center;
+            margin: 5px 15px;
+        }
+        
+        .legend-color {
+            width: 24px;
+            height: 24px;
+            border-radius: 6px;
+            margin-right: 10px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .step-details {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 25px;
+            margin-top: 20px;
+        }
+        
+        .step-card {
+            background: white;
+            border-radius: 12px;
+            padding: 25px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.07);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            border-left: 5px solid;
+        }
+        
+        .step-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
+        }
+        
+        .step-title {
+            font-weight: 700;
+            color: #2c3e50;
+            margin-bottom: 18px;
+            font-size: 1.3rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .step-number {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 32px;
+            height: 32px;
+            background-color: #2c3e50;
+            color: white;
+            border-radius: 50%;
+            font-size: 1rem;
+            font-weight: bold;
+        }
+        
+        .step-subtitle {
+            font-weight: 600;
+            color: #3498db;
+            margin: 15px 0 8px;
+            font-size: 1.05rem;
+        }
+        
+        .step-text {
+            font-size: 0.95rem;
+            line-height: 1.7;
+            color: #5d6d7e;
+        }
+        
+        .step-text small {
+            font-style: italic;
+            color: #7d8b9a;
+            display: block;
+            margin-top: 8px;
+            padding-left: 15px;
+            border-left: 3px solid #eaeaea;
+        }
+        
+        .footer {
+            text-align: center;
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #eaeaea;
+            font-size: 0.95rem;
+            color: #7f8c8d;
+            font-style: italic;
+        }
+        
+        @media (max-width: 768px) {
+            .step-details {
+                grid-template-columns: 1fr;
+            }
+            
+            h1 {
+                font-size: 1.8rem;
+            }
+            
+            .container {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Sơ đồ Quy trình Tầm Soát và Dự Báo Chiều Cao Trưởng Thành</h1>
+            <p class="subtitle">Quy trình đánh giá toàn diện và khoa học để dự báo chiều cao trưởng thành ở trẻ em</p>
+        </header>
+        
+        <div class="flowchart-container">
+            <div class="canvas-wrapper">
+                <canvas id="flowchartCanvas" width="1300" height="1400"></canvas>
+            </div>
+            
+            <div class="legend">
+                <div class="legend-item">
+                    <div class="legend-color" style="background-color: #e74c3c;"></div>
+                    <span>Đánh giá lâm sàng</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color" style="background-color: #3498db;"></div>
+                    <span>Xét nghiệm cơ bản</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color" style="background-color: #2ecc71;"></div>
+                    <span>Đánh giá tuổi xương</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color" style="background-color: #f39c12;"></div>
+                    <span>Đánh giá nội tiết</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color" style="background-color: #9b59b6;"></div>
+                    <span>Nghiệm pháp GH</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color" style="background-color: #1abc9c;"></div>
+                    <span>Tổng hợp kết quả</span>
+                </div>
+            </div>
+        </div>
+        
+        <div class="step-details">
+            <div class="step-card" style="border-left-color: #e74c3c;">
+                <div class="step-title">
+                    <span class="step-number">1</span>
+                    <span>Đánh giá lâm sàng ban đầu và khai thác tiền sử</span>
+                </div>
+                <div class="step-subtitle">Đo đạc nhân trắc học:</div>
+                <p class="step-text">Đo chiều cao và cân nặng một cách chính xác. So sánh với biểu đồ tăng trưởng WHO hoặc CDC để xác định phân vị.
+                    <small>Phân vị dưới 3% hoặc trên 97% cần được đánh giá kỹ lưỡng hơn.</small>
+                </p>
+                
+                <div class="step-subtitle">Khai thác tiền sử:</div>
+                <p class="step-text">Tiền sử gia đình: Chiều cao của cha mẹ (để tính chiều cao mục tiêu di truyền), tuổi dậy thì của cha mẹ. Tiền sử bản thân trẻ: Cân nặng khi sinh, quá trình phát triển, bệnh lý đã mắc, chế độ dinh dưỡng, giấc ngủ, thói quen vận động.</p>
+                
+                <div class="step-subtitle">Tốc độ tăng trưởng:</div>
+                <p class="step-text">Theo dõi mức tăng chiều cao hằng năm (cm/năm). Tốc độ tăng &lt; 4–5 cm/năm (sau 4 tuổi) là dấu hiệu cần quan tâm.
+                    <small>Tốc độ tăng trưởng chậm có thể là dấu hiệu của các vấn đề nội tiết hoặc bệnh mạn tính.</small>
+                </p>
+                
+                <div class="step-subtitle">Giai đoạn dậy thì:</div>
+                <p class="step-text">Đánh giá bằng thang điểm Tanner (độ trưởng thành sinh dục thứ phát).
+                    <small>Đánh giá này giúp xác định giai đoạn phát triển và tiên lượng thời gian còn lại để tăng trưởng chiều cao.</small>
+                </p>
+            </div>
+            
+            <div class="step-card" style="border-left-color: #3498db;">
+                <div class="step-title">
+                    <span class="step-number">2</span>
+                    <span>Xét nghiệm cận lâm sàng cơ bản</span>
+                </div>
+                <div class="step-subtitle">Xét nghiệm sinh hóa máu:</div>
+                <p class="step-text">Công thức máu (CBC): Loại trừ thiếu máu. Chức năng gan và thận: Đảm bảo chuyển hóa bình thường. Điện giải (Canxi, Phospho, Natri, Kali): Đánh giá cân bằng khoáng chất thiết yếu cho phát triển xương.
+                    <small>Các xét nghiệm này giúp loại trừ các bệnh lý toàn thân ảnh hưởng đến tăng trưởng.</small>
+                </p>
+                
+                <div class="step-subtitle">Xét nghiệm nước tiểu:</div>
+                <p class="step-text">Phát hiện bất thường về chuyển hóa hoặc chức năng thận.
+                    <small>Giúp phát hiện các rối loạn chuyển hóa hoặc bệnh lý thận ảnh hưởng đến phát triển.</small>
+                </p>
+            </div>
+            
+            <div class="step-card" style="border-left-color: #2ecc71;">
+                <div class="step-title">
+                    <span class="step-number">3</span>
+                    <span>Đánh giá tuổi xương (X-quang)</span>
+                </div>
+                <div class="step-subtitle">Mục đích:</div>
+                <p class="step-text">Xác định mức độ trưởng thành của bộ xương ("tuổi sinh học") – chính xác hơn tuổi đời.
+                    <small>Tuổi xương phản ánh mức độ trưởng thành thực tế của hệ xương và là yếu tố quan trọng để dự báo chiều cao.</small>
+                </p>
+                
+                <div class="step-subtitle">Thực hiện:</div>
+                <p class="step-text">Chụp X-quang bàn tay và cổ tay trái. So sánh với Atlas Greulich & Pyle để ước tính tuổi xương.
+                    <small>Bàn tay và cổ tay chứa nhiều đầu xương dài, là vị trí lý tưởng để đánh giá tuổi xương.</small>
+                </p>
+                
+                <div class="step-subtitle">Diễn giải:</div>
+                <p class="step-text">Tuổi xương = Tuổi đời: Phát triển bình thường. Tuổi xương &lt; Tuổi đời (&gt; 2 năm): Có thể do thiếu hormone tăng trưởng (GH), suy dinh dưỡng hoặc bệnh mạn tính → tiềm năng phát triển chiều cao còn lớn. Tuổi xương &gt; Tuổi đời: Có thể do dậy thì sớm hoặc cường giáp → tiềm năng phát triển chiều cao bị hạn chế.
+                    <small>Chênh lệch giữa tuổi xương và tuổi đời cung cấp thông tin quan trọng về tiềm năng tăng trưởng còn lại.</small>
+                </p>
+            </div>
+            
+            <div class="step-card" style="border-left-color: #f39c12;">
+                <div class="step-title">
+                    <span class="step-number">4</span>
+                    <span>Đánh giá nội tiết và miễn dịch</span>
+                </div>
+                <div class="step-subtitle">Xét nghiệm nội tiết tố:</div>
+                <p class="step-text">IGF-1 & IGFBP-3: Dấu ấn gián tiếp và ổn định phản ánh hoạt động của hormone tăng trưởng (GH). Hormone tuyến giáp (TSH, FT4): Loại trừ suy giáp. Hormone sinh dục (Testosterone, Estradiol, FSH, LH): Đánh giá tình trạng dậy thì sớm hoặc muộn.
+                    <small>Các xét nghiệm này giúp đánh giá chức năng của các tuyến nội tiết quan trọng ảnh hưởng đến tăng trưởng.</small>
+                </p>
+                
+                <div class="step-subtitle">Xét nghiệm miễn dịch và di truyền (nếu cần):</div>
+                <p class="step-text">Phân tích nhiễm sắc thể: Phát hiện các hội chứng Turner (ở nữ) hoặc Klinefelter (ở nam). Sàng lọc tự miễn (ví dụ kháng thể Celiac): Phát hiện bệnh kém hấp thu hoặc bệnh tự miễn ảnh hưởng đến dinh dưỡng.
+                    <small>Các xét nghiệm chuyên sâu này chỉ được thực hiện khi có nghi ngờ lâm sàng về rối loạn di truyền hoặc tự miễn.</small>
+                </p>
+            </div>
+            
+            <div class="step-card" style="border-left-color: #9b59b6;">
+                <div class="step-title">
+                    <span class="step-number">5</span>
+                    <span>Nghiệm pháp kích thích hormone tăng trưởng (nếu nghi ngờ thiếu GH)</span>
+                </div>
+                <div class="step-subtitle">Chỉ định:</div>
+                <p class="step-text">Khi IGF-1 thấp và có dấu hiệu lâm sàng gợi ý thiếu GH.
+                    <small>Nghiệm pháp này chỉ được thực hiện khi có bằng chứng gợi ý thiếu hụt GH từ các đánh giá trước đó.</small>
+                </p>
+                
+                <div class="step-subtitle">Thực hiện:</div>
+                <p class="step-text">Sử dụng các thuốc kích thích như clonidine, arginine, hoặc insulin. Lấy máu nhiều lần để đo đáp ứng tiết GH của cơ thể.
+                    <small>Quá trình này cần được thực hiện tại bệnh viện dưới sự giám sát của nhân viên y tế.</small>
+                </p>
+            </div>
+            
+            <div class="step-card" style="border-left-color: #1abc9c;">
+                <div class="step-title">
+                    <span class="step-number">6</span>
+                    <span>Tổng hợp kết quả và dự báo chiều cao trưởng thành</span>
+                </div>
+                <div class="step-subtitle">Tổng hợp dữ liệu:</div>
+                <p class="step-text">Tuổi xương, tuổi đời, chiều cao hiện tại, giới tính, giai đoạn dậy thì.
+                    <small>Kết hợp tất cả thông tin thu thập được để có cái nhìn toàn diện về tình trạng phát triển của trẻ.</small>
+                </p>
+                
+                <div class="step-subtitle">Phương pháp dự báo:</div>
+                <p class="step-text">Phương pháp Bayley–Pinneau: Dựa vào tuổi xương (theo bảng Greulich & Pyle). Phương pháp Tanner–Whitehouse 2 (TW2): Dựa vào điểm số phát triển từng xương (RUS score).
+                    <small>Các phương pháp này sử dụng thuật toán dựa trên dữ liệu từ hàng ngàn trẻ em để dự báo chiều cao trưởng thành.</small>
+                </p>
+                
+                <div class="step-subtitle">Diễn giải và tư vấn:</div>
+                <p class="step-text">Chẩn đoán nguyên nhân: thiếu GH, dậy thì sớm, bệnh mạn tính, rối loạn dinh dưỡng... Dự đoán chiều cao trưởng thành tiềm năng và đánh giá khả năng phát triển còn lại. Lập kế hoạch theo dõi hoặc điều trị: Bổ sung hormone (nếu cần), điều chỉnh dinh dưỡng và vi chất, kiểm soát thời điểm dậy thì, theo dõi định kỳ mỗi 3–6 tháng.
+                    <small>Kết quả dự báo cần được giải thích rõ ràng cho gia đình cùng với kế hoạch quản lý và can thiệp phù hợp.</small>
+                </p>
+            </div>
+        </div>
+        
+        <div class="footer">
+            <p>Sơ đồ quy trình tầm soát và dự báo chiều cao trưởng thành - Phương pháp đánh giá toàn diện dựa trên bằng chứng khoa học</p>
+        </div>
+    </div>
 
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const canvas = document.getElementById('flowchartCanvas');
+            const ctx = canvas.getContext('2d');
+            
+            // Colors for each step
+            const colors = [
+                '#e74c3c', // Step 1 - Red
+                '#3498db', // Step 2 - Blue
+                '#2ecc71', // Step 3 - Green
+                '#f39c12', // Step 4 - Orange
+                '#9b59b6', // Step 5 - Purple
+                '#1abc9c'  // Step 6 - Teal
+            ];
+            
+            // Step titles
+            const stepTitles = [
+                "Bước 1: Đánh giá lâm sàng ban đầu\nvà khai thác tiền sử",
+                "Bước 2: Xét nghiệm cận lâm sàng cơ bản",
+                "Bước 3: Đánh giá tuổi xương (X-quang)",
+                "Bước 4: Đánh giá nội tiết và miễn dịch",
+                "Bước 5: Nghiệm pháp kích thích GH\n(nếu nghi ngờ thiếu GH)",
+                "Bước 6: Tổng hợp kết quả và\ndự báo chiều cao trưởng thành"
+            ];
+            
+            // Step details (shortened for display in flowchart)
+            const stepDetails = [
+                "• Đo chiều cao, cân nặng\n• So sánh biểu đồ tăng trưởng\n• Khai thác tiền sử gia đình & bản thân\n• Đánh giá tốc độ tăng trưởng\n• Đánh giá giai đoạn dậy thì (Tanner)",
+                "• Xét nghiệm sinh hóa máu\n  - Công thức máu (CBC)\n  - Chức năng gan, thận\n  - Điện giải (Ca, P, Na, K)\n• Xét nghiệm nước tiểu",
+                "• Chụp X-quang bàn tay & cổ tay trái\n• So sánh Atlas Greulich & Pyle\n• Diễn giải kết quả:\n  - Tuổi xương = Tuổi đời: Bình thường\n  - Tuổi xương < Tuổi đời: Tiềm năng cao\n  - Tuổi xương > Tuổi đời: Tiềm năng thấp",
+                "• Xét nghiệm nội tiết tố:\n  - IGF-1 & IGFBP-3\n  - Hormone tuyến giáp (TSH, FT4)\n  - Hormone sinh dục\n• Xét nghiệm miễn dịch & di truyền\n(nếu cần)",
+                "• Chỉ định khi:\n  - IGF-1 thấp\n  - Dấu hiệu lâm sàng thiếu GH\n• Thực hiện:\n  - Dùng thuốc kích thích\n  - Lấy máu nhiều lần\n  - Đo đáp ứng GH",
+                "• Tổng hợp dữ liệu\n• Phương pháp dự báo:\n  - Bayley-Pinneau\n  - Tanner-Whitehouse 2 (TW2)\n• Chẩn đoán nguyên nhân\n• Lập kế hoạch điều trị & theo dõi"
+            ];
+            
+            // Draw the flowchart
+            drawFlowchart();
+            
+            function drawFlowchart() {
+                // Clear canvas
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                
+                // Set initial positions
+                const startX = canvas.width / 2;
+                let currentY = 100;
+                const stepWidth = 350;
+                const stepHeight = 220;
+                const verticalSpacing = 140;
+                
+                // Draw start node
+                drawRoundedRect(startX - 120, currentY - 40, 240, 70, 15, '#2c3e50');
+                ctx.fillStyle = 'white';
+                ctx.font = 'bold 20px Arial';
+                ctx.textAlign = 'center';
+                ctx.textBaseline = 'middle';
+                ctx.fillText('BẮT ĐẦU QUY TRÌNH', startX, currentY - 10);
+                
+                currentY += 90;
+                
+                // Draw steps
+                for (let i = 0; i < 6; i++) {
+                    // Draw connecting arrow
+                    if (i > 0) {
+                        drawArrow(startX, currentY - verticalSpacing + stepHeight, startX, currentY - 20, 10);
+                    }
+                    
+                    // Draw step
+                    drawStep(startX, currentY, stepWidth, stepHeight, colors[i], stepTitles[i], stepDetails[i], i);
+                    
+                    currentY += stepHeight + verticalSpacing;
+                }
+                
+                // Draw end node
+                drawRoundedRect(startX - 120, currentY - 40, 240, 70, 15, '#2c3e50');
+                ctx.fillStyle = 'white';
+                ctx.font = 'bold 20px Arial';
+                ctx.textAlign = 'center';
+                ctx.textBaseline = 'middle';
+                ctx.fillText('KẾT THÚC', startX, currentY - 15);
+                ctx.font = '16px Arial';
+                ctx.fillText('Diễn giải & Tư vấn', startX, currentY + 10);
+            }
+            
+            function drawStep(x, y, width, height, color, title, details, stepNumber) {
+                // Draw main rectangle
+                drawRoundedRect(x - width/2, y, width, height, 20, color);
+                
+                // Draw step number circle
+                ctx.fillStyle = '#2c3e50';
+                ctx.beginPath();
+                ctx.arc(x - width/2 + 35, y + 35, 25, 0, Math.PI * 2);
+                ctx.fill();
+                
+                ctx.fillStyle = 'white';
+                ctx.font = 'bold 18px Arial';
+                ctx.textAlign = 'center';
+                ctx.textBaseline = 'middle';
+                ctx.fillText((stepNumber + 1).toString(), x - width/2 + 35, y + 35);
+                
+                // Draw title
+                ctx.fillStyle = '#2c3e50';
+                ctx.font = 'bold 18px Arial';
+                ctx.textAlign = 'center';
+                
+                // Split title by newlines and draw each line
+                const titleLines = title.split('\n');
+                for (let i = 0; i < titleLines.length; i++) {
+                    ctx.fillText(titleLines[i], x, y + 35 + i * 25);
+                }
+                
+                // Draw details
+                ctx.fillStyle = '#2c3e50';
+                ctx.font = '14px Arial';
+                ctx.textAlign = 'left';
+                
+                // Split details by newlines and draw each line
+                const detailLines = details.split('\n');
+                for (let i = 0; i < detailLines.length; i++) {
+                    ctx.fillText(detailLines[i], x - width/2 + 25, y + 85 + i * 20);
+                }
+            }
+            
+            function drawRoundedRect(x, y, width, height, radius, color) {
+                ctx.fillStyle = color;
+                ctx.beginPath();
+                ctx.moveTo(x + radius, y);
+                ctx.lineTo(x + width - radius, y);
+                ctx.quadraticCurveTo(x + width, y, x + width, y + radius);
+                ctx.lineTo(x + width, y + height - radius);
+                ctx.quadraticCurveTo(x + width, y + height, x + width - radius, y + height);
+                ctx.lineTo(x + radius, y + height);
+                ctx.quadraticCurveTo(x, y + height, x, y + height - radius);
+                ctx.lineTo(x, y + radius);
+                ctx.quadraticCurveTo(x, y, x + radius, y);
+                ctx.closePath();
+                ctx.fill();
+                
+                // Add subtle shadow
+                ctx.strokeStyle = 'rgba(0, 0, 0, 0.15)';
+                ctx.lineWidth = 3;
+                ctx.stroke();
+            }
+            
+            function drawArrow(fromX, fromY, toX, toY, headSize) {
+                ctx.strokeStyle = '#7f8c8d';
+                ctx.lineWidth = 3;
+                ctx.beginPath();
+                ctx.moveTo(fromX, fromY);
+                ctx.lineTo(toX, toY);
+                ctx.stroke();
+                
+                // Arrowhead
+                const angle = Math.atan2(toY - fromY, toX - fromX);
+                
+                ctx.fillStyle = '#7f8c8d';
+                ctx.beginPath();
+                ctx.moveTo(toX, toY);
+                ctx.lineTo(
+                    toX - headSize * Math.cos(angle - Math.PI / 6),
+                    toY - headSize * Math.sin(angle - Math.PI / 6)
+                );
+                ctx.lineTo(
+                    toX - headSize * Math.cos(angle + Math.PI / 6),
+                    toY - headSize * Math.sin(angle + Math.PI / 6)
+                );
+                ctx.closePath();
+                ctx.fill();
+            }
+        });
+    </script>
+</body>
+</html>
