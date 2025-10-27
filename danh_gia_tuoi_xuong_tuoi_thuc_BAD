@@ -1,1 +1,412 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bảng Chênh Lệch Tuổi Xương Theo Lứa Tuổi</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
 
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #333;
+            line-height: 1.6;
+            padding: 20px;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+            padding: 30px;
+            backdrop-filter: blur(10px);
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding-bottom: 20px;
+            border-bottom: 3px solid #667eea;
+        }
+
+        h1 {
+            color: #2c3e50;
+            font-size: 2.5rem;
+            margin-bottom: 15px;
+            font-weight: 700;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .subtitle {
+            color: #7f8c8d;
+            font-size: 1.2rem;
+            font-style: italic;
+        }
+
+        .age-groups {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 25px;
+            margin-bottom: 40px;
+        }
+
+        .age-group {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            border-left: 5px solid;
+        }
+
+        .age-group:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
+        }
+
+        .age-title {
+            font-size: 1.4rem;
+            font-weight: 700;
+            margin-bottom: 20px;
+            color: #2c3e50;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .age-icon {
+            width: 40px;
+            height: 40px;
+            background: #667eea;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+        }
+
+        .bad-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
+
+        .bad-table th {
+            background: #f8f9fa;
+            padding: 12px;
+            text-align: left;
+            font-weight: 600;
+            color: #2c3e50;
+            border-bottom: 2px solid #e9ecef;
+        }
+
+        .bad-table td {
+            padding: 12px;
+            border-bottom: 1px solid #e9ecef;
+        }
+
+        .bad-level {
+            font-weight: 600;
+            padding: 6px 12px;
+            border-radius: 20px;
+            text-align: center;
+            display: inline-block;
+            min-width: 100px;
+        }
+
+        .normal { background: #d4edda; color: #155724; }
+        .mild { background: #fff3cd; color: #856404; }
+        .moderate { background: #ffeaa7; color: #8a710c; }
+        .severe { background: #f8d7da; color: #721c24; }
+
+        .interpretation {
+            margin-top: 20px;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 10px;
+            border-left: 4px solid #667eea;
+        }
+
+        .interpretation h4 {
+            color: #2c3e50;
+            margin-bottom: 10px;
+        }
+
+        .clinical-notes {
+            background: #e3f2fd;
+            padding: 25px;
+            border-radius: 15px;
+            margin-top: 30px;
+            border-left: 5px solid #2196f3;
+        }
+
+        .clinical-notes h3 {
+            color: #1976d2;
+            margin-bottom: 15px;
+        }
+
+        .notes-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .note-item {
+            background: white;
+            padding: 15px;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+        }
+
+        .note-title {
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .footer {
+            text-align: center;
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 2px solid #e9ecef;
+            color: #7f8c8d;
+            font-style: italic;
+        }
+
+        @media (max-width: 768px) {
+            .age-groups {
+                grid-template-columns: 1fr;
+            }
+            
+            h1 {
+                font-size: 2rem;
+            }
+            
+            .container {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Bảng Chênh Lệch Tuổi Xương (BAD) Theo Lứa Tuổi</h1>
+            <p class="subtitle">Đánh giá mức độ chênh lệch giữa tuổi xương và tuổi thực tế ở trẻ em</p>
+        </header>
+
+        <div class="age-groups">
+            <!-- Nhóm tuổi 0-2 tuổi -->
+            <div class="age-group" style="border-left-color: #3498db;">
+                <div class="age-title">
+                    <div class="age-icon">0-2</div>
+                    <span>Giai đoạn Sơ sinh & Nhũ nhi (0-2 tuổi)</span>
+                </div>
+                <table class="bad-table">
+                    <thead>
+                        <tr>
+                            <th>Mức độ BAD</th>
+                            <th>Chênh lệch (tháng)</th>
+                            <th>Đánh giá</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><span class="bad-level normal">Bình thường</span></td>
+                            <td>± 3 tháng</td>
+                            <td>Phát triển phù hợp</td>
+                        </tr>
+                        <tr>
+                            <td><span class="bad-level mild">Nhẹ</span></td>
+                            <td>± 4-6 tháng</td>
+                            <td>Theo dõi định kỳ</td>
+                        </tr>
+                        <tr>
+                            <td><span class="bad-level moderate">Trung bình</span></td>
+                            <td>± 7-12 tháng</td>
+                            <td>Cần đánh giá thêm</td>
+                        </tr>
+                        <tr>
+                            <td><span class="bad-level severe">Nặng</span></td>
+                            <td>> 12 tháng</td>
+                            <td>Khẩn cấp đánh giá</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div class="interpretation">
+                    <h4>Diễn giải lâm sàng:</h4>
+                    <p>Giai đoạn này có biến động sinh lý lớn. Chênh lệch &lt; 6 tháng thường không đáng lo ngại trừ khi có các dấu hiệu bất thường khác.</p>
+                </div>
+            </div>
+
+            <!-- Nhóm tuổi 3-6 tuổi -->
+            <div class="age-group" style="border-left-color: #2ecc71;">
+                <div class="age-title">
+                    <div class="age-icon">3-6</div>
+                    <span>Giai đoạn Mầm non (3-6 tuổi)</span>
+                </div>
+                <table class="bad-table">
+                    <thead>
+                        <tr>
+                            <th>Mức độ BAD</th>
+                            <th>Chênh lệch (tháng)</th>
+                            <th>Đánh giá</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><span class="bad-level normal">Bình thường</span></td>
+                            <td>± 6 tháng</td>
+                            <td>Phát triển ổn định</td>
+                        </tr>
+                        <tr>
+                            <td><span class="bad-level mild">Nhẹ</span></td>
+                            <td>± 7-12 tháng</td>
+                            <td>Theo dõi chặt</td>
+                        </tr>
+                        <tr>
+                            <td><span class="bad-level moderate">Trung bình</span></td>
+                            <td>± 13-18 tháng</td>
+                            <td>Đánh giá chuyên sâu</td>
+                        </tr>
+                        <tr>
+                            <td><span class="bad-level severe">Nặng</span></td>
+                            <td>> 18 tháng</td>
+                            <td>Can thiệp y tế</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div class="interpretation">
+                    <h4>Diễn giải lâm sàng:</h4>
+                    <p>Tốc độ tăng trưởng ổn định hơn. Chênh lệch &gt; 12 tháng cần đánh giá nội tiết và dinh dưỡng.</p>
+                </div>
+            </div>
+
+            <!-- Nhóm tuổi 7-12 tuổi -->
+            <div class="age-group" style="border-left-color: #e74c3c;">
+                <div class="age-title">
+                    <div class="age-icon">7-12</div>
+                    <span>Giai đoạn Tiền dậy thì (7-12 tuổi)</span>
+                </div>
+                <table class="bad-table">
+                    <thead>
+                        <tr>
+                            <th>Mức độ BAD</th>
+                            <th>Chênh lệch (tháng)</th>
+                            <th>Đánh giá</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><span class="bad-level normal">Bình thường</span></td>
+                            <td>± 12 tháng</td>
+                            <td>Phát triển phù hợp</td>
+                        </tr>
+                        <tr>
+                            <td><span class="bad-level mild">Nhẹ</span></td>
+                            <td>± 13-18 tháng</td>
+                            <td>Theo dõi định kỳ</td>
+                        </tr>
+                        <tr>
+                            <td><span class="bad-level moderate">Trung bình</span></td>
+                            <td>± 19-24 tháng</td>
+                            <td>Đánh giá toàn diện</td>
+                        </tr>
+                        <tr>
+                            <td><span class="bad-level severe">Nặng</span></td>
+                            <td>> 24 tháng</td>
+                            <td>Can thiệp tích cực</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div class="interpretation">
+                    <h4>Diễn giải lâm sàng:</h4>
+                    <p>Giai đoạn quan trọng trước khi bùng phát tăng trưởng dậy thì. Chênh lệch &gt; 18 tháng ảnh hưởng đến chiều cao trưởng thành.</p>
+                </div>
+            </div>
+
+            <!-- Nhóm tuổi 13-18 tuổi -->
+            <div class="age-group" style="border-left-color: #f39c12;">
+                <div class="age-title">
+                    <div class="age-icon">13-18</div>
+                    <span>Giai đoạn Dậy thì (13-18 tuổi)</span>
+                </div>
+                <table class="bad-table">
+                    <thead>
+                        <tr>
+                            <th>Mức độ BAD</th>
+                            <th>Chênh lệch (tháng)</th>
+                            <th>Đánh giá</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><span class="bad-level normal">Bình thường</span></td>
+                            <td>± 12 tháng</td>
+                            <td>Dậy thì phù hợp</td>
+                        </tr>
+                        <tr>
+                            <td><span class="bad-level mild">Nhẹ</span></td>
+                            <td>± 13-18 tháng</td>
+                            <td>Theo dõi sát</td>
+                        </tr>
+                        <tr>
+                            <td><span class="bad-level moderate">Trung bình</span></td>
+                            <td>± 19-24 tháng</td>
+                            <td>Đánh giá nội tiết</td>
+                        </tr>
+                        <tr>
+                            <td><span class="bad-level severe">Nặng</span></td>
+                            <td>> 24 tháng</td>
+                            <td>Can thiệp khẩn</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div class="interpretation">
+                    <h4>Diễn giải lâm sàng:</h4>
+                    <p>Tuổi xương giúp dự báo thời điểm đóng sụn tăng trưởng. Chênh lệch lớn ảnh hưởng quyết định đến chiều cao cuối cùng.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="clinical-notes">
+            <h3>📊 Ghi chú Lâm sàng Quan trọng</h3>
+            <div class="notes-grid">
+                <div class="note-item">
+                    <div class="note-title">🔄 BAD Dương tính (Tuổi xương > Tuổi thực)</div>
+                    <p>Thường gặp trong: Dậy thì sớm, Cường giáp, Béo phì, Hội chứng tăng sinh thượng thận bẩm sinh.</p>
+                </div>
+                <div class="note-item">
+                    <div class="note-title">🔽 BAD Âm tính (Tuổi xương < Tuổi thực)</div>
+                    <p>Thường gặp trong: Thiếu hormone tăng trưởng, Suy giáp, Suy dinh dưỡng, Bệnh mạn tính, Hội chứng Turner/Noonan.</p>
+                </div>
+                <div class="note-item">
+                    <div class="note-title">📈 Theo dõi Định kỳ</div>
+                    <p>BAD nên được đánh giá 6-12 tháng/lần ở trẻ có bất thường tăng trưởng hoặc đang điều trị nội tiết.</p>
+                </div>
+                <div class="note-item">
+                    <div class="note-title">🎯 Đánh giá Toàn diện</div>
+                    <p>BAD cần được diễn giải cùng với tốc độ tăng trưởng, tuổi dậy thì, chiều cao bố mẹ và các xét nghiệm khác.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="footer">
+            <p>Bảng chênh lệch tuổi xương (BAD) - Tài liệu tham khảo cho chuyên gia y tế | Dữ liệu dựa trên tiêu chuẩn Greulich & Pyle và Tanner-Whitehouse</p>
+        </div>
+    </div>
+</body>
+</html>
