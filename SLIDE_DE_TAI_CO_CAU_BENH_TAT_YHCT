@@ -1,1 +1,1132 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Báo Cáo Kết Quả Nghiên Cứu - Bệnh Viện Thể Thao Việt Nam</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Arial', sans-serif;
+        }
+        
+        body {
+            background-color: #8B0000; /* Đỏ đun */
+            color: #FFD700; /* Vàng */
+            overflow-x: hidden;
+        }
+        
+        .presentation-container {
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+        }
+        
+        .slide {
+            width: 100%;
+            height: 100%;
+            padding: 40px;
+            display: none;
+            flex-direction: column;
+            justify-content: center;
+            background-color: #8B0000; /* Đỏ đun */
+            background-image: linear-gradient(135deg, #8B0000 0%, #A52A2A 100%);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .slide.active {
+            display: flex;
+        }
+        
+        .slide-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #FFD700;
+        }
+        
+        .logo {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            border: 3px solid #FFD700;
+        }
+        
+        .logo img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .slide-title {
+            font-size: 32px;
+            text-align: center;
+            margin-bottom: 30px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            line-height: 1.3;
+        }
+        
+        .slide-content {
+            font-size: 22px;
+            line-height: 1.6;
+            margin-bottom: 30px;
+            z-index: 2;
+            position: relative;
+        }
+        
+        .slide-content ul {
+            list-style-type: none;
+            padding-left: 20px;
+        }
+        
+        .slide-content li {
+            margin-bottom: 15px;
+            position: relative;
+            padding-left: 25px;
+        }
+        
+        .slide-content li:before {
+            content: "•";
+            color: #FFD700;
+            font-size: 24px;
+            position: absolute;
+            left: 0;
+            top: -2px;
+        }
+        
+        .table-container {
+            background-color: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+            overflow-x: auto;
+            z-index: 2;
+            position: relative;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            color: white;
+        }
+        
+        th, td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        th {
+            background-color: rgba(255, 215, 0, 0.3);
+            color: #FFD700;
+        }
+        
+        .illustration {
+            position: absolute;
+            opacity: 0.7;
+            z-index: 1;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+        }
+        
+        .illustration img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .acupuncture {
+            bottom: 20px;
+            right: 20px;
+            width: 200px;
+            height: 200px;
+        }
+        
+        .massage {
+            top: 20px;
+            left: 20px;
+            width: 180px;
+            height: 180px;
+        }
+        
+        .acupressure {
+            bottom: 100px;
+            left: 50px;
+            width: 200px;
+            height: 150px;
+        }
+        
+        .traction {
+            top: 100px;
+            right: 100px;
+            width: 220px;
+            height: 160px;
+        }
+        
+        .herbal-medicine {
+            bottom: 20px;
+            left: 20px;
+            width: 200px;
+            height: 150px;
+        }
+        
+        .hydro-acupuncture {
+            top: 150px;
+            left: 150px;
+            width: 180px;
+            height: 180px;
+        }
+        
+        .navigation {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            display: flex;
+            gap: 10px;
+            z-index: 100;
+        }
+        
+        .nav-btn {
+            background-color: #FFD700;
+            color: #8B0000;
+            border: none;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            font-size: 20px;
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: all 0.3s ease;
+            font-weight: bold;
+        }
+        
+        .nav-btn:hover {
+            background-color: white;
+            transform: scale(1.1);
+        }
+        
+        .nav-btn:disabled {
+            background-color: #cccccc;
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        .slide-counter {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            color: #FFD700;
+            font-size: 18px;
+            z-index: 100;
+            background-color: rgba(0, 0, 0, 0.5);
+            padding: 5px 10px;
+            border-radius: 5px;
+        }
+        
+        .white-text {
+            color: white;
+        }
+        
+        .highlight {
+            color: #FFD700;
+            font-weight: bold;
+        }
+        
+        .reference {
+            font-size: 14px;
+            color: rgba(255, 255, 255, 0.7);
+            margin-top: 10px;
+        }
+        
+        .content-list {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        
+        .content-item {
+            background-color: rgba(255, 255, 255, 0.1);
+            padding: 15px;
+            border-radius: 8px;
+            border-left: 4px solid #FFD700;
+        }
+        
+        .title-slide-content {
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        
+        .title-slide-content div {
+            padding: 10px;
+            background-color: rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+        }
+    </style>
+</head>
+<body>
+    <div class="presentation-container">
+        <!-- Slide 1: Tiêu đề -->
+        <div class="slide active" id="slide1">
+            <div class="slide-header">
+                <div class="logo">
+                    <img src="https://images.unsplash.com/photo-1559757148-5c350d0d3c56?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8aG9zcGl0YWwlMjBsb2dvfGVufDB8fDB8fHww&auto=format&fit=crop&w=500&q=60" alt="Logo Bệnh Viện Thể Thao Việt Nam">
+                </div>
+                <div class="slide-title">BỆNH VIỆN THỂ THAO VIỆT NAM</div>
+            </div>
+            <div class="slide-content title-slide-content">
+                <div>BÁO CÁO KẾT QUẢ ĐỀ TÀI CẤP BỆNH VIỆN</div>
+                <div>Tên đề tài: NGHIÊN CỨU CƠ CẤU BỆNH TẬT BỆNH NHÂN ĐẾN KHÁM, CHỮA BỆNH TẠI BỘ PHẬN Y HỌC CỔ TRUYỀN & DINH DƯỠNG NĂM 2025</div>
+                <div>Chủ nhiệm đề tài: PGs.Ts.Bs.Võ Tường Kha và ThS.Bs. Trần Danh Phương</div>
+                <div>Tháng 11/2025</div>
+            </div>
+            <div class="illustration acupuncture">
+                <img src="https://images.unsplash.com/photo-1551601651-2a8555f1a136?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8YWN1cHVuY3R1cmV8ZW58MHx8MHx8fDA%3D&auto=format&fit=crop&w=500&q=60" alt="Điện châm">
+            </div>
+        </div>
+        
+        <!-- Slide 2: Các nội dung báo cáo -->
+        <div class="slide" id="slide2">
+            <div class="slide-header">
+                <div class="logo">
+                    <img src="https://images.unsplash.com/photo-1559757148-5c350d0d3c56?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8aG9zcGl0YWwlMjBsb2dvfGVufDB8fDB8fHww&auto=format&fit=crop&w=500&q=60" alt="Logo Bệnh Viện Thể Thao Việt Nam">
+                </div>
+                <div class="slide-title">CÁC NỘI DUNG BÁO CÁO</div>
+            </div>
+            <div class="slide-content">
+                <div class="content-list">
+                    <div class="content-item">ĐẶT VẤN ĐỀ</div>
+                    <div class="content-item">TỔNG QUAN TÀI LIỆU</div>
+                    <div class="content-item">ĐỐI TƯỢNG VÀ PHƯƠNG PHÁP NGHIÊN CỨU</div>
+                    <div class="content-item">KẾT QUẢ NGHIÊN CỨU & BÀN LUẬN</div>
+                    <div class="content-item">KẾT LUẬN</div>
+                    <div class="content-item">TÀI LIỆU THAM KHẢO</div>
+                </div>
+            </div>
+            <div class="illustration massage">
+                <img src="https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8M3x8bWFzc2FnZXxlbnwwfHwwfHx8MA%3D%3D&auto=format&fit=crop&w=500&q=60" alt="Xoa bóp bấm huyệt">
+            </div>
+        </div>
+        
+        <!-- Slide 3: Đặt vấn đề (1) -->
+        <div class="slide" id="slide3">
+            <div class="slide-header">
+                <div class="logo">
+                    <img src="https://images.unsplash.com/photo-1559757148-5c350d0d3c56?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8aG9zcGl0YWwlMjBsb2dvfGVufDB8fDB8fHww&auto=format&fit=crop&w=500&q=60" alt="Logo Bệnh Viện Thể Thao Việt Nam">
+                </div>
+                <div class="slide-title">ĐẶT VẤN ĐỀ (1)</div>
+            </div>
+            <div class="slide-content">
+                <ul>
+                    <li>Cơ cấu bệnh tật là bức tranh tổng quan</li>
+                    <li>Giúp hoạch định chính sách y tế</li>
+                    <li>Phân bổ nguồn lực hiệu quả</li>
+                    <li>BV Thể thao VN có nhiều thay đổi</li>
+                    <li>Cần đánh giá lại cơ cấu bệnh tật</li>
+                    <li>Đặc biệt tại Bộ phận YHCT & Dinh dưỡng</li>
+                </ul>
+            </div>
+            <div class="illustration herbal-medicine">
+                <img src="https://images.unsplash.com/photo-1584302179602-e4819bb92daa?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTB8fGhlcmJhbCUyMG1lZGljaW5lfGVufDB8fDB8fHww&auto=format&fit=crop&w=500&q=60" alt="Thuốc YHCT">
+            </div>
+        </div>
+        
+        <!-- Slide 4: Đặt vấn đề (2) -->
+        <div class="slide" id="slide4">
+            <div class="slide-header">
+                <div class="logo">
+                    <img src="https://images.unsplash.com/photo-1559757148-5c350d0d3c56?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8aG9zcGl0YWwlMjBsb2dvfGVufDB8fDB8fHww&auto=format&fit=crop&w=500&q=60" alt="Logo Bệnh Viện Thể Thao Việt Nam">
+                </div>
+                <div class="slide-title">ĐẶT VẤN ĐỀ (2)</div>
+            </div>
+            <div class="slide-content">
+                <ul>
+                    <li>Nghiên cứu trước năm 2012</li>
+                    <li>Bối cảnh kinh tế xã hội thay đổi</li>
+                    <li>Bệnh viện được đầu tư nâng cấp</li>
+                    <li>Chính sách BHYT toàn dân</li>
+                    <li>Cần dữ liệu cập nhật để hoạch định</li>
+                    <li>Mở rộng thu dung và nâng cao chất lượng</li>
+                </ul>
+            </div>
+            <div class="illustration acupressure">
+                <img src="https://images.unsplash.com/photo-1599045118108-bf9954418b76?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NHx8YWN1cHJlc3N1cmV8ZW58MHx8MHx8fDA%3D&auto=format&fit=crop&w=500&q=60" alt="Bấm huyệt">
+            </div>
+        </div>
+        
+        <!-- Slide 5: Tổng quan - Khái niệm CCBT -->
+        <div class="slide" id="slide5">
+            <div class="slide-header">
+                <div class="logo">
+                    <img src="https://images.unsplash.com/photo-1559757148-5c350d0d3c56?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8aG9zcGl0YWwlMjBsb2dvfGVufDB8fDB8fHww&auto=format&fit=crop&w=500&q=60" alt="Logo Bệnh Viện Thể Thao Việt Nam">
+                </div>
+                <div class="slide-title">TỔNG QUAN - KHÁI NIỆM CCBT</div>
+            </div>
+            <div class="slide-content">
+                <ul>
+                    <li>CCBT là tỷ lệ các loại bệnh</li>
+                    <li>Trong một cộng đồng hoặc đơn vị</li>
+                    <li>Giúp xác định vấn đề sức khỏe ưu tiên</li>
+                    <li>Phân bổ nguồn lực y tế hiệu quả</li>
+                    <li>So sánh giữa các khu vực, thời kỳ</li>
+                </ul>
+            </div>
+        </div>
+        
+        <!-- Slide 6: Tổng quan - Yếu tố ảnh hưởng CCBT -->
+        <div class="slide" id="slide6">
+            <div class="slide-header">
+                <div class="logo">
+                    <img src="https://images.unsplash.com/photo-1559757148-5c350d0d3c56?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8aG9zcGl0YWwlMjBsb2dvfGVufDB8fDB8fHww&auto=format&fit=crop&w=500&q=60" alt="Logo Bệnh Viện Thể Thao Việt Nam">
+                </div>
+                <div class="slide-title">TỔNG QUAN - YẾU TỐ ẢNH HƯỞNG</div>
+            </div>
+            <div class="slide-content">
+                <ul>
+                    <li>Yếu tố dân số: tuổi, giới, nghề nghiệp</li>
+                    <li>Môi trường, dịch tễ, kháng kháng sinh</li>
+                    <li>Chính sách y tế, trang thiết bị</li>
+                    <li>Trình độ nhân lực y tế</li>
+                    <li>Văn hóa, giáo dục, nhận thức</li>
+                </ul>
+            </div>
+            <div class="illustration traction">
+                <img src="https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8c3BpbmUlMjB0cmFjdGlvbnxlbnwwfHwwfHx8MA%3D%3D&auto=format&fit=crop&w=500&q=60" alt="Kéo giãn cột sống">
+            </div>
+        </div>
+        
+        <!-- Slide 7: Tổng quan - Phân loại bệnh theo ICD-10 -->
+        <div class="slide" id="slide7">
+            <div class="slide-header">
+                <div class="logo">
+                    <img src="https://images.unsplash.com/photo-1559757148-5c350d0d3c56?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8aG9zcGl0YWwlMjBsb2dvfGVufDB8fDB8fHww&auto=format&fit=crop&w=500&q=60" alt="Logo Bệnh Viện Thể Thao Việt Nam">
+                </div>
+                <div class="slide-title">PHÂN LOẠI BỆNH THEO ICD-10</div>
+            </div>
+            <div class="slide-content">
+                <ul>
+                    <li>Hệ thống mã hóa bệnh tật quốc tế</li>
+                    <li>Ngôn ngữ chung cho chuyên gia y tế</li>
+                    <li>Giúp thống kê, phân tích, so sánh</li>
+                    <li>Sử dụng trong quản lý và bảo hiểm</li>
+                    <li>Ví dụ: M54.5 (Đau thắt lưng)</li>
+                </ul>
+            </div>
+        </div>
+        
+        <!-- Slide 8: Tổng quan - Phân loại bệnh theo YHCT -->
+        <div class="slide" id="slide8">
+            <div class="slide-header">
+                <div class="logo">
+                    <img src="https://images.unsplash.com/photo-1559757148-5c350d0d3c56?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8aG9zcGl0YWwlMjBsb2dvfGVufDB8fDB8fHww&auto=format&fit=crop&w=500&q=60" alt="Logo Bệnh Viện Thể Thao Việt Nam">
+                </div>
+                <div class="slide-title">PHÂN LOẠI BỆNH THEO YHCT</div>
+            </div>
+            <div class="slide-content">
+                <ul>
+                    <li>Dựa trên cân bằng Âm Dương, Ngũ Hành</li>
+                    <li>Nguyên nhân: Ngoại nhân, Nội nhân</li>
+                    <li>Theo Tạng Phủ và Bát Cương</li>
+                    <li>Ví dụ: Chứng Tý (bệnh khớp)</li>
+                    <li>Khác biệt căn bản với Y học hiện đại</li>
+                </ul>
+            </div>
+            <div class="illustration acupuncture">
+                <img src="https://images.unsplash.com/photo-1551601651-2a8555f1a136?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8YWN1cHVuY3R1cmV8ZW58MHx8MHx8fDA%3D&auto=format&fit=crop&w=500&q=60" alt="Điện châm">
+            </div>
+        </div>
+        
+        <!-- Slide 9: Tổng quan - Nghiên cứu trong nước -->
+        <div class="slide" id="slide9">
+            <div class="slide-header">
+                <div class="logo">
+                    <img src="https://images.unsplash.com/photo-1559757148-5c350d0d3c56?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8aG9zcGl0YWwlMjBsb2dvfGVufDB8fDB8fHww&auto=format&fit=crop&w=500&q=60" alt="Logo Bệnh Viện Thể Thao Việt Nam">
+                </div>
+                <div class="slide-title">NGHIÊN CỨU TRONG NƯỚC</div>
+            </div>
+            <div class="slide-content">
+                <ul>
+                    <li>Các BV YHCT: Bệnh cơ xương khớp chiếm ưu thế</li>
+                    <li>Võ Tường Kha (2012): BN trẻ, chấn thương</li>
+                    <li>Tăng Hùng Cường (2023): BN cao tuổi</li>
+                    <li>Phạm Thị Huệ (2021): Đau lưng, cổ vai gáy</li>
+                    <li>Xu hướng điều trị kết hợp Đông - Tây y</li>
+                </ul>
+            </div>
+            <div class="illustration massage">
+                <img src="https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8M3x8bWFzc2FnZXxlbnwwfHwwfHx8MA%3D%3D&auto=format&fit=crop&w=500&q=60" alt="Xoa bóp">
+            </div>
+        </div>
+        
+        <!-- Slide 10: Phương pháp nghiên cứu (1) -->
+        <div class="slide" id="slide10">
+            <div class="slide-header">
+                <div class="logo">
+                    <img src="https://images.unsplash.com/photo-1559757148-5c350d0d3c56?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8aG9zcGl0YWwlMjBsb2dvfGVufDB8fDB8fHww&auto=format&fit=crop&w=500&q=60" alt="Logo Bệnh Viện Thể Thao Việt Nam">
+                </div>
+                <div class="slide-title">PHƯƠNG PHÁP NGHIÊN CỨU (1)</div>
+            </div>
+            <div class="slide-content">
+                <ul>
+                    <li>Thiết kế: Mô tả cắt ngang</li>
+                    <li>Đối tượng: BN đến khám tại Bộ phận YHCT</li>
+                    <li>Thời gian: Từ 03/2025 đến 10/2025</li>
+                    <li>Cỡ mẫu: 323 (đã thu thập 461)</li>
+                    <li>Phương pháp chọn mẫu: Toàn bộ</li>
+                </ul>
+            </div>
+        </div>
+        
+        <!-- Slide 11: Phương pháp nghiên cứu (2) -->
+        <div class="slide" id="slide11">
+            <div class="slide-header">
+                <div class="logo">
+                    <img src="https://images.unsplash.com/photo-1559757148-5c350d0d3c56?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8aG9zcGl0YWwlMjBsb2dvfGVufDB8fDB8fHww&auto=format&fit=crop&w=500&q=60" alt="Logo Bệnh Viện Thể Thao Việt Nam">
+                </div>
+                <div class="slide-title">PHƯƠNG PHÁP NGHIÊN CỨU (2)</div>
+            </div>
+            <div class="slide-content">
+                <ul>
+                    <li>Tiêu chí hành chính: Tuổi, giới, BHYT</li>
+                    <li>Tiêu chí chuyên môn: Lý do khám, chẩn đoán</li>
+                    <li>Phương pháp điều trị, kết quả</li>
+                    <li>Công cụ: HSBA, phần mềm QLBV</li>
+                    <li>Phần mềm phân tích: SPSS 20.0</li>
+                </ul>
+            </div>
+            <div class="illustration hydro-acupuncture">
+                <img src="https://images.unsplash.com/photo-1584302179602-e4819bb92daa?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTB8fGhlcmJhbCUyMG1lZGljaW5lfGVufDB8fDB8fHww&auto=format&fit=crop&w=500&q=60" alt="Thủy châm">
+            </div>
+        </div>
+        
+        <!-- Slide 12: Phương pháp nghiên cứu (3) -->
+        <div class="slide" id="slide12">
+            <div class="slide-header">
+                <div class="logo">
+                    <img src="https://images.unsplash.com/photo-1559757148-5c350d0d3c56?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8aG9zcGl0YWwlMjBsb2dvfGVufDB8fDB8fHww&auto=format&fit=crop&w=500&q=60" alt="Logo Bệnh Viện Thể Thao Việt Nam">
+                </div>
+                <div class="slide-title">PHƯƠNG PHÁP NGHIÊN CỨU (3)</div>
+            </div>
+            <div class="slide-content">
+                <ul>
+                    <li>Tuân thủ đạo đức nghiên cứu</li>
+                    <li>Được Hội đồng KH BV phê duyệt</li>
+                    <li>Đảm bảo an toàn thông tin cá nhân</li>
+                    <li>Không ảnh hưởng sức khỏe bệnh nhân</li>
+                    <li>Số liệu phục vụ mục đích nghiên cứu</li>
+                </ul>
+            </div>
+        </div>
+        
+        <!-- Slide 13: Kết quả - Đặc điểm hành chính (1) -->
+        <div class="slide" id="slide13">
+            <div class="slide-header">
+                <div class="logo">
+                    <img src="https://images.unsplash.com/photo-1559757148-5c350d0d3c56?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8aG9zcGl0YWwlMjBsb2dvfGVufDB8fDB8fHww&auto=format&fit=crop&w=500&q=60" alt="Logo Bệnh Viện Thể Thao Việt Nam">
+                </div>
+                <div class="slide-title">KẾT QUẢ - ĐẶC ĐIỂM HÀNH CHÍNH (1)</div>
+            </div>
+            <div class="slide-content">
+                <div class="table-container">
+                    <table>
+                        <tr>
+                            <th>Đặc điểm</th>
+                            <th>Tỷ lệ (%)</th>
+                        </tr>
+                        <tr>
+                            <td>Tuổi 41-60</td>
+                            <td>41.0</td>
+                        </tr>
+                        <tr>
+                            <td>Tuổi 18-40</td>
+                            <td>37.9</td>
+                        </tr>
+                        <tr>
+                            <td>Nữ giới</td>
+                            <td>53.9</td>
+                        </tr>
+                        <tr>
+                            <td>BHYT</td>
+                            <td>94.9</td>
+                        </tr>
+                        <tr>
+                            <td>Dịch vụ</td>
+                            <td>5.1</td>
+                        </tr>
+                    </table>
+                    <div class="reference">Bảng 3.1: Đặc điểm hành chính (N=759)</div>
+                </div>
+            </div>
+            <div class="illustration traction">
+                <img src="https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8c3BpbmUlMjB0cmFjdGlvbnxlbnwwfHwwfHx8MA%3D%3D&auto=format&fit=crop&w=500&q=60" alt="Kéo giãn cột sống">
+            </div>
+        </div>
+        
+        <!-- Slide 14: Kết quả - Đặc điểm hành chính (2) -->
+        <div class="slide" id="slide14">
+            <div class="slide-header">
+                <div class="logo">
+                    <img src="https://images.unsplash.com/photo-1559757148-5c350d0d3c56?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8aG9zcGl0YWwlMjBsb2dvfGVufDB8fDB8fHww&auto=format&fit=crop&w=500&q=60" alt="Logo Bệnh Viện Thể Thao Việt Nam">
+                </div>
+                <div class="slide-title">KẾT QUẢ - ĐẶC ĐIỂM HÀNH CHÍNH (2)</div>
+            </div>
+            <div class="slide-content">
+                <div class="table-container">
+                    <table>
+                        <tr>
+                            <th>Kênh thông tin</th>
+                            <th>Tỷ lệ (%)</th>
+                        </tr>
+                        <tr>
+                            <td>BN cũ giới thiệu</td>
+                            <td>26.4</td>
+                        </tr>
+                        <tr>
+                            <td>Phân luồng tiếp đón</td>
+                            <td>24.4</td>
+                        </tr>
+                        <tr>
+                            <td>Truyền thông mạng</td>
+                            <td>19.8</td>
+                        </tr>
+                    </table>
+                    <div class="reference">Bảng 3.1 (tiếp theo): Kênh thông tin</div>
+                </div>
+                <ul>
+                    <li>Hình thức điều trị: Ngoại trú (30%) cao nhất</li>
+                </ul>
+            </div>
+            <div class="illustration acupuncture">
+                <img src="https://images.unsplash.com/photo-1551601651-2a8555f1a136?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8YWN1cHVuY3R1cmV8ZW58MHx8MHx8fDA%3D&auto=format&fit=crop&w=500&q=60" alt="Điện châm">
+            </div>
+        </div>
+        
+        <!-- Slide 15: Kết quả - Đặc điểm chuyên môn (1) -->
+        <div class="slide" id="slide15">
+            <div class="slide-header">
+                <div class="logo">
+                    <img src="https://images.unsplash.com/photo-1559757148-5c350d0d3c56?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8aG9zcGl0YWwlMjBsb2dvfGVufDB8fDB8fHww&auto=format&fit=crop&w=500&q=60" alt="Logo Bệnh Viện Thể Thao Việt Nam">
+                </div>
+                <div class="slide-title">KẾT QUẢ - ĐẶC ĐIỂM CHUYÊN MÔN (1)</div>
+            </div>
+            <div class="slide-content">
+                <div class="table-container">
+                    <table>
+                        <tr>
+                            <th>Đặc điểm</th>
+                            <th>Tỷ lệ (%)</th>
+                        </tr>
+                        <tr>
+                            <td>Thời gian mắc bệnh &lt;3 năm</td>
+                            <td>~70</td>
+                        </tr>
+                        <tr>
+                            <td>Đã điều trị nơi khác</td>
+                            <td>59.9</td>
+                        </tr>
+                        <tr>
+                            <td>Lần đầu đến</td>
+                            <td>20.0</td>
+                        </tr>
+                    </table>
+                    <div class="reference">Bảng 3.2: Đặc điểm chuyên môn</div>
+                </div>
+            </div>
+            <div class="illustration massage">
+                <img src="https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8M3x8bWFzc2FnZXxlbnwwfHwwfHx8MA%3D%3D&auto=format&fit=crop&w=500&q=60" alt="Xoa bóp">
+            </div>
+        </div>
+        
+        <!-- Slide 16: Kết quả - Đặc điểm chuyên môn (2) -->
+        <div class="slide" id="slide16">
+            <div class="slide-header">
+                <div class="logo">
+                    <img src="https://images.unsplash.com/photo-1559757148-5c350d0d3c56?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8aG9zcGl0YWwlMjBsb2dvfGVufDB8fDB8fHww&auto=format&fit=crop&w=500&q=60" alt="Logo Bệnh Viện Thể Thao Việt Nam">
+                </div>
+                <div class="slide-title">KẾT QUẢ - ĐẶC ĐIỂM CHUYÊN MÔN (2)</div>
+            </div>
+            <div class="slide-content">
+                <div class="table-container">
+                    <table>
+                        <tr>
+                            <th>Lý do khám</th>
+                            <th>Tỷ lệ (%)</th>
+                        </tr>
+                        <tr>
+                            <td>Đau thắt lưng</td>
+                            <td>27.9</td>
+                        </tr>
+                        <tr>
+                            <td>Đau cột sống cổ</td>
+                            <td>24.0</td>
+                        </tr>
+                        <tr>
+                            <td>Đau khớp vai</td>
+                            <td>14.0</td>
+                        </tr>
+                        <tr>
+                            <td>Đau khớp gối</td>
+                            <td>12.0</td>
+                        </tr>
+                    </table>
+                    <div class="reference">Bảng 3.2 (tiếp theo): Lý do khám</div>
+                </div>
+            </div>
+            <div class="illustration acupressure">
+                <img src="https://images.unsplash.com/photo-1599045118108-bf9954418b76?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NHx8YWN1cHJlc3N1cmV8ZW58MHx8MHx8fDA%3D&auto=format&fit=crop&w=500&q=60" alt="Bấm huyệt">
+            </div>
+        </div>
+        
+        <!-- Slide 17: Kết quả - Chẩn đoán theo ICD-10 -->
+        <div class="slide" id="slide17">
+            <div class="slide-header">
+                <div class="logo">
+                    <img src="https://images.unsplash.com/photo-1559757148-5c350d0d3c56?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8aG9zcGl0YWwlMjBsb2dvfGVufDB8fDB8fHww&auto=format&fit=crop&w=500&q=60" alt="Logo Bệnh Viện Thể Thao Việt Nam">
+                </div>
+                <div class="slide-title">KẾT QUẢ - CHẨN ĐOÁN THEO ICD-10</div>
+            </div>
+            <div class="slide-content">
+                <div class="table-container">
+                    <table>
+                        <tr>
+                            <th>Chẩn đoán</th>
+                            <th>Tỷ lệ (%)</th>
+                        </tr>
+                        <tr>
+                            <td>Thoái hóa cột sống thắt lưng</td>
+                            <td>27.9</td>
+                        </tr>
+                        <tr>
+                            <td>Thoái hóa cột sống cổ</td>
+                            <td>24.0</td>
+                        </tr>
+                        <tr>
+                            <td>Thoát vị đĩa đệm thắt lưng</td>
+                            <td>19.0</td>
+                        </tr>
+                        <tr>
+                            <td>Thoái hóa khớp gối</td>
+                            <td>12.0</td>
+                        </tr>
+                    </table>
+                    <div class="reference">Bảng 3.3: Kết quả chẩn đoán</div>
+                </div>
+                <ul>
+                    <li>Tỷ lệ chẩn đoán xác định/sơ bộ &gt;90%</li>
+                </ul>
+            </div>
+            <div class="illustration traction">
+                <img src="https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8c3BpbmUlMjB0cmFjdGlvbnxlbnwwfHwwfHx8MA%3D%3D&auto=format&fit=crop&w=500&q=60" alt="Kéo giãn cột sống">
+            </div>
+        </div>
+        
+        <!-- Slide 18: Kết quả - Sử dụng cận lâm sàng -->
+        <div class="slide" id="slide18">
+            <div class="slide-header">
+                <div class="logo">
+                    <img src="https://images.unsplash.com/photo-1559757148-5c350d0d3c56?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8aG9zcGl0YWwlMjBsb2dvfGVufDB8fDB8fHww&auto=format&fit=crop&w=500&q=60" alt="Logo Bệnh Viện Thể Thao Việt Nam">
+                </div>
+                <div class="slide-title">KẾT QUẢ - SỬ DỤNG CẬN LÂM SÀNG</div>
+            </div>
+            <div class="slide-content">
+                <div class="table-container">
+                    <table>
+                        <tr>
+                            <th>Cận lâm sàng</th>
+                            <th>Tỷ lệ (%)</th>
+                        </tr>
+                        <tr>
+                            <td>CT/MRI</td>
+                            <td>96.7</td>
+                        </tr>
+                        <tr>
+                            <td>Siêu âm</td>
+                            <td>98.4</td>
+                        </tr>
+                        <tr>
+                            <td>Xét nghiệm máu</td>
+                            <td>98.5</td>
+                        </tr>
+                        <tr>
+                            <td>X-quang</td>
+                            <td>89.2</td>
+                        </tr>
+                    </table>
+                    <div class="reference">Bảng 3.4: Tỷ lệ sử dụng cận lâm sàng</div>
+                </div>
+                <ul>
+                    <li>Phản ánh xu hướng chẩn đoán hiện đại</li>
+                </ul>
+            </div>
+            <div class="illustration acupuncture">
+                <img src="https://images.unsplash.com/photo-1551601651-2a8555f1a136?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8YWN1cHVuY3R1cmV8ZW58MHx8MHx8fDA%3D&auto=format&fit=crop&w=500&q=60" alt="Điện châm">
+            </div>
+        </div>
+        
+        <!-- Slide 19: Kết quả - Phương pháp điều trị -->
+        <div class="slide" id="slide19">
+            <div class="slide-header">
+                <div class="logo">
+                    <img src="https://images.unsplash.com/photo-1559757148-5c350d0d3c56?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8aG9zcGl0YWwlMjBsb2dvfGVufDB8fDB8fHww&auto=format&fit=crop&w=500&q=60" alt="Logo Bệnh Viện Thể Thao Việt Nam">
+                </div>
+                <div class="slide-title">KẾT QUẢ - PHƯƠNG PHÁP ĐIỀU TRỊ</div>
+            </div>
+            <div class="slide-content">
+                <div class="table-container">
+                    <table>
+                        <tr>
+                            <th>Phương pháp</th>
+                            <th>Tỷ lệ (%)</th>
+                        </tr>
+                        <tr>
+                            <td>Thủ thuật đơn thuần</td>
+                            <td>42.2</td>
+                        </tr>
+                        <tr>
+                            <td>Thuốc YHCT thành phẩm</td>
+                            <td>21.2</td>
+                        </tr>
+                        <tr>
+                            <td>Kết hợp Thuốc Tây + YHCT</td>
+                            <td>14.0</td>
+                        </tr>
+                        <tr>
+                            <td>Kết hợp đa phương pháp</td>
+                            <td>~5.0</td>
+                        </tr>
+                    </table>
+                    <div class="reference">Bảng 3.5: Phương pháp điều trị</div>
+                </div>
+                <ul>
+                    <li>Phác đồ YHCT chiếm ưu thế (&gt;75%)</li>
+                </ul>
+            </div>
+            <div class="illustration massage">
+                <img src="https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8M3x8bWFzc2FnZXxlbnwwfHwwfHx8MA%3D%3D&auto=format&fit=crop&w=500&q=60" alt="Xoa bóp">
+            </div>
+        </div>
+        
+        <!-- Slide 20: Kết quả - Kết quả điều trị -->
+        <div class="slide" id="slide20">
+            <div class="slide-header">
+                <div class="logo">
+                    <img src="https://images.unsplash.com/photo-1559757148-5c350d0d3c56?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8aG9zcGl0YWwlMjBsb2dvfGVufDB8fDB8fHww&auto=format&fit=crop&w=500&q=60" alt="Logo Bệnh Viện Thể Thao Việt Nam">
+                </div>
+                <div class="slide-title">KẾT QUẢ - KẾT QUẢ ĐIỀU TRỊ</div>
+            </div>
+            <div class="slide-content">
+                <div class="table-container">
+                    <table>
+                        <tr>
+                            <th>Kết quả</th>
+                            <th>Tỷ lệ (%)</th>
+                        </tr>
+                        <tr>
+                            <td>Tổng có hiệu quả</td>
+                            <td>95.9</td>
+                        </tr>
+                        <tr>
+                            <td>Cải thiện nhiều</td>
+                            <td>44.9</td>
+                        </tr>
+                        <tr>
+                            <td>Cải thiện vừa</td>
+                            <td>27.0</td>
+                        </tr>
+                        <tr>
+                            <td>Khỏi</td>
+                            <td>12.0</td>
+                        </tr>
+                        <tr>
+                            <td>Không cải thiện</td>
+                            <td>3.0</td>
+                        </tr>
+                    </table>
+                    <div class="reference">Bảng 3.6: Kết quả điều trị</div>
+                </div>
+                <ul>
+                    <li>Hiệu quả điều trị rất cao</li>
+                </ul>
+            </div>
+            <div class="illustration acupressure">
+                <img src="https://images.unsplash.com/photo-1599045118108-bf9954418b76?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NHx8YWN1cHJlc3N1cmV8ZW58MHx8MHx8fDA%3D&auto=format&fit=crop&w=500&q=60" alt="Bấm huyệt">
+            </div>
+        </div>
+        
+        <!-- Slide 21: Kết quả - Cơ cấu bệnh tật 2025 -->
+        <div class="slide" id="slide21">
+            <div class="slide-header">
+                <div class="logo">
+                    <img src="https://images.unsplash.com/photo-1559757148-5c350d0d3c56?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8aG9zcGl0YWwlMjBsb2dvfGVufDB8fDB8fHww&auto=format&fit=crop&w=500&q=60" alt="Logo Bệnh Viện Thể Thao Việt Nam">
+                </div>
+                <div class="slide-title">KẾT QUẢ - CƠ CẤU BỆNH TẬT 2025</div>
+            </div>
+            <div class="slide-content">
+                <div class="table-container">
+                    <table>
+                        <tr>
+                            <th>Bệnh lý</th>
+                            <th>Tỷ lệ (%)</th>
+                        </tr>
+                        <tr>
+                            <td>Thoái hóa khớp</td>
+                            <td>13.8</td>
+                        </tr>
+                        <tr>
+                            <td>Thoái hóa cột sống thắt lưng</td>
+                            <td>12.5</td>
+                        </tr>
+                        <tr>
+                            <td>Viêm gân/cơ</td>
+                            <td>11.2</td>
+                        </tr>
+                        <tr>
+                            <td>Thoát vị đĩa đệm thắt lưng</td>
+                            <td>10.5</td>
+                        </tr>
+                        <tr>
+                            <td>Đau thần kinh tọa</td>
+                            <td>8.6</td>
+                        </tr>
+                    </table>
+                    <div class="reference">Bảng 3.7: Cơ cấu bệnh tật năm 2025</div>
+                </div>
+                <ul>
+                    <li>Nhóm Cơ Xương Khớp & Thần Kinh chiếm ưu thế</li>
+                </ul>
+            </div>
+            <div class="illustration traction">
+                <img src="https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8c3BpbmUlMjB0cmFjdGlvbnxlbnwwfHwwfHx8MA%3D%3D&auto=format&fit=crop&w=500&q=60" alt="Kéo giãn cột sống">
+            </div>
+        </div>
+        
+        <!-- Slide 22: Kết quả - Thực trạng cơ sở vật chất -->
+        <div class="slide" id="slide22">
+            <div class="slide-header">
+                <div class="logo">
+                    <img src="https://images.unsplash.com/photo-1559757148-5c350d0d3c56?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8aG9zcGl0YWwlMjBsb2dvfGVufDB8fDB8fHww&auto=format&fit=crop&w=500&q=60" alt="Logo Bệnh Viện Thể Thao Việt Nam">
+                </div>
+                <div class="slide-title">KẾT QUẢ - THỰC TRẠNG CSVC</div>
+            </div>
+            <div class="slide-content">
+                <ul>
+                    <li>Cơ sở hạ tầng tạm bợ, chưa hoàn thiện</li>
+                    <li>Trang thiết bị: 73% hỏng, hết khấu hao</li>
+                    <li>Thiếu phòng chức năng, phòng bào chế</li>
+                    <li>Nhiều máy móc không có mặt bằng sử dụng</li>
+                    <li>Hạn chế lớn đến khả năng KCB</li>
+                </ul>
+                <div class="reference">Bảng 1.3 & 1.4: Thực trạng CSVC & Thiết bị</div>
+            </div>
+            <div class="illustration acupuncture">
+                <img src="https://images.unsplash.com/photo-1551601651-2a8555f1a136?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8YWN1cHVuY3R1cmV8ZW58MHx8MHx8fDA%3D&auto=format&fit=crop&w=500&q=60" alt="Điện châm">
+            </div>
+        </div>
+        
+        <!-- Slide 23: Bàn luận - Đặc điểm BN & So sánh -->
+        <div class="slide" id="slide23">
+            <div class="slide-header">
+                <div class="logo">
+                    <img src="https://images.unsplash.com/photo-1559757148-5c350d0d3c56?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8aG9zcGl0YWwlMjBsb2dvfGVufDB8fDB8fHww&auto=format&fit=crop&w=500&q=60" alt="Logo Bệnh Viện Thể Thao Việt Nam">
+                </div>
+                <div class="slide-title">BÀN LUẬN - ĐẶC ĐIỂM BN & SO SÁNH</div>
+            </div>
+            <div class="slide-content">
+                <ul>
+                    <li>BN trung niên, nữ, BHYT là chủ yếu</li>
+                    <li>Khác biệt với nghiên cứu trước (2012)</li>
+                    <li>Phù hợp với sự thay đổi dân số, chính sách</li>
+                    <li>Tương đồng với các nghiên cứu YHCT khác</li>
+                    <li>Về cơ cấu bệnh cơ xương khớp chiếm ưu thế</li>
+                </ul>
+            </div>
+            <div class="illustration massage">
+                <img src="https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8M3x8bWFzc2FnZXxlbnwwfHwwfHx8MA%3D%3D&auto=format&fit=crop&w=500&q=60" alt="Xoa bóp">
+            </div>
+        </div>
+        
+        <!-- Slide 24: Bàn luận - Chẩn đoán & Điều trị -->
+        <div class="slide" id="slide24">
+            <div class="slide-header">
+                <div class="logo">
+                    <img src="https://images.unsplash.com/photo-1559757148-5c350d0d3c56?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8aG9zcGl0YWwlMjBsb2dvfGVufDB8fDB8fHww&auto=format&fit=crop&w=500&q=60" alt="Logo Bệnh Viện Thể Thao Việt Nam">
+                </div>
+                <div class="slide-title">BÀN LUẬN - CHẨN ĐOÁN & ĐIỀU TRỊ</div>
+            </div>
+            <div class="slide-content">
+                <ul>
+                    <li>Chẩn đoán chính xác, tỷ lệ XĐ/SB cao</li>
+                    <li>Trùng khớp với thế mạnh chuyên môn</li>
+                    <li>Điều trị YHCT là chủ đạo, kết hợp linh hoạt</li>
+                    <li>Hiệu quả điều trị cao (95.9%)</li>
+                    <li>Tương đồng với kết quả các nghiên cứu uy tín</li>
+                </ul>
+            </div>
+            <div class="illustration acupressure">
+                <img src="https://images.unsplash.com/photo-1599045118108-bf9954418b76?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NHx8YWN1cHJlc3N1cmV8ZW58MHx8MHx8fDA%3D&auto=format&fit=crop&w=500&q=60" alt="Bấm huyệt">
+            </div>
+        </div>
+        
+        <!-- Slide 25: Bàn luận - Hạn chế & Thách thức -->
+        <div class="slide" id="slide25">
+            <div class="slide-header">
+                <div class="logo">
+                    <img src="https://images.unsplash.com/photo-1559757148-5c350d0d3c56?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8aG9zcGl0YWwlMjBsb2dvfGVufDB8fDB8fHww&auto=format&fit=crop&w=500&q=60" alt="Logo Bệnh Viện Thể Thao Việt Nam">
+                </div>
+                <div class="slide-title">BÀN LUẬN - HẠN CHẾ & THÁCH THỨC</div>
+            </div>
+            <div class="slide-content">
+                <ul>
+                    <li>Cơ sở vật chất, trang thiết bị lạc hậu</li>
+                    <li>Danh mục kỹ thuật chưa khai thác hết</li>
+                    <li>Phân luồng BN chưa tối ưu</li>
+                    <li>Động lực NVYT chưa cao</li>
+                    <li>Thuốc thang chưa triển khai được</li>
+                </ul>
+                <div class="reference">Bảng 3.8: Thực trạng điều kiện tiếp nhận</div>
+            </div>
+            <div class="illustration traction">
+                <img src="https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8c3BpbmUlMjB0cmFjdGlvbnxlbnwwfHwwfHx8MA%3D%3D&auto=format&fit=crop&w=500&q=60" alt="Kéo giãn cột sống">
+            </div>
+        </div>
+        
+        <!-- Slide 26: Kết luận -->
+        <div class="slide" id="slide26">
+            <div class="slide-header">
+                <div class="logo">
+                    <img src="https://images.unsplash.com/photo-1559757148-5c350d0d3c56?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8aG9zcGl0YWwlMjBsb2dvfGVufDB8fDB8fHww&auto=format&fit=crop&w=500&q=60" alt="Logo Bệnh Viện Thể Thao Việt Nam">
+                </div>
+                <div class="slide-title">KẾT LUẬN</div>
+            </div>
+            <div class="slide-content">
+                <ul>
+                    <li>CCBT chủ yếu là bệnh cơ xương khớp</li>
+                    <li>Đối tượng: trung niên, nữ, BHYT</li>
+                    <li>Phương pháp điều trị YHCT hiệu quả cao</li>
+                    <li>Điều kiện CSVC, trang thiết bị rất hạn chế</li>
+                    <li>Ảnh hưởng lớn đến thu dung và chất lượng</li>
+                </ul>
+            </div>
+            <div class="illustration herbal-medicine">
+                <img src="https://images.unsplash.com/photo-1584302179602-e4819bb92daa?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTB8fGhlcmJhbCUyMG1lZGljaW5lfGVufDB8fDB8fHww&auto=format&fit=crop&w=500&q=60" alt="Thuốc YHCT">
+            </div>
+        </div>
+        
+        <!-- Slide 27: Kiến nghị (1) - Cải thiện cơ sở vật chất -->
+        <div class="slide" id="slide27">
+            <div class="slide-header">
+                <div class="logo">
+                    <img src="https://images.unsplash.com/photo-1559757148-5c350d0d3c56?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8aG9zcGl0YWwlMjBsb2dvfGVufDB8fDB8fHww&auto=format&fit=crop&w=500&q=60" alt="Logo Bệnh Viện Thể Thao Việt Nam">
+                </div>
+                <div class="slide-title">KIẾN NGHỊ (1) - CẢI THIỆN CSVC</div>
+            </div>
+            <div class="slide-content">
+                <ul>
+                    <li>Đầu tư cấp bách: nâng cấp phòng ốc</li>
+                    <li>Mua sắm trang thiết bị y tế mới</li>
+                    <li>Khôi phục khu bào chế thuốc</li>
+                    <li>Bố trí mặt bằng cho thiết bị hiện có</li>
+                    <li>Hoàn thiện khu điều trị, phục hồi</li>
+                </ul>
+            </div>
+            <div class="illustration hydro-acupuncture">
+                <img src="https://images.unsplash.com/photo-1584302179602-e4819bb92daa?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTB8fGhlcmJhbCUyMG1lZGljaW5lfGVufDB8fDB8fHww&auto=format&fit=crop&w=500&q=60" alt="Thủy châm">
+            </div>
+        </div>
+        
+        <!-- Slide 28: Kiến nghị (2) - Giải pháp tổng thể -->
+        <div class="slide" id="slide28">
+            <div class="slide-header">
+                <div class="logo">
+                    <img src="https://images.unsplash.com/photo-1559757148-5c350d0d3c56?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8aG9zcGl0YWwlMjBsb2dvfGVufDB8fDB8fHww&auto=format&fit=crop&w=500&q=60" alt="Logo Bệnh Viện Thể Thao Việt Nam">
+                </div>
+                <div class="slide-title">KIẾN NGHỊ (2) - GIẢI PHÁP TỔNG THỂ</div>
+            </div>
+            <div class="slide-content">
+                <ul>
+                    <li>Đào tạo & Phát triển nhân lực</li>
+                    <li>Mở rộng danh mục kỹ thuật được cấp phép</li>
+                    <li>Tối ưu hóa quy trình phân luồng bệnh nhân</li>
+                    <li>Tăng cường phối hợp liên khoa</li>
+                    <li>Xây dựng gói dịch vụ YHCT chất lượng cao</li>
+                    <li>Hoàn thiện chính sách đãi ngộ cho NVYT</li>
+                </ul>
+            </div>
+            <div class="illustration acupuncture">
+                <img src="https://images.unsplash.com/photo-1551601651-2a8555f1a136?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8YWN1cHVuY3R1cmV8ZW58MHx8MHx8fDA%3D&auto=format&fit=crop&w=500&q=60" alt="Điện châm">
+            </div>
+        </div>
+        
+        <div class="slide-counter" id="slideCounter">1 / 28</div>
+        <div class="navigation">
+            <button class="nav-btn" id="prevBtn">←</button>
+            <button class="nav-btn" id="nextBtn">→</button>
+        </div>
+    </div>
 
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const slides = document.querySelectorAll('.slide');
+            const prevBtn = document.getElementById('prevBtn');
+            const nextBtn = document.getElementById('nextBtn');
+            const slideCounter = document.getElementById('slideCounter');
+            let currentSlide = 0;
+            
+            function showSlide(n) {
+                slides.forEach(slide => slide.classList.remove('active'));
+                slides[n].classList.add('active');
+                slideCounter.textContent = `${n + 1} / ${slides.length}`;
+                currentSlide = n;
+                
+                // Disable/enable buttons based on current slide
+                prevBtn.disabled = n === 0;
+                nextBtn.disabled = n === slides.length - 1;
+            }
+            
+            function nextSlide() {
+                if (currentSlide < slides.length - 1) {
+                    showSlide(currentSlide + 1);
+                }
+            }
+            
+            function prevSlide() {
+                if (currentSlide > 0) {
+                    showSlide(currentSlide - 1);
+                }
+            }
+            
+            // Event listeners for buttons
+            nextBtn.addEventListener('click', nextSlide);
+            prevBtn.addEventListener('click', prevSlide);
+            
+            // Keyboard navigation
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'ArrowRight') {
+                    nextSlide();
+                } else if (e.key === 'ArrowLeft') {
+                    prevSlide();
+                }
+            });
+            
+            // Initialize first slide
+            showSlide(0);
+        });
+    </script>
+</body>
+</html>
