@@ -6,6 +6,8 @@
     <title>Hệ Thống Tư Vấn Kiểm Soát Huyết Áp - PGs.TS.Bs. Võ Tường Kha</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <style>
         :root {
             --primary: #2c5530;
@@ -185,8 +187,12 @@
             background: linear-gradient(135deg, var(--info) 0%, #2980b9 100%);
         }
         
+        .btn-pdf {
+            background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
+        }
+        
         .btn-reset {
-            background: linear-gradient(135deg, var(--danger) 0%, #c0392b 100%);
+            background: linear-gradient(135deg, var(--warning) 0%, #e67e22 100%);
         }
         
         .btn-group {
@@ -397,14 +403,52 @@
         }
         
         @media print {
-            .btn-group, .card:not(.result-card) {
+            body {
+                background: white;
+                padding: 0;
+            }
+            
+            .btn-group, .card:not(.result-card), .footer, .visualization {
                 display: none;
             }
             
             .result-card {
                 box-shadow: none;
                 border: 1px solid #ddd;
+                margin: 0;
+                padding: 15px;
             }
+            
+            .container {
+                max-width: 100%;
+                margin: 0;
+            }
+            
+            .clinic-header {
+                margin-bottom: 15px;
+                padding: 15px;
+            }
+        }
+        
+        .loading {
+            display: none;
+            text-align: center;
+            padding: 20px;
+        }
+        
+        .loading-spinner {
+            border: 5px solid #f3f3f3;
+            border-top: 5px solid var(--primary);
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 15px;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
         }
     </style>
 </head>
@@ -487,6 +531,16 @@
                     <input type="number" id="heartRate" placeholder="Nhập nhịp tim lúc nghỉ">
                 </div>
                 
+                <div class="form-group">
+                    <label for="patientHeight"><i class="fas fa-ruler-vertical"></i> Chiều cao (cm)</label>
+                    <input type="number" id="patientHeight" placeholder="Nhập chiều cao">
+                </div>
+                
+                <div class="form-group">
+                    <label for="patientWeight"><i class="fas fa-weight"></i> Cân nặng (kg)</label>
+                    <input type="number" id="patientWeight" placeholder="Nhập cân nặng">
+                </div>
+                
                 <div class="highlight">
                     <i class="fas fa-info-circle"></i> Hệ thống sẽ tự động đề xuất kế hoạch tập luyện và dinh dưỡng phù hợp dựa trên thông tin của bạn.
                 </div>
@@ -496,6 +550,11 @@
                     <button id="resetBtn" class="btn-reset"><i class="fas fa-redo"></i> NHẬP LẠI</button>
                 </div>
             </div>
+        </div>
+        
+        <div class="loading" id="loadingSection">
+            <div class="loading-spinner"></div>
+            <p>Đang phân tích và tính toán dữ liệu...</p>
         </div>
         
         <div class="visualization">
@@ -556,6 +615,10 @@
                             <div class="result-item">
                                 <span class="result-label">Tình trạng sinh lý:</span>
                                 <span class="result-value" id="resultPhysio">-</span>
+                            </div>
+                            <div class="result-item">
+                                <span class="result-label">BMI:</span>
+                                <span class="result-value" id="resultBMI">-</span>
                             </div>
                         </div>
                     </div>
@@ -659,6 +722,7 @@
                 
                 <div class="btn-group">
                     <button id="printBtn" class="btn-print"><i class="fas fa-print"></i> IN KẾT QUẢ</button>
+                    <button id="pdfBtn" class="btn-pdf"><i class="fas fa-file-pdf"></i> XUẤT PDF</button>
                     <button id="newConsultBtn"><i class="fas fa-user-plus"></i> TƯ VẤN MỚI</button>
                 </div>
             </div>
@@ -673,7 +737,7 @@
     <script>
         // Lớp UserProfile
         class UserProfile {
-            constructor(name, gender, dob, address, occupation, activityLevel, physioFactor) {
+            constructor(name, gender, dob, address, occupation, activityLevel, physioFactor, height, weight) {
                 this.name = name;
                 this.gender = gender;
                 this.dob = dob;
@@ -681,9 +745,11 @@
                 this.occupation = occupation;
                 this.activityLevel = activityLevel;
                 this.physioFactor = physioFactor;
+                this.height = height;
+                this.weight = weight;
                 this.age = this.calculateAge();
-                this.bmi = 0; // Sẽ được tính sau khi có chiều cao, cân nặng
-                this.bmr = 0; // Sẽ được tính sau
+                this.bmi = this.calculateBMI();
+                this.bmr = this.calculateBMR();
             }
             
             calculateAge() {
@@ -699,11 +765,15 @@
                 return age;
             }
             
-            calculateBMR(height, weight) {
+            calculateBMI() {
+                return (this.weight / ((this.height / 100) ** 2)).toFixed(1);
+            }
+            
+            calculateBMR() {
                 if (this.gender === 'male') {
-                    return 10 * weight + 6.25 * height - 5 * this.age + 5;
+                    return 10 * this.weight + 6.25 * this.height - 5 * this.age + 5;
                 } else {
-                    return 10 * weight + 6.25 * height - 5 * this.age - 161;
+                    return 10 * this.weight + 6.25 * this.height - 5 * this.age - 161;
                 }
             }
         }
@@ -736,14 +806,15 @@
         
         // Lớp ExerciseRecommendation
         class ExerciseRecommendation {
-            constructor(bloodPressureCategory, age) {
+            constructor(bloodPressureCategory, age, bmi) {
                 this.bloodPressureCategory = bloodPressureCategory;
                 this.age = age;
+                this.bmi = bmi;
                 this.generateRecommendation();
             }
             
             generateRecommendation() {
-                // Xác định môn tập dựa trên tình trạng huyết áp và tuổi
+                // Xác định môn tập dựa trên tình trạng huyết áp, tuổi và BMI
                 if (this.bloodPressureCategory.includes("GIAI ĐOẠN 2") || this.bloodPressureCategory.includes("CƠN")) {
                     this.exerciseType = "ĐI BỘ CHẬM";
                     this.intensity = "NHẸ";
@@ -751,17 +822,27 @@
                     this.frequency = "3-4 buổi/tuần";
                     this.metValue = 2.9;
                 } else if (this.bloodPressureCategory.includes("GIAI ĐOẠN 1") || this.bloodPressureCategory.includes("CAO TÂM THU")) {
-                    this.exerciseType = this.age > 50 ? "ĐI BỘ NHANH" : "XE ĐẠP CHẬM";
+                    if (this.age > 50 || this.bmi > 25) {
+                        this.exerciseType = "ĐI BỘ NHANH";
+                        this.metValue = 4.3;
+                    } else {
+                        this.exerciseType = "XE ĐẠP CHẬM";
+                        this.metValue = 4.0;
+                    }
                     this.intensity = "VỪA";
                     this.duration = 30;
                     this.frequency = "4-5 buổi/tuần";
-                    this.metValue = this.age > 50 ? 4.3 : 4.0;
                 } else {
-                    this.exerciseType = this.age > 50 ? "BƠI LỘI" : "CHẠY BỘ";
+                    if (this.age > 50 || this.bmi > 25) {
+                        this.exerciseType = "BƠI LỘI";
+                        this.metValue = 6.0;
+                    } else {
+                        this.exerciseType = "CHẠY BỘ";
+                        this.metValue = 8.0;
+                    }
                     this.intensity = "VỪA";
                     this.duration = 40;
                     this.frequency = "5-6 buổi/tuần";
-                    this.metValue = this.age > 50 ? 6.0 : 8.0;
                 }
             }
             
@@ -830,6 +911,22 @@
                         ]
                     }
                 ];
+                
+                // Tính tổng calories của thực đơn mẫu
+                this.sampleTotalCalories = 0;
+                this.meals.forEach(meal => {
+                    meal.items.forEach(item => {
+                        this.sampleTotalCalories += item.calories;
+                    });
+                });
+                
+                // Điều chỉnh tỷ lệ để khớp với tổng năng lượng cần
+                const adjustmentFactor = this.totalCalories / this.sampleTotalCalories;
+                this.meals.forEach(meal => {
+                    meal.items.forEach(item => {
+                        item.calories = Math.round(item.calories * adjustmentFactor);
+                    });
+                });
             }
         }
         
@@ -840,8 +937,6 @@
                 this.bloodPressure = null;
                 this.exerciseRecommendation = null;
                 this.mealPlan = null;
-                this.height = 170; // Giả định chiều cao trung bình
-                this.weight = 65;  // Giả định cân nặng trung bình
                 this.activityFactors = {
                     'sedentary': { value: 1.2, name: 'Ít vận động' },
                     'light': { value: 1.375, name: 'Vận động nhẹ' },
@@ -859,19 +954,27 @@
                 };
             }
             
-            calculateBMR() {
-                return this.userProfile.calculateBMR(this.height, this.weight);
+            calculateTDEE() {
+                const activityFactor = this.activityFactors[this.userProfile.activityLevel].value;
+                const physioFactor = this.physioFactors[this.userProfile.physioFactor].value;
+                return this.userProfile.bmr * activityFactor * physioFactor;
             }
             
             calculateTotalEnergyRequirement() {
-                const bmr = this.calculateBMR();
-                const activityFactor = this.activityFactors[this.userProfile.activityLevel].value;
-                const physioFactor = this.physioFactors[this.userProfile.physioFactor].value;
-                const tdee = bmr * activityFactor * physioFactor;
+                const tdee = this.calculateTDEE();
                 
-                const exerciseCaloriesPerDay = this.exerciseRecommendation.calculateCaloriesBurned(this.weight) * 
-                                             (this.exerciseRecommendation.frequency.includes('3-4') ? 3.5 : 
-                                              this.exerciseRecommendation.frequency.includes('4-5') ? 4.5 : 5.5) / 7;
+                // Tính năng lượng tiêu hao tập luyện mỗi ngày
+                let sessionsPerWeek;
+                if (this.exerciseRecommendation.frequency.includes('3-4')) {
+                    sessionsPerWeek = 3.5;
+                } else if (this.exerciseRecommendation.frequency.includes('4-5')) {
+                    sessionsPerWeek = 4.5;
+                } else {
+                    sessionsPerWeek = 5.5;
+                }
+                
+                const exerciseCaloriesPerDay = this.exerciseRecommendation.calculateCaloriesBurned(this.userProfile.weight) * 
+                                             sessionsPerWeek / 7;
                 
                 return tdee + exerciseCaloriesPerDay;
             }
@@ -890,49 +993,64 @@
         
         // Xử lý sự kiện khi nhấn nút PHÂN TÍCH & TƯ VẤN
         document.getElementById('calculateBtn').addEventListener('click', function() {
-            // Lấy thông tin từ form
-            const name = document.getElementById('patientName').value;
-            const gender = document.getElementById('patientGender').value;
-            const dob = document.getElementById('patientDob').value;
-            const address = document.getElementById('patientAddress').value;
-            const occupation = document.getElementById('patientOccupation').value;
-            const activityLevel = document.getElementById('activityLevel').value;
-            const physioFactor = document.getElementById('physioFactor').value;
+            // Hiển thị loading
+            document.getElementById('loadingSection').style.display = 'block';
+            document.getElementById('resultsSection').style.display = 'none';
             
-            const systolic = parseInt(document.getElementById('systolic').value);
-            const diastolic = parseInt(document.getElementById('diastolic').value);
-            const heartRate = parseInt(document.getElementById('heartRate').value);
-            
-            // Kiểm tra dữ liệu đầu vào
-            if (!name || !dob || !address || !occupation || !systolic || !diastolic || !heartRate) {
-                alert('Vui lòng điền đầy đủ thông tin bắt buộc!');
-                return;
-            }
-            
-            // Tạo các đối tượng
-            system.userProfile = new UserProfile(name, gender, dob, address, occupation, activityLevel, physioFactor);
-            system.bloodPressure = new BloodPressureRecord(systolic, diastolic, heartRate);
-            system.exerciseRecommendation = new ExerciseRecommendation(system.bloodPressure.category.text, system.userProfile.age);
-            
-            // Tính toán kết quả
-            const bmr = system.calculateBMR();
-            const totalEnergy = system.calculateTotalEnergyRequirement();
-            const exerciseCaloriesPerSession = system.exerciseRecommendation.calculateCaloriesBurned(system.weight);
-            
-            // Tạo kế hoạch bữa ăn
-            system.mealPlan = new MealPlan(totalEnergy);
-            
-            // Hiển thị kết quả
-            displayResults(system, bmr, totalEnergy, exerciseCaloriesPerSession);
-            
-            // Vẽ biểu đồ
-            drawCharts(system.mealPlan, bmr, exerciseCaloriesPerSession, totalEnergy);
-            
-            // Hiển thị phần kết quả
-            document.getElementById('resultsSection').style.display = 'block';
-            
-            // Cuộn đến phần kết quả
-            document.getElementById('resultsSection').scrollIntoView({ behavior: 'smooth' });
+            // Sử dụng setTimeout để hiển thị loading trong 1 giây
+            setTimeout(function() {
+                // Lấy thông tin từ form
+                const name = document.getElementById('patientName').value;
+                const gender = document.getElementById('patientGender').value;
+                const dob = document.getElementById('patientDob').value;
+                const address = document.getElementById('patientAddress').value;
+                const occupation = document.getElementById('patientOccupation').value;
+                const activityLevel = document.getElementById('activityLevel').value;
+                const physioFactor = document.getElementById('physioFactor').value;
+                const height = parseFloat(document.getElementById('patientHeight').value);
+                const weight = parseFloat(document.getElementById('patientWeight').value);
+                
+                const systolic = parseInt(document.getElementById('systolic').value);
+                const diastolic = parseInt(document.getElementById('diastolic').value);
+                const heartRate = parseInt(document.getElementById('heartRate').value);
+                
+                // Kiểm tra dữ liệu đầu vào
+                if (!name || !dob || !address || !occupation || !systolic || !diastolic || !heartRate || !height || !weight) {
+                    alert('Vui lòng điền đầy đủ thông tin bắt buộc!');
+                    document.getElementById('loadingSection').style.display = 'none';
+                    return;
+                }
+                
+                // Tạo các đối tượng
+                system.userProfile = new UserProfile(name, gender, dob, address, occupation, activityLevel, physioFactor, height, weight);
+                system.bloodPressure = new BloodPressureRecord(systolic, diastolic, heartRate);
+                system.exerciseRecommendation = new ExerciseRecommendation(
+                    system.bloodPressure.category.text, 
+                    system.userProfile.age, 
+                    system.userProfile.bmi
+                );
+                
+                // Tính toán kết quả
+                const bmr = system.userProfile.bmr;
+                const totalEnergy = system.calculateTotalEnergyRequirement();
+                const exerciseCaloriesPerSession = system.exerciseRecommendation.calculateCaloriesBurned(system.userProfile.weight);
+                
+                // Tạo kế hoạch bữa ăn
+                system.mealPlan = new MealPlan(totalEnergy);
+                
+                // Hiển thị kết quả
+                displayResults(system, bmr, totalEnergy, exerciseCaloriesPerSession);
+                
+                // Vẽ biểu đồ
+                drawCharts(system.mealPlan, bmr, exerciseCaloriesPerSession, totalEnergy);
+                
+                // Hiển thị phần kết quả
+                document.getElementById('resultsSection').style.display = 'block';
+                document.getElementById('loadingSection').style.display = 'none';
+                
+                // Cuộn đến phần kết quả
+                document.getElementById('resultsSection').scrollIntoView({ behavior: 'smooth' });
+            }, 1000);
         });
         
         // Xử lý sự kiện khi nhấn nút NHẬP LẠI
@@ -946,11 +1064,18 @@
             
             // Ẩn kết quả
             document.getElementById('resultsSection').style.display = 'none';
+            document.getElementById('loadingSection').style.display = 'none';
         });
         
         // Xử lý sự kiện khi nhấn nút IN KẾT QUẢ
         document.getElementById('printBtn').addEventListener('click', function() {
             window.print();
+        });
+        
+        // Xử lý sự kiện khi nhấn nút XUẤT PDF
+        document.getElementById('pdfBtn').addEventListener('click', function() {
+            // Hiển thị thông báo
+            alert('Tính năng xuất PDF đang được phát triển. Vui lòng sử dụng tính năng in ấn.');
         });
         
         // Xử lý sự kiện khi nhấn nút TƯ VẤN MỚI
@@ -979,6 +1104,7 @@
             document.getElementById('resultOccupation').textContent = system.userProfile.occupation;
             document.getElementById('resultActivity').textContent = system.getActivityFactorName();
             document.getElementById('resultPhysio').textContent = system.getPhysioFactorName();
+            document.getElementById('resultBMI').textContent = system.userProfile.bmi;
             
             // Chẩn đoán huyết áp
             document.getElementById('resultBP').textContent = `${system.bloodPressure.systolic}/${system.bloodPressure.diastolic} mmHg`;
