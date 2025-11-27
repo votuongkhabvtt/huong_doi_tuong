@@ -3,20 +3,21 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hệ Thống Kiểm Soát Huyết Áp Tích Hợp</title>
+    <title>Hệ Thống Tư Vấn Kiểm Soát Huyết Áp - PGs.TS.Bs. Võ Tường Kha</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         :root {
-            --primary: #2c7873;
-            --secondary: #6fb98f;
-            --accent: #ff9a76;
+            --primary: #2c5530;
+            --secondary: #4a7c59;
+            --accent: #8fb996;
             --light: #f8f9fa;
             --dark: #343a40;
             --danger: #e74c3c;
-            --success: #2ecc71;
+            --success: #27ae60;
             --warning: #f39c12;
             --info: #3498db;
+            --gold: #d4af37;
         }
         
         * {
@@ -27,7 +28,7 @@
         }
         
         body {
-            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            background: linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 100%);
             color: var(--dark);
             min-height: 100vh;
             padding: 20px;
@@ -38,24 +39,51 @@
             margin: 0 auto;
         }
         
-        header {
-            text-align: center;
-            margin-bottom: 30px;
-            padding: 20px;
-            background: white;
+        .clinic-header {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            color: white;
+            padding: 25px;
             border-radius: 15px;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+            text-align: center;
+            position: relative;
+            overflow: hidden;
         }
         
-        h1 {
-            color: var(--primary);
+        .clinic-header:before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="100" height="100" opacity="0.1"><path d="M20,20 L80,20 L80,80 L20,80 Z" fill="white" stroke="white" stroke-width="2"/><circle cx="50" cy="50" r="15" fill="white"/></svg>');
+        }
+        
+        .clinic-name {
+            font-size: 2.2rem;
             margin-bottom: 10px;
-            font-size: 2.5rem;
+            font-weight: 700;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
         }
         
-        .subtitle {
-            color: var(--secondary);
-            font-size: 1.2rem;
+        .doctor-name {
+            font-size: 1.4rem;
+            color: var(--gold);
+            margin-bottom: 15px;
+            font-weight: 600;
+        }
+        
+        .system-name {
+            font-size: 1.8rem;
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+        
+        .system-subtitle {
+            font-size: 1.1rem;
+            opacity: 0.9;
         }
         
         .dashboard {
@@ -68,99 +96,103 @@
         .card {
             background: white;
             border-radius: 15px;
-            padding: 20px;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-            transition: transform 0.3s ease;
+            padding: 25px;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            border-left: 5px solid var(--secondary);
         }
         
         .card:hover {
             transform: translateY(-5px);
+            box-shadow: 0 12px 25px rgba(0,0,0,0.15);
         }
         
         .card-header {
             display: flex;
             align-items: center;
-            margin-bottom: 15px;
-            padding-bottom: 10px;
-            border-bottom: 2px solid var(--light);
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid var(--accent);
         }
         
         .card-header i {
-            font-size: 1.5rem;
-            margin-right: 10px;
+            font-size: 1.8rem;
+            margin-right: 15px;
             color: var(--primary);
+            background: var(--accent);
+            padding: 10px;
+            border-radius: 50%;
         }
         
         .card-title {
-            font-size: 1.3rem;
+            font-size: 1.4rem;
             color: var(--primary);
+            font-weight: 600;
         }
         
         .form-group {
-            margin-bottom: 15px;
+            margin-bottom: 18px;
         }
         
         label {
             display: block;
-            margin-bottom: 5px;
+            margin-bottom: 8px;
             font-weight: 600;
             color: var(--dark);
         }
         
-        input, select {
+        input, select, textarea {
             width: 100%;
-            padding: 10px 15px;
+            padding: 12px 16px;
             border: 2px solid #e1e5ee;
             border-radius: 10px;
             font-size: 1rem;
-            transition: border 0.3s ease;
+            transition: all 0.3s ease;
         }
         
-        input:focus, select:focus {
+        input:focus, select:focus, textarea:focus {
             outline: none;
             border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(44, 85, 48, 0.1);
         }
         
         button {
-            background: var(--primary);
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
             color: white;
             border: none;
-            padding: 12px 20px;
+            padding: 14px 24px;
             border-radius: 10px;
             cursor: pointer;
-            font-size: 1rem;
+            font-size: 1.1rem;
             font-weight: 600;
             transition: all 0.3s ease;
             display: inline-flex;
             align-items: center;
             justify-content: center;
+            box-shadow: 0 4px 10px rgba(44, 85, 48, 0.3);
         }
         
         button:hover {
-            background: var(--secondary);
-            transform: translateY(-2px);
+            transform: translateY(-3px);
+            box-shadow: 0 6px 15px rgba(44, 85, 48, 0.4);
         }
         
         button i {
-            margin-right: 8px;
+            margin-right: 10px;
         }
         
-        .btn-secondary {
-            background: var(--secondary);
+        .btn-print {
+            background: linear-gradient(135deg, var(--info) 0%, #2980b9 100%);
         }
         
-        .btn-accent {
-            background: var(--accent);
-        }
-        
-        .btn-danger {
-            background: var(--danger);
+        .btn-reset {
+            background: linear-gradient(135deg, var(--danger) 0%, #c0392b 100%);
         }
         
         .btn-group {
             display: flex;
-            gap: 10px;
-            margin-top: 20px;
+            gap: 15px;
+            margin-top: 25px;
         }
         
         .btn-group button {
@@ -176,10 +208,11 @@
         
         canvas {
             width: 100%;
-            height: 300px;
+            height: 320px;
             border-radius: 10px;
             background: white;
             box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            padding: 15px;
         }
         
         .results {
@@ -190,26 +223,48 @@
         .result-card {
             background: white;
             border-radius: 15px;
-            padding: 20px;
+            padding: 25px;
             margin-bottom: 20px;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+            border-left: 5px solid var(--primary);
         }
         
         .result-section {
-            margin-bottom: 20px;
+            margin-bottom: 25px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #eaeaea;
+        }
+        
+        .result-section:last-child {
+            border-bottom: none;
         }
         
         .result-section h3 {
             color: var(--primary);
-            margin-bottom: 10px;
-            padding-bottom: 5px;
-            border-bottom: 1px solid var(--light);
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid var(--accent);
+            display: flex;
+            align-items: center;
+        }
+        
+        .result-section h3 i {
+            margin-right: 10px;
+            background: var(--accent);
+            padding: 8px;
+            border-radius: 50%;
+        }
+        
+        .result-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 15px;
         }
         
         .result-item {
             display: flex;
             justify-content: space-between;
-            padding: 8px 0;
+            padding: 12px 0;
             border-bottom: 1px dashed #e1e5ee;
         }
         
@@ -219,29 +274,21 @@
         
         .result-label {
             font-weight: 600;
+            color: var(--dark);
         }
         
         .result-value {
             color: var(--primary);
             font-weight: 600;
+            text-align: right;
         }
         
-        .food-item, .exercise-item {
-            display: flex;
-            justify-content: space-between;
-            padding: 10px;
-            margin-bottom: 10px;
-            background: #f8f9fa;
+        .highlight {
+            background: linear-gradient(135deg, #fff9c4 0%, #fff176 100%);
+            padding: 12px 15px;
             border-radius: 10px;
-        }
-        
-        .food-name, .exercise-name {
-            font-weight: 600;
-        }
-        
-        .food-details, .exercise-details {
-            color: var(--dark);
-            font-size: 0.9rem;
+            border-left: 4px solid var(--warning);
+            margin: 10px 0;
         }
         
         .nutrition-chart {
@@ -253,92 +300,78 @@
         
         .nutrition-item {
             text-align: center;
-            padding: 15px;
+            padding: 20px 15px;
             border-radius: 10px;
             color: white;
             font-weight: 600;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
         }
         
         .protein {
-            background: var(--info);
+            background: linear-gradient(135deg, #3498db 0%, #2980b9 100%);
         }
         
         .carbs {
-            background: var(--success);
+            background: linear-gradient(135deg, #2ecc71 0%, #27ae60 100%);
         }
         
         .fat {
-            background: var(--warning);
+            background: linear-gradient(135deg, #f39c12 0%, #e67e22 100%);
         }
         
         .bp-status {
-            padding: 10px;
+            padding: 12px 15px;
             border-radius: 10px;
             text-align: center;
             font-weight: 600;
             margin-top: 10px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
         }
         
         .bp-normal {
-            background: #d4edda;
+            background: linear-gradient(135deg, #d4edda 0%, #c3e6cb 100%);
             color: #155724;
+            border-left: 4px solid #28a745;
         }
         
         .bp-elevated {
-            background: #fff3cd;
+            background: linear-gradient(135deg, #fff3cd 0%, #ffeaa7 100%);
             color: #856404;
+            border-left: 4px solid #ffc107;
         }
         
         .bp-hypertension {
-            background: #f8d7da;
+            background: linear-gradient(135deg, #f8d7da 0%, #f5c6cb 100%);
             color: #721c24;
+            border-left: 4px solid #dc3545;
         }
         
-        .icon {
-            display: inline-block;
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            background: var(--primary);
-            color: white;
-            text-align: center;
-            line-height: 40px;
-            margin-right: 10px;
-        }
-        
-        .energy-calculation {
-            background: #e8f4f8;
-            padding: 15px;
+        .meal-plan {
+            background: #f8fff8;
             border-radius: 10px;
-            margin: 15px 0;
-        }
-        
-        .calculation-step {
-            margin-bottom: 10px;
-            padding-left: 20px;
-            position: relative;
-        }
-        
-        .calculation-step:before {
-            content: "•";
-            position: absolute;
-            left: 5px;
-            color: var(--primary);
-            font-weight: bold;
-        }
-        
-        .meal-plan-details {
+            padding: 15px;
             margin-top: 15px;
+            border: 1px solid #e8f5e9;
         }
         
         .meal-item {
             display: flex;
             justify-content: space-between;
             background: white;
-            padding: 10px;
-            margin-bottom: 8px;
+            padding: 12px 15px;
+            margin-bottom: 10px;
             border-radius: 8px;
-            border-left: 4px solid var(--secondary);
+            border-left: 4px solid var(--success);
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+        
+        .footer {
+            text-align: center;
+            margin-top: 30px;
+            padding: 20px;
+            color: var(--dark);
+            font-size: 0.9rem;
+            opacity: 0.8;
         }
         
         @media (max-width: 768px) {
@@ -349,51 +382,72 @@
             .nutrition-chart {
                 grid-template-columns: 1fr;
             }
+            
+            .result-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .clinic-name {
+                font-size: 1.8rem;
+            }
+            
+            .doctor-name {
+                font-size: 1.2rem;
+            }
+        }
+        
+        @media print {
+            .btn-group, .card:not(.result-card) {
+                display: none;
+            }
+            
+            .result-card {
+                box-shadow: none;
+                border: 1px solid #ddd;
+            }
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <header>
-            <h1><i class="fas fa-heartbeat"></i> Hệ Thống Kiểm Soát Huyết Áp Tích Hợp</h1>
-            <p class="subtitle">Kết hợp dinh dưỡng và tập luyện để kiểm soát huyết áp hiệu quả</p>
-        </header>
+        <div class="clinic-header">
+            <div class="clinic-name">PHÒNG KHÁM ĐA KHOA YHTT & YHCT</div>
+            <div class="doctor-name">PGs.TS.Bs. Võ Tường Kha</div>
+            <div class="system-name">HỆ THỐNG TƯ VẤN KIỂM SOÁT HUYẾT ÁP</div>
+            <div class="system-subtitle">Kết hợp Y học Thể thao & Y học Cổ truyền trong phòng ngừa và điều trị</div>
+        </div>
         
         <div class="dashboard">
             <div class="card">
                 <div class="card-header">
-                    <i class="fas fa-user"></i>
-                    <h2 class="card-title">Thông Tin Bệnh Nhân</h2>
+                    <i class="fas fa-user-injured"></i>
+                    <h2 class="card-title">THÔNG TIN BỆNH NHÂN</h2>
                 </div>
                 <div class="form-group">
-                    <label for="patientName">Họ tên</label>
-                    <input type="text" id="patientName" placeholder="Nhập họ tên">
+                    <label for="patientName"><i class="fas fa-signature"></i> Họ và tên</label>
+                    <input type="text" id="patientName" placeholder="Nhập họ tên đầy đủ">
                 </div>
                 <div class="form-group">
-                    <label for="patientAge">Tuổi</label>
-                    <input type="number" id="patientAge" placeholder="Nhập tuổi">
-                </div>
-                <div class="form-group">
-                    <label for="patientGender">Giới tính</label>
+                    <label for="patientGender"><i class="fas fa-venus-mars"></i> Giới tính</label>
                     <select id="patientGender">
                         <option value="male">Nam</option>
                         <option value="female">Nữ</option>
                     </select>
                 </div>
                 <div class="form-group">
-                    <label for="patientHeight">Chiều cao (cm)</label>
-                    <input type="number" id="patientHeight" placeholder="Nhập chiều cao">
+                    <label for="patientDob"><i class="fas fa-birthday-cake"></i> Ngày tháng năm sinh</label>
+                    <input type="date" id="patientDob">
                 </div>
                 <div class="form-group">
-                    <label for="patientWeight">Cân nặng (kg)</label>
-                    <input type="number" id="patientWeight" placeholder="Nhập cân nặng">
+                    <label for="patientAddress"><i class="fas fa-home"></i> Địa chỉ</label>
+                    <textarea id="patientAddress" rows="2" placeholder="Nhập địa chỉ liên hệ"></textarea>
                 </div>
                 <div class="form-group">
-                    <label for="patientOccupation">Nghề nghiệp</label>
-                    <input type="text" id="patientOccupation" placeholder="Nhập nghề nghiệp">
+                    <label for="patientOccupation"><i class="fas fa-briefcase"></i> Nghề nghiệp</label>
+                    <input type="text" id="patientOccupation" placeholder="Nhập nghề nghiệp hiện tại">
                 </div>
                 <div class="form-group">
-                    <label for="activityLevel">Mức độ hoạt động</label>
+                    <label for="activityLevel"><i class="fas fa-running"></i> Loại lao động (Hệ số hoạt động)</label>
                     <select id="activityLevel">
                         <option value="sedentary">Ít vận động (hệ số 1.2)</option>
                         <option value="light">Vận động nhẹ (hệ số 1.375)</option>
@@ -403,7 +457,7 @@
                     </select>
                 </div>
                 <div class="form-group">
-                    <label for="physioFactor">Trạng thái sinh lý</label>
+                    <label for="physioFactor"><i class="fas fa-heartbeat"></i> Tình trạng sinh lý (Hệ số sinh lý)</label>
                     <select id="physioFactor">
                         <option value="normal">Bình thường (hệ số 1.0)</option>
                         <option value="pregnant">Mang thai (hệ số 1.15)</option>
@@ -418,43 +472,28 @@
             <div class="card">
                 <div class="card-header">
                     <i class="fas fa-stethoscope"></i>
-                    <h2 class="card-title">Chỉ Số Huyết Áp & Tập Luyện</h2>
+                    <h2 class="card-title">CHỈ SỐ SỨC KHỎE</h2>
                 </div>
                 <div class="form-group">
-                    <label for="systolic">Huyết áp tâm thu (mmHg)</label>
+                    <label for="systolic"><i class="fas fa-tachometer-alt"></i> Huyết áp tối đa (mmHg)</label>
                     <input type="number" id="systolic" placeholder="Nhập huyết áp tâm thu">
                 </div>
                 <div class="form-group">
-                    <label for="diastolic">Huyết áp tâm trương (mmHg)</label>
+                    <label for="diastolic"><i class="fas fa-tachometer-alt"></i> Huyết áp tối thiểu (mmHg)</label>
                     <input type="number" id="diastolic" placeholder="Nhập huyết áp tâm trương">
                 </div>
                 <div class="form-group">
-                    <label for="heartRate">Nhịp tim (bpm)</label>
-                    <input type="number" id="heartRate" placeholder="Nhập nhịp tim">
+                    <label for="heartRate"><i class="fas fa-heart"></i> Mạch lúc nghỉ (bpm)</label>
+                    <input type="number" id="heartRate" placeholder="Nhập nhịp tim lúc nghỉ">
                 </div>
                 
-                <div class="form-group">
-                    <label for="exerciseType">Bài tập sức bền</label>
-                    <select id="exerciseType">
-                        <option value="walking_slow">Đi bộ chậm (3.2 km/h) - MET: 2.9</option>
-                        <option value="walking_fast">Đi bộ nhanh (5.6 km/h) - MET: 4.3</option>
-                        <option value="jogging">Chạy bộ (8 km/h) - MET: 8.0</option>
-                        <option value="cycling">Đạp xe tại chỗ (trung bình) - MET: 7.0</option>
-                        <option value="swimming">Bơi lội (sải, nhẹ nhàng) - MET: 6.0</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label for="exerciseDuration">Thời lượng tập (phút/buổi)</label>
-                    <input type="number" id="exerciseDuration" placeholder="Nhập thời lượng tập">
-                </div>
-                <div class="form-group">
-                    <label for="exerciseFrequency">Tần suất tập (buổi/tuần)</label>
-                    <input type="number" id="exerciseFrequency" placeholder="Nhập tần suất tập">
+                <div class="highlight">
+                    <i class="fas fa-info-circle"></i> Hệ thống sẽ tự động đề xuất kế hoạch tập luyện và dinh dưỡng phù hợp dựa trên thông tin của bạn.
                 </div>
                 
                 <div class="btn-group">
-                    <button id="calculateBtn"><i class="fas fa-calculator"></i> Tính Toán</button>
-                    <button id="resetBtn" class="btn-danger"><i class="fas fa-redo"></i> Làm Mới</button>
+                    <button id="calculateBtn"><i class="fas fa-calculator"></i> PHÂN TÍCH & TƯ VẤN</button>
+                    <button id="resetBtn" class="btn-reset"><i class="fas fa-redo"></i> NHẬP LẠI</button>
                 </div>
             </div>
         </div>
@@ -463,15 +502,15 @@
             <div class="card">
                 <div class="card-header">
                     <i class="fas fa-chart-pie"></i>
-                    <h2 class="card-title">Phân Bổ Dinh Dưỡng</h2>
+                    <h2 class="card-title">PHÂN BỔ DINH DƯỠNG</h2>
                 </div>
                 <canvas id="nutritionChart"></canvas>
             </div>
             
             <div class="card">
                 <div class="card-header">
-                    <i class="fas fa-running"></i>
-                    <h2 class="card-title">Năng Lượng Tiêu Hao & Cần Nạp</h2>
+                    <i class="fas fa-burn"></i>
+                    <h2 class="card-title">NĂNG LƯỢNG TIÊU HAO & CẦN NẠP</h2>
                 </div>
                 <canvas id="energyChart"></canvas>
             </div>
@@ -481,184 +520,190 @@
             <div class="result-card">
                 <div class="card-header">
                     <i class="fas fa-file-medical-alt"></i>
-                    <h2 class="card-title">Kết Quả Phân Tích & Tính Toán</h2>
+                    <h2 class="card-title">KẾT QUẢ PHÂN TÍCH & TƯ VẤN</h2>
                 </div>
                 
                 <div class="result-section">
-                    <h3><i class="fas fa-user-md"></i> Thông Tin Bệnh Nhân</h3>
-                    <div class="result-item">
-                        <span class="result-label">Họ tên:</span>
-                        <span class="result-value" id="resultName">-</span>
-                    </div>
-                    <div class="result-item">
-                        <span class="result-label">Tuổi:</span>
-                        <span class="result-value" id="resultAge">-</span>
-                    </div>
-                    <div class="result-item">
-                        <span class="result-label">Giới tính:</span>
-                        <span class="result-value" id="resultGender">-</span>
-                    </div>
-                    <div class="result-item">
-                        <span class="result-label">Chiều cao:</span>
-                        <span class="result-value" id="resultHeight">-</span>
-                    </div>
-                    <div class="result-item">
-                        <span class="result-label">Cân nặng:</span>
-                        <span class="result-value" id="resultWeight">-</span>
-                    </div>
-                    <div class="result-item">
-                        <span class="result-label">BMI:</span>
-                        <span class="result-value" id="resultBMI">-</span>
-                    </div>
-                    <div class="result-item">
-                        <span class="result-label">Nghề nghiệp:</span>
-                        <span class="result-value" id="resultOccupation">-</span>
+                    <h3><i class="fas fa-user-md"></i> THÔNG TIN BỆNH NHÂN</h3>
+                    <div class="result-grid">
+                        <div>
+                            <div class="result-item">
+                                <span class="result-label">Họ tên:</span>
+                                <span class="result-value" id="resultName">-</span>
+                            </div>
+                            <div class="result-item">
+                                <span class="result-label">Giới tính:</span>
+                                <span class="result-value" id="resultGender">-</span>
+                            </div>
+                            <div class="result-item">
+                                <span class="result-label">Tuổi:</span>
+                                <span class="result-value" id="resultAge">-</span>
+                            </div>
+                            <div class="result-item">
+                                <span class="result-label">Địa chỉ:</span>
+                                <span class="result-value" id="resultAddress">-</span>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="result-item">
+                                <span class="result-label">Nghề nghiệp:</span>
+                                <span class="result-value" id="resultOccupation">-</span>
+                            </div>
+                            <div class="result-item">
+                                <span class="result-label">Loại lao động:</span>
+                                <span class="result-value" id="resultActivity">-</span>
+                            </div>
+                            <div class="result-item">
+                                <span class="result-label">Tình trạng sinh lý:</span>
+                                <span class="result-value" id="resultPhysio">-</span>
+                            </div>
+                        </div>
                     </div>
                 </div>
                 
                 <div class="result-section">
-                    <h3><i class="fas fa-heartbeat"></i> Chỉ Số Huyết Áp & Tim Mạch</h3>
+                    <h3><i class="fas fa-heartbeat"></i> CHẨN ĐOÁN HUYẾT ÁP</h3>
                     <div class="result-item">
                         <span class="result-label">Huyết áp:</span>
                         <span class="result-value" id="resultBP">-</span>
                     </div>
                     <div class="result-item">
                         <span class="result-label">Phân loại:</span>
-                        <span class="result-value" id="resultBPCategory">-</span>
+                        <span id="resultBPCategory">-</span>
                     </div>
                     <div class="result-item">
-                        <span class="result-label">Nhịp tim:</span>
+                        <span class="result-label">Mạch lúc nghỉ:</span>
                         <span class="result-value" id="resultHeartRate">-</span>
                     </div>
                 </div>
                 
                 <div class="result-section">
-                    <h3><i class="fas fa-calculator"></i> Tính Toán Năng Lượng Chi Tiết</h3>
-                    <div class="energy-calculation">
-                        <div class="calculation-step">
-                            <strong>BMR (Năng lượng cơ bản):</strong> 
-                            <span id="calcBMR">-</span>
+                    <h3><i class="fas fa-dumbbell"></i> KẾ HOẠCH TẬP LUYỆN ĐỀ XUẤT</h3>
+                    <div class="result-grid">
+                        <div>
+                            <div class="result-item">
+                                <span class="result-label">Môn thể thao sức bền:</span>
+                                <span class="result-value" id="resultExerciseType">-</span>
+                            </div>
+                            <div class="result-item">
+                                <span class="result-label">Mức độ vận động:</span>
+                                <span class="result-value" id="resultExerciseIntensity">-</span>
+                            </div>
                         </div>
-                        <div class="calculation-step">
-                            <strong>Hệ số hoạt động:</strong> 
-                            <span id="calcActivityFactor">-</span>
+                        <div>
+                            <div class="result-item">
+                                <span class="result-label">Thời lượng tập/buổi:</span>
+                                <span class="result-value" id="resultExerciseDuration">-</span>
+                            </div>
+                            <div class="result-item">
+                                <span class="result-label">Tần suất tập:</span>
+                                <span class="result-value" id="resultExerciseFrequency">-</span>
+                            </div>
                         </div>
-                        <div class="calculation-step">
-                            <strong>Hệ số sinh lý:</strong> 
-                            <span id="calcPhysioFactor">-</span>
-                        </div>
-                        <div class="calculation-step">
-                            <strong>TDEE (Nhu cầu năng lượng/ngày):</strong> 
-                            <span id="calcTDEE">-</span>
-                        </div>
-                        <div class="calculation-step">
-                            <strong>Năng lượng tiêu hao tập luyện/buổi:</strong> 
-                            <span id="calcExerciseCaloriesPerSession">-</span>
-                        </div>
-                        <div class="calculation-step">
-                            <strong>Năng lượng tiêu hao tập luyện/ngày:</strong> 
-                            <span id="calcExerciseCaloriesPerDay">-</span>
-                        </div>
-                        <div class="calculation-step">
-                            <strong>Tổng năng lượng cần nạp/ngày:</strong> 
-                            <span id="calcTotalEnergy">-</span>
-                        </div>
-                    </div>
-                    
-                    <div class="result-item">
-                        <span class="result-label">BMR (Năng lượng cơ bản):</span>
-                        <span class="result-value" id="resultBMR">-</span>
-                    </div>
-                    <div class="result-item">
-                        <span class="result-label">TDEE (Nhu cầu năng lượng/ngày):</span>
-                        <span class="result-value" id="resultTDEE">-</span>
-                    </div>
-                    <div class="result-item">
-                        <span class="result-label">Năng lượng tiêu hao tập luyện/ngày:</span>
-                        <span class="result-value" id="resultExerciseCalories">-</span>
-                    </div>
-                    <div class="result-item">
-                        <span class="result-label">Tổng năng lượng cần nạp/ngày:</span>
-                        <span class="result-value" id="resultTotalEnergy">-</span>
                     </div>
                 </div>
                 
                 <div class="result-section">
-                    <h3><i class="fas fa-utensils"></i> Khẩu Phần & Thực Đơn Khuyến Nghị</h3>
+                    <h3><i class="fas fa-calculator"></i> TÍNH TOÁN NĂNG LƯỢNG</h3>
+                    <div class="result-grid">
+                        <div>
+                            <div class="result-item">
+                                <span class="result-label">Năng lượng chuyển hóa cơ bản (Ecb):</span>
+                                <span class="result-value" id="resultBMR">-</span>
+                            </div>
+                            <div class="result-item">
+                                <span class="result-label">Tổng năng lượng tiêu hao/buổi tập (Etl):</span>
+                                <span class="result-value" id="resultExerciseCaloriesPerSession">-</span>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="result-item">
+                                <span class="result-label">Tổng năng lượng cần nạp/ngày:</span>
+                                <span class="result-value" id="resultTotalEnergy">-</span>
+                            </div>
+                            <div class="result-item highlight">
+                                <span class="result-label">CÔNG THỨC:</span>
+                                <span class="result-value">Ecb + Etl = Tổng năng lượng</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="result-section">
+                    <h3><i class="fas fa-utensils"></i> THỰC ĐƠN & KHẨU PHẦN ĐỀ XUẤT</h3>
                     <div class="nutrition-chart">
                         <div class="nutrition-item protein">
-                            <div>Chất Đạm</div>
+                            <div>CHẤT ĐẠM</div>
                             <div>15%</div>
                             <div id="proteinGrams">- g</div>
                         </div>
                         <div class="nutrition-item carbs">
-                            <div>Chất Bột</div>
+                            <div>CHẤT BỘT</div>
                             <div>55%</div>
                             <div id="carbsGrams">- g</div>
                         </div>
                         <div class="nutrition-item fat">
-                            <div>Chất Béo</div>
+                            <div>CHẤT BÉO</div>
                             <div>30%</div>
                             <div id="fatGrams">- g</div>
                         </div>
                     </div>
                     
-                    <div class="meal-plan-details">
-                        <h4>Thực đơn mẫu cho một ngày:</h4>
+                    <div class="meal-plan">
+                        <h4><i class="fas fa-concierge-bell"></i> THỰC ĐƠN MẪU CHO MỘT NGÀY:</h4>
                         <div id="mealPlanDetails">
                             <!-- Meal items will be dynamically added here -->
                         </div>
                     </div>
                 </div>
                 
-                <div class="result-section">
-                    <h3><i class="fas fa-running"></i> Kế Hoạch Tập Luyện</h3>
-                    <div class="result-item">
-                        <span class="result-label">Bài tập:</span>
-                        <span class="result-value" id="resultExerciseType">-</span>
-                    </div>
-                    <div class="result-item">
-                        <span class="result-label">Thời lượng:</span>
-                        <span class="result-value" id="resultExerciseDuration">-</span>
-                    </div>
-                    <div class="result-item">
-                        <span class="result-label">Tần suất:</span>
-                        <span class="result-value" id="resultExerciseFrequency">-</span>
-                    </div>
-                    <div class="result-item">
-                        <span class="result-label">Năng lượng tiêu hao/buổi:</span>
-                        <span class="result-value" id="resultExerciseCaloriesPerSession">-</span>
-                    </div>
+                <div class="btn-group">
+                    <button id="printBtn" class="btn-print"><i class="fas fa-print"></i> IN KẾT QUẢ</button>
+                    <button id="newConsultBtn"><i class="fas fa-user-plus"></i> TƯ VẤN MỚI</button>
                 </div>
             </div>
+        </div>
+        
+        <div class="footer">
+            <p>Hệ thống tư vấn sức khỏe - Phòng khám Đa khoa YHTT & YHCT - PGs.TS.Bs. Võ Tường Kha</p>
+            <p>Kết hợp Y học Hiện đại & Y học Cổ truyền để chăm sóc sức khỏe toàn diện</p>
         </div>
     </div>
 
     <script>
         // Lớp UserProfile
         class UserProfile {
-            constructor(name, age, gender, height, weight, occupation, activityLevel, physioFactor) {
+            constructor(name, gender, dob, address, occupation, activityLevel, physioFactor) {
                 this.name = name;
-                this.age = age;
                 this.gender = gender;
-                this.height = height;
-                this.weight = weight;
+                this.dob = dob;
+                this.address = address;
                 this.occupation = occupation;
                 this.activityLevel = activityLevel;
                 this.physioFactor = physioFactor;
-                this.bmi = this.calculateBMI();
-                this.bmr = this.calculateBMR();
+                this.age = this.calculateAge();
+                this.bmi = 0; // Sẽ được tính sau khi có chiều cao, cân nặng
+                this.bmr = 0; // Sẽ được tính sau
             }
             
-            calculateBMI() {
-                return (this.weight / ((this.height / 100) ** 2)).toFixed(2);
+            calculateAge() {
+                const today = new Date();
+                const birthDate = new Date(this.dob);
+                let age = today.getFullYear() - birthDate.getFullYear();
+                const monthDiff = today.getMonth() - birthDate.getMonth();
+                
+                if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
+                    age--;
+                }
+                
+                return age;
             }
             
-            calculateBMR() {
+            calculateBMR(height, weight) {
                 if (this.gender === 'male') {
-                    return 10 * this.weight + 6.25 * this.height - 5 * this.age + 5;
+                    return 10 * weight + 6.25 * height - 5 * this.age + 5;
                 } else {
-                    return 10 * this.weight + 6.25 * this.height - 5 * this.age - 161;
+                    return 10 * weight + 6.25 * height - 5 * this.age - 161;
                 }
             }
         }
@@ -674,51 +719,55 @@
             
             classifyBloodPressure() {
                 if (this.systolic < 90 || this.diastolic < 60) {
-                    return { text: "Huyết áp thấp", class: "bp-normal" };
+                    return { text: "HUYẾT ÁP THẤP", class: "bp-normal", advice: "Nên nghỉ ngơi, bổ sung dinh dưỡng và theo dõi định kỳ" };
                 } else if (this.systolic < 120 && this.diastolic < 80) {
-                    return { text: "Bình thường", class: "bp-normal" };
+                    return { text: "BÌNH THƯỜNG", class: "bp-normal", advice: "Duy trì lối sống lành mạnh và tập luyện đều đặn" };
                 } else if (this.systolic >= 120 && this.systolic < 130 && this.diastolic < 80) {
-                    return { text: "Huyết áp cao tâm thu", class: "bp-elevated" };
+                    return { text: "HUYẾT ÁP CAO TÂM THU", class: "bp-elevated", advice: "Cần điều chỉnh chế độ ăn và tăng cường vận động" };
                 } else if ((this.systolic >= 130 && this.systolic < 140) || (this.diastolic >= 80 && this.diastolic < 90)) {
-                    return { text: "Tăng huyết áp giai đoạn 1", class: "bp-hypertension" };
+                    return { text: "TĂNG HUYẾT ÁP GIAI ĐOẠN 1", class: "bp-hypertension", advice: "Cần theo dõi và có thể cần dùng thuốc theo chỉ định" };
                 } else if ((this.systolic >= 140 && this.systolic < 180) || (this.diastolic >= 90 && this.diastolic < 120)) {
-                    return { text: "Tăng huyết áp giai đoạn 2", class: "bp-hypertension" };
+                    return { text: "TĂNG HUYẾT ÁP GIAI ĐOẠN 2", class: "bp-hypertension", advice: "Cần điều trị tích cực và theo dõi chặt chẽ" };
                 } else {
-                    return { text: "Cơn tăng huyết áp", class: "bp-hypertension" };
+                    return { text: "CƠN TĂNG HUYẾT ÁP", class: "bp-hypertension", advice: "Cần cấp cứu y tế ngay lập tức" };
                 }
             }
         }
         
-        // Lớp ExerciseSession
-        class ExerciseSession {
-            constructor(exerciseType, duration, frequency) {
-                this.exerciseType = exerciseType;
-                this.duration = duration;
-                this.frequency = frequency;
-                this.metValues = {
-                    'walking_slow': 2.9,
-                    'walking_fast': 4.3,
-                    'jogging': 8.0,
-                    'cycling': 7.0,
-                    'swimming': 6.0
-                };
-                this.exerciseNames = {
-                    'walking_slow': 'Đi bộ chậm (3.2 km/h)',
-                    'walking_fast': 'Đi bộ nhanh (5.6 km/h)',
-                    'jogging': 'Chạy bộ (8 km/h)',
-                    'cycling': 'Đạp xe tại chỗ (trung bình)',
-                    'swimming': 'Bơi lội (sải, nhẹ nhàng)'
-                };
+        // Lớp ExerciseRecommendation
+        class ExerciseRecommendation {
+            constructor(bloodPressureCategory, age) {
+                this.bloodPressureCategory = bloodPressureCategory;
+                this.age = age;
+                this.generateRecommendation();
+            }
+            
+            generateRecommendation() {
+                // Xác định môn tập dựa trên tình trạng huyết áp và tuổi
+                if (this.bloodPressureCategory.includes("GIAI ĐOẠN 2") || this.bloodPressureCategory.includes("CƠN")) {
+                    this.exerciseType = "ĐI BỘ CHẬM";
+                    this.intensity = "NHẸ";
+                    this.duration = 20;
+                    this.frequency = "3-4 buổi/tuần";
+                    this.metValue = 2.9;
+                } else if (this.bloodPressureCategory.includes("GIAI ĐOẠN 1") || this.bloodPressureCategory.includes("CAO TÂM THU")) {
+                    this.exerciseType = this.age > 50 ? "ĐI BỘ NHANH" : "XE ĐẠP CHẬM";
+                    this.intensity = "VỪA";
+                    this.duration = 30;
+                    this.frequency = "4-5 buổi/tuần";
+                    this.metValue = this.age > 50 ? 4.3 : 4.0;
+                } else {
+                    this.exerciseType = this.age > 50 ? "BƠI LỘI" : "CHẠY BỘ";
+                    this.intensity = "VỪA";
+                    this.duration = 40;
+                    this.frequency = "5-6 buổi/tuần";
+                    this.metValue = this.age > 50 ? 6.0 : 8.0;
+                }
             }
             
             calculateCaloriesBurned(weight) {
-                const met = this.metValues[this.exerciseType];
                 const durationHours = this.duration / 60;
-                return met * weight * durationHours;
-            }
-            
-            getExerciseName() {
-                return this.exerciseNames[this.exerciseType];
+                return this.metValue * weight * durationHours;
             }
         }
         
@@ -740,7 +789,6 @@
                 this.fatCalories = this.totalCalories * this.fatPercentage;
                 
                 // Chuyển đổi calories sang grams
-                // 1g protein = 4 calories, 1g carb = 4 calories, 1g fat = 9 calories
                 this.proteinGrams = this.proteinCalories / 4;
                 this.carbsGrams = this.carbsCalories / 4;
                 this.fatGrams = this.fatCalories / 9;
@@ -749,68 +797,51 @@
             generateSampleMeals() {
                 this.meals = [
                     {
-                        name: "Bữa sáng",
+                        name: "BỮA SÁNG",
                         items: [
-                            { name: "Bánh mì", amount: "2 lát", calories: 160, protein: 6, carbs: 30, fat: 2 },
-                            { name: "Trứng ốp la", amount: "2 quả", calories: 180, protein: 12, carbs: 1, fat: 14 },
-                            { name: "Sữa tươi không đường", amount: "200ml", calories: 120, protein: 7, carbs: 12, fat: 4 }
+                            { name: "Bánh mì đen", amount: "2 lát", calories: 160 },
+                            { name: "Trứng luộc", amount: "2 quả", calories: 140 },
+                            { name: "Sữa đậu nành", amount: "200ml", calories: 100 }
                         ]
                     },
                     {
-                        name: "Bữa trưa",
+                        name: "BỮA TRƯA",
                         items: [
-                            { name: "Cơm trắng", amount: "2 bát", calories: 260, protein: 5, carbs: 58, fat: 1 },
-                            { name: "Thịt gà luộc", amount: "150g", calories: 240, protein: 30, carbs: 0, fat: 12 },
-                            { name: "Rau muống luộc", amount: "200g", calories: 60, protein: 5, carbs: 8, fat: 1 },
-                            { name: "Đu đủ chín", amount: "200g", calories: 80, protein: 1, carbs: 20, fat: 0 }
+                            { name: "Cơm gạo lứt", amount: "2 bát", calories: 240 },
+                            { name: "Cá hồi áp chảo", amount: "150g", calories: 280 },
+                            { name: "Rau củ luộc", amount: "200g", calories: 60 },
+                            { name: "Chuối", amount: "1 quả", calories: 105 }
                         ]
                     },
                     {
-                        name: "Bữa tối",
+                        name: "BỮA TỐI",
                         items: [
-                            { name: "Cơm trắng", amount: "1.5 bát", calories: 195, protein: 4, carbs: 43, fat: 1 },
-                            { name: "Cá hồi áp chảo", amount: "150g", calories: 280, protein: 25, carbs: 0, fat: 18 },
-                            { name: "Salad rau củ", amount: "150g", calories: 50, protein: 2, carbs: 10, fat: 0 },
-                            { name: "Dầu olive", amount: "10g", calories: 90, protein: 0, carbs: 0, fat: 10 }
+                            { name: "Cơm gạo lứt", amount: "1.5 bát", calories: 180 },
+                            { name: "Đậu phụ sốt cà", amount: "150g", calories: 150 },
+                            { name: "Salad rau xanh", amount: "150g", calories: 50 },
+                            { name: "Táo", amount: "1 quả", calories: 95 }
                         ]
                     },
                     {
-                        name: "Bữa phụ",
+                        name: "BỮA PHỤ",
                         items: [
-                            { name: "Chuối", amount: "1 quả", calories: 105, protein: 1, carbs: 27, fat: 0 },
-                            { name: "Hạt hạnh nhân", amount: "30g", calories: 180, protein: 6, carbs: 6, fat: 16 }
+                            { name: "Hạt hạnh nhân", amount: "30g", calories: 180 },
+                            { name: "Sữa chua không đường", amount: "1 hộp", calories: 100 }
                         ]
                     }
                 ];
-                
-                // Tính tổng calories của thực đơn mẫu
-                this.sampleTotalCalories = 0;
-                this.meals.forEach(meal => {
-                    meal.items.forEach(item => {
-                        this.sampleTotalCalories += item.calories;
-                    });
-                });
-                
-                // Điều chỉnh tỷ lệ để khớp với tổng năng lượng cần
-                const adjustmentFactor = this.totalCalories / this.sampleTotalCalories;
-                this.meals.forEach(meal => {
-                    meal.items.forEach(item => {
-                        item.calories = Math.round(item.calories * adjustmentFactor);
-                        item.protein = Math.round(item.protein * adjustmentFactor * 0.8); // Giảm protein một chút
-                        item.carbs = Math.round(item.carbs * adjustmentFactor);
-                        item.fat = Math.round(item.fat * adjustmentFactor * 1.2); // Tăng chất béo một chút
-                    });
-                });
             }
         }
         
-        // Lớp HypertensionControlSystem
-        class HypertensionControlSystem {
+        // Lớp HypertensionConsultationSystem
+        class HypertensionConsultationSystem {
             constructor() {
                 this.userProfile = null;
                 this.bloodPressure = null;
-                this.exerciseSession = null;
+                this.exerciseRecommendation = null;
                 this.mealPlan = null;
+                this.height = 170; // Giả định chiều cao trung bình
+                this.weight = 65;  // Giả định cân nặng trung bình
                 this.activityFactors = {
                     'sedentary': { value: 1.2, name: 'Ít vận động' },
                     'light': { value: 1.375, name: 'Vận động nhẹ' },
@@ -828,16 +859,20 @@
                 };
             }
             
-            calculateTDEE() {
-                const activityFactor = this.activityFactors[this.userProfile.activityLevel].value;
-                const physioFactor = this.physioFactors[this.userProfile.physioFactor].value;
-                return this.userProfile.bmr * activityFactor * physioFactor;
+            calculateBMR() {
+                return this.userProfile.calculateBMR(this.height, this.weight);
             }
             
             calculateTotalEnergyRequirement() {
-                const tdee = this.calculateTDEE();
-                const exerciseCaloriesPerDay = this.exerciseSession.calculateCaloriesBurned(this.userProfile.weight) * 
-                                             this.exerciseSession.frequency / 7;
+                const bmr = this.calculateBMR();
+                const activityFactor = this.activityFactors[this.userProfile.activityLevel].value;
+                const physioFactor = this.physioFactors[this.userProfile.physioFactor].value;
+                const tdee = bmr * activityFactor * physioFactor;
+                
+                const exerciseCaloriesPerDay = this.exerciseRecommendation.calculateCaloriesBurned(this.weight) * 
+                                             (this.exerciseRecommendation.frequency.includes('3-4') ? 3.5 : 
+                                              this.exerciseRecommendation.frequency.includes('4-5') ? 4.5 : 5.5) / 7;
+                
                 return tdee + exerciseCaloriesPerDay;
             }
             
@@ -851,16 +886,15 @@
         }
         
         // Khởi tạo hệ thống
-        const system = new HypertensionControlSystem();
+        const system = new HypertensionConsultationSystem();
         
-        // Xử lý sự kiện khi nhấn nút Tính Toán
+        // Xử lý sự kiện khi nhấn nút PHÂN TÍCH & TƯ VẤN
         document.getElementById('calculateBtn').addEventListener('click', function() {
             // Lấy thông tin từ form
             const name = document.getElementById('patientName').value;
-            const age = parseInt(document.getElementById('patientAge').value);
             const gender = document.getElementById('patientGender').value;
-            const height = parseFloat(document.getElementById('patientHeight').value);
-            const weight = parseFloat(document.getElementById('patientWeight').value);
+            const dob = document.getElementById('patientDob').value;
+            const address = document.getElementById('patientAddress').value;
             const occupation = document.getElementById('patientOccupation').value;
             const activityLevel = document.getElementById('activityLevel').value;
             const physioFactor = document.getElementById('physioFactor').value;
@@ -869,45 +903,42 @@
             const diastolic = parseInt(document.getElementById('diastolic').value);
             const heartRate = parseInt(document.getElementById('heartRate').value);
             
-            const exerciseType = document.getElementById('exerciseType').value;
-            const exerciseDuration = parseFloat(document.getElementById('exerciseDuration').value);
-            const exerciseFrequency = parseInt(document.getElementById('exerciseFrequency').value);
-            
             // Kiểm tra dữ liệu đầu vào
-            if (!name || !age || !height || !weight || !systolic || !diastolic || !heartRate || 
-                !exerciseDuration || !exerciseFrequency) {
-                alert('Vui lòng điền đầy đủ thông tin!');
+            if (!name || !dob || !address || !occupation || !systolic || !diastolic || !heartRate) {
+                alert('Vui lòng điền đầy đủ thông tin bắt buộc!');
                 return;
             }
             
             // Tạo các đối tượng
-            system.userProfile = new UserProfile(name, age, gender, height, weight, occupation, activityLevel, physioFactor);
+            system.userProfile = new UserProfile(name, gender, dob, address, occupation, activityLevel, physioFactor);
             system.bloodPressure = new BloodPressureRecord(systolic, diastolic, heartRate);
-            system.exerciseSession = new ExerciseSession(exerciseType, exerciseDuration, exerciseFrequency);
+            system.exerciseRecommendation = new ExerciseRecommendation(system.bloodPressure.category.text, system.userProfile.age);
             
             // Tính toán kết quả
-            const tdee = system.calculateTDEE();
+            const bmr = system.calculateBMR();
             const totalEnergy = system.calculateTotalEnergyRequirement();
-            const exerciseCaloriesPerSession = system.exerciseSession.calculateCaloriesBurned(weight);
-            const exerciseCaloriesPerDay = exerciseCaloriesPerSession * exerciseFrequency / 7;
+            const exerciseCaloriesPerSession = system.exerciseRecommendation.calculateCaloriesBurned(system.weight);
             
             // Tạo kế hoạch bữa ăn
             system.mealPlan = new MealPlan(totalEnergy);
             
             // Hiển thị kết quả
-            displayResults(system, tdee, totalEnergy, exerciseCaloriesPerSession, exerciseCaloriesPerDay);
+            displayResults(system, bmr, totalEnergy, exerciseCaloriesPerSession);
             
             // Vẽ biểu đồ
-            drawCharts(system.mealPlan, tdee, exerciseCaloriesPerDay, totalEnergy);
+            drawCharts(system.mealPlan, bmr, exerciseCaloriesPerSession, totalEnergy);
             
             // Hiển thị phần kết quả
             document.getElementById('resultsSection').style.display = 'block';
+            
+            // Cuộn đến phần kết quả
+            document.getElementById('resultsSection').scrollIntoView({ behavior: 'smooth' });
         });
         
-        // Xử lý sự kiện khi nhấn nút Làm Mới
+        // Xử lý sự kiện khi nhấn nút NHẬP LẠI
         document.getElementById('resetBtn').addEventListener('click', function() {
             // Reset form
-            document.querySelectorAll('input, select').forEach(element => {
+            document.querySelectorAll('input, select, textarea').forEach(element => {
                 if (element.type !== 'button') {
                     element.value = '';
                 }
@@ -917,35 +948,56 @@
             document.getElementById('resultsSection').style.display = 'none';
         });
         
+        // Xử lý sự kiện khi nhấn nút IN KẾT QUẢ
+        document.getElementById('printBtn').addEventListener('click', function() {
+            window.print();
+        });
+        
+        // Xử lý sự kiện khi nhấn nút TƯ VẤN MỚI
+        document.getElementById('newConsultBtn').addEventListener('click', function() {
+            // Reset form
+            document.querySelectorAll('input, select, textarea').forEach(element => {
+                if (element.type !== 'button') {
+                    element.value = '';
+                }
+            });
+            
+            // Ẩn kết quả
+            document.getElementById('resultsSection').style.display = 'none';
+            
+            // Cuộn lên đầu trang
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+        
         // Hiển thị kết quả
-        function displayResults(system, tdee, totalEnergy, exerciseCaloriesPerSession, exerciseCaloriesPerDay) {
+        function displayResults(system, bmr, totalEnergy, exerciseCaloriesPerSession) {
             // Thông tin bệnh nhân
             document.getElementById('resultName').textContent = system.userProfile.name;
-            document.getElementById('resultAge').textContent = system.userProfile.age + ' tuổi';
             document.getElementById('resultGender').textContent = system.userProfile.gender === 'male' ? 'Nam' : 'Nữ';
-            document.getElementById('resultHeight').textContent = system.userProfile.height + ' cm';
-            document.getElementById('resultWeight').textContent = system.userProfile.weight + ' kg';
-            document.getElementById('resultBMI').textContent = system.userProfile.bmi;
+            document.getElementById('resultAge').textContent = system.userProfile.age + ' tuổi';
+            document.getElementById('resultAddress').textContent = system.userProfile.address;
             document.getElementById('resultOccupation').textContent = system.userProfile.occupation;
+            document.getElementById('resultActivity').textContent = system.getActivityFactorName();
+            document.getElementById('resultPhysio').textContent = system.getPhysioFactorName();
             
-            // Chỉ số huyết áp
+            // Chẩn đoán huyết áp
             document.getElementById('resultBP').textContent = `${system.bloodPressure.systolic}/${system.bloodPressure.diastolic} mmHg`;
-            document.getElementById('resultBPCategory').textContent = system.bloodPressure.category.text;
+            
+            const bpCategoryElement = document.getElementById('resultBPCategory');
+            bpCategoryElement.textContent = system.bloodPressure.category.text;
+            bpCategoryElement.className = `bp-status ${system.bloodPressure.category.class}`;
+            
             document.getElementById('resultHeartRate').textContent = system.bloodPressure.heartRate + ' bpm';
             
-            // Tính toán năng lượng chi tiết
-            document.getElementById('calcBMR').textContent = `BMR = 10 × ${system.userProfile.weight} + 6.25 × ${system.userProfile.height} - 5 × ${system.userProfile.age} ${system.userProfile.gender === 'male' ? '+ 5' : '- 161'} = ${system.userProfile.bmr.toFixed(1)} kcal`;
-            document.getElementById('calcActivityFactor').textContent = `${system.getActivityFactorName()} = ${system.activityFactors[system.userProfile.activityLevel].value}`;
-            document.getElementById('calcPhysioFactor').textContent = `${system.getPhysioFactorName()} = ${system.physioFactors[system.userProfile.physioFactor].value}`;
-            document.getElementById('calcTDEE').textContent = `TDEE = ${system.userProfile.bmr.toFixed(1)} × ${system.activityFactors[system.userProfile.activityLevel].value} × ${system.physioFactors[system.userProfile.physioFactor].value} = ${tdee.toFixed(1)} kcal`;
-            document.getElementById('calcExerciseCaloriesPerSession').textContent = `Calories = MET × weight × duration = ${system.exerciseSession.metValues[system.exerciseSession.exerciseType]} × ${system.userProfile.weight} × ${(system.exerciseSession.duration/60).toFixed(2)} = ${exerciseCaloriesPerSession.toFixed(1)} kcal`;
-            document.getElementById('calcExerciseCaloriesPerDay').textContent = `${exerciseCaloriesPerSession.toFixed(1)} × ${system.exerciseSession.frequency} / 7 = ${exerciseCaloriesPerDay.toFixed(1)} kcal`;
-            document.getElementById('calcTotalEnergy').textContent = `Tổng = ${tdee.toFixed(1)} + ${exerciseCaloriesPerDay.toFixed(1)} = ${totalEnergy.toFixed(1)} kcal`;
+            // Kế hoạch tập luyện
+            document.getElementById('resultExerciseType').textContent = system.exerciseRecommendation.exerciseType;
+            document.getElementById('resultExerciseIntensity').textContent = system.exerciseRecommendation.intensity;
+            document.getElementById('resultExerciseDuration').textContent = system.exerciseRecommendation.duration + ' phút';
+            document.getElementById('resultExerciseFrequency').textContent = system.exerciseRecommendation.frequency;
             
-            // Kết quả tính toán
-            document.getElementById('resultBMR').textContent = system.userProfile.bmr.toFixed(1) + ' kcal';
-            document.getElementById('resultTDEE').textContent = tdee.toFixed(1) + ' kcal';
-            document.getElementById('resultExerciseCalories').textContent = exerciseCaloriesPerDay.toFixed(1) + ' kcal';
+            // Tính toán năng lượng
+            document.getElementById('resultBMR').textContent = bmr.toFixed(1) + ' kcal';
+            document.getElementById('resultExerciseCaloriesPerSession').textContent = exerciseCaloriesPerSession.toFixed(1) + ' kcal';
             document.getElementById('resultTotalEnergy').textContent = totalEnergy.toFixed(1) + ' kcal';
             
             // Khẩu phần dinh dưỡng
@@ -965,7 +1017,7 @@
                 let totalMealCalories = 0;
                 
                 meal.items.forEach(item => {
-                    mealHTML += `<div>${item.name} (${item.amount}): ${item.calories} kcal</div>`;
+                    mealHTML += `<div>${item.name} (${item.amount})</div>`;
                     totalMealCalories += item.calories;
                 });
                 
@@ -973,16 +1025,10 @@
                 mealElement.innerHTML = mealHTML;
                 mealPlanDetails.appendChild(mealElement);
             });
-            
-            // Kế hoạch tập luyện
-            document.getElementById('resultExerciseType').textContent = system.exerciseSession.getExerciseName();
-            document.getElementById('resultExerciseDuration').textContent = system.exerciseSession.duration + ' phút/buổi';
-            document.getElementById('resultExerciseFrequency').textContent = system.exerciseSession.frequency + ' buổi/tuần';
-            document.getElementById('resultExerciseCaloriesPerSession').textContent = exerciseCaloriesPerSession.toFixed(1) + ' kcal/buổi';
         }
         
         // Vẽ biểu đồ
-        function drawCharts(mealPlan, tdee, exerciseCalories, totalEnergy) {
+        function drawCharts(mealPlan, bmr, exerciseCalories, totalEnergy) {
             const nutritionCtx = document.getElementById('nutritionChart').getContext('2d');
             const energyCtx = document.getElementById('energyChart').getContext('2d');
             
@@ -1010,25 +1056,6 @@
                         title: {
                             display: true,
                             text: 'Phân Bổ Dinh Dưỡng'
-                        },
-                        tooltip: {
-                            callbacks: {
-                                label: function(context) {
-                                    const label = context.label || '';
-                                    const value = context.raw || 0;
-                                    let gramText = '';
-                                    
-                                    if (label.includes('đạm')) {
-                                        gramText = ` (${mealPlan.proteinGrams.toFixed(1)}g)`;
-                                    } else if (label.includes('bột')) {
-                                        gramText = ` (${mealPlan.carbsGrams.toFixed(1)}g)`;
-                                    } else if (label.includes('béo')) {
-                                        gramText = ` (${mealPlan.fatGrams.toFixed(1)}g)`;
-                                    }
-                                    
-                                    return `${label}: ${value}%${gramText}`;
-                                }
-                            }
                         }
                     }
                 }
@@ -1041,11 +1068,11 @@
             window.energyChart = new Chart(energyCtx, {
                 type: 'bar',
                 data: {
-                    labels: ['Nhu cầu cơ bản (TDEE)', 'Tập luyện', 'Tổng năng lượng cần'],
+                    labels: ['Năng lượng cơ bản (Ecb)', 'Tập luyện (Etl)', 'Tổng năng lượng cần'],
                     datasets: [{
                         label: 'Năng lượng (kcal)',
-                        data: [tdee, exerciseCalories, totalEnergy],
-                        backgroundColor: ['#2c7873', '#6fb98f', '#ff9a76'],
+                        data: [bmr, exerciseCalories, totalEnergy],
+                        backgroundColor: ['#2c5530', '#4a7c59', '#8fb996'],
                         borderWidth: 1
                     }]
                 },
